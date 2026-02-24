@@ -1,4 +1,5 @@
 ---
+import { Font } from 'astro:assets';
 import "@styles/main.scss";
 ---
 
@@ -11,6 +12,8 @@ import "@styles/main.scss";
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
 		<title>Astro Basics</title>
+		<Font cssVariable="--font-title" />
+		<Font cssVariable="--font-body" />
 	</head>
 	<body>
 		<slot />
