@@ -15,12 +15,6 @@ export default defineConfig({
             name: 'Geist',
             cssVariable: '--font-body',
             weights: ['100', '200','300', '400', '500', '600', '700']
-        },
-        {
-            provider: fontProviders.google(),
-            name: 'Geist Mono',
-            cssVariable: '--font-body-mono',
-            weights: ['100', '200','300', '400', '500', '600', '700']
         }
     ],
     }
