@@ -16,3 +16,15 @@ p {
     --scale: 1.25;
   }
 }
+
+@include breakpoint-up($breakpoint-desktop-xl) {
+  :root {
+    --scale: 1.27;
+  }
+}
+
+@include breakpoint-up($breakpoint-desktop-xxl) {
+  :root {
+    --scale: 1.32;
+  }
+}
