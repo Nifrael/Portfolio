@@ -7,7 +7,16 @@
   }
 }
 
-p {
+h1, h2, h3 {
+    font-family: var(--font-title);
+}
+
+h4, h5, p, a {
+    font-family: var(--font-body);
+}
+    
+
+p, a {
   font-size: var(--p);
 }
 
