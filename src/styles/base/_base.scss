@@ -1,0 +1,20 @@
+@use "@styles/config/variables" as *;
+@use "@styles/config/mixin" as *;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--bg-base); 
+}
+
+main {
+  flex: 1;
+}

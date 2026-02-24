@@ -4,6 +4,7 @@
 @each $i in (1, 2, 3, 4, 5) {
   h#{$i} {
     font-size: var(--h#{$i});
+    color: var(--text-primary);
   }
 }
 
@@ -18,6 +19,7 @@ h4, h5, p, a {
 
 p, a {
   font-size: var(--p);
+  color: var(--text-primary);
 }
 
 @include breakpoint-up($breakpoint-desktop) {
