@@ -21,7 +21,7 @@ const menuItems = [
       <span class="hamburger"></span>
     </button>
 
-    <div class="nav-content" id="navbar-content">
+    <div class="nav-desktop">
       <ul class="menu-items">
         {
           menuItems.map((item) => (
@@ -31,27 +31,44 @@ const menuItems = [
           ))
         }
       </ul>
-
-      <div class="actions">
-        <a href="#init" class="btn-initialize">
-          VOIR<span class="arrow">&rarr;</span>
-        </a>
-      </div>
     </div>
   </nav>
+
+  <div class="nav-mobile" id="navbar-mobile" aria-hidden="true">
+    <ul class="menu-items">
+      {
+        menuItems.map((item) => (
+          <li>
+            <a href={item.href}>{item.label}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
 </header>
 
 <script>
   const toggle = document.getElementById('navbar-toggle');
-  const content = document.getElementById('navbar-content');
+  const mobileMenu = document.getElementById('navbar-mobile');
   const hamburger = document.querySelector('.hamburger');
 
-  if (toggle && content && hamburger) {
+  if (toggle && mobileMenu && hamburger) {
     toggle.addEventListener('click', () => {
       const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
-      toggle.setAttribute('aria-expanded', String(!isExpanded));
-      content.classList.toggle('is-open');
+      const nowExpanded = !isExpanded;
+      toggle.setAttribute('aria-expanded', String(nowExpanded));
+      mobileMenu.classList.toggle('is-open');
+      mobileMenu.setAttribute('aria-hidden', String(!nowExpanded));
       hamburger.classList.toggle('is-active');
+    });
+
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.remove('is-open');
+        mobileMenu.setAttribute('aria-hidden', 'true');
+        toggle.setAttribute('aria-expanded', 'false');
+        hamburger.classList.remove('is-active');
+      });
     });
   }
 </script>
@@ -102,9 +119,9 @@ const menuItems = [
     transition: opacity 0.2s ease;
 
     @include breakpoint-up($breakpoint-desktop) {
-    &:hover {
-      opacity: 0.8;
-    }
+      &:hover {
+        opacity: 0.8;
+      }
     }
   }
 
@@ -145,13 +162,13 @@ const menuItems = [
     justify-content: center;
     width: 40px;
     height: 40px;
-    background: var(--bg-surface);
-    border: 1px solid var(--bg-surface);
-    border-radius: 50%;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 30%;
     cursor: pointer;
     padding: 0;
     transition: background 0.2s ease;
-    
+
     @include breakpoint-up($breakpoint-tablet) {
       display: none;
     }
@@ -198,7 +215,7 @@ const menuItems = [
     }
   }
 
-  .nav-content {
+  .nav-desktop {
     display: none;
 
     @include breakpoint-up($breakpoint-tablet) {
@@ -206,37 +223,35 @@ const menuItems = [
       align-items: center;
       gap: 2rem;
     }
-    
+
     @include breakpoint-up($breakpoint-desktop) {
       gap: 4rem;
     }
+  }
+
+  .nav-mobile {
+    display: none;
+    flex-direction: column;
+    gap: 0;
+    position: absolute;
+    top: calc(100% + 0.75rem);
+    left: 1rem;
+    right: 1rem;
+    background: rgba(12, 12, 18, 0.6);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1.5rem;
+    padding: 2rem;
+    gap: 2rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
 
     &.is-open {
       display: flex;
-      flex-direction: column;
-      position: absolute;
-      top: calc(100% + 1rem);
-      left: 1rem;
-      right: 1rem;
-      background: rgba(10, 10, 12, 0.95);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 1.5rem;
-      padding: 2rem;
-      gap: 2rem;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
 
-      @include breakpoint-up($breakpoint-tablet) {
-        position: static;
-        flex-direction: row;
-        background: none;
-        backdrop-filter: none;
-        -webkit-backdrop-filter: none;
-        border: none;
-        padding: 0;
-        box-shadow: none;
-      }
+    @include breakpoint-up($breakpoint-tablet) {
+      display: none !important;
     }
   }
 
@@ -248,7 +263,7 @@ const menuItems = [
     gap: 1.5rem;
     margin: 0;
     padding: 0;
-    
+
     @include breakpoint-up($breakpoint-tablet) {
       flex-direction: row;
       gap: 2rem;
@@ -269,44 +284,6 @@ const menuItems = [
       &:hover {
         color: #fff;
       }
-    }
-  }
-
-  .actions {
-    display: flex;
-    justify-content: center;
-  }
-
-  .btn-initialize {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.6rem 1.25rem;
-    border-radius: 100px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    background: transparent;
-    color: #fff;
-    text-decoration: none;
-    font-family: var(--font-body-mono);
-    font-size: 0.8rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    transition: all 0.3s ease;
-
-    &:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.4);
-      transform: translateY(-1px);
-    }
-
-    .arrow {
-      transition: transform 0.3s ease;
-      font-size: 1.2em;
-      line-height: 1;
-    }
-
-    &:hover .arrow {
-      transform: translateX(4px);
     }
   }
 </style>
