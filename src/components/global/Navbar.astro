@@ -48,29 +48,8 @@ const menuItems = [
 </header>
 
 <script>
-  const toggle = document.getElementById('navbar-toggle');
-  const mobileMenu = document.getElementById('navbar-mobile');
-  const hamburger = document.querySelector('.hamburger');
-
-  if (toggle && mobileMenu && hamburger) {
-    toggle.addEventListener('click', () => {
-      const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
-      const nowExpanded = !isExpanded;
-      toggle.setAttribute('aria-expanded', String(nowExpanded));
-      mobileMenu.classList.toggle('is-open');
-      mobileMenu.setAttribute('aria-hidden', String(!nowExpanded));
-      hamburger.classList.toggle('is-active');
-    });
-
-    mobileMenu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        mobileMenu.classList.remove('is-open');
-        mobileMenu.setAttribute('aria-hidden', 'true');
-        toggle.setAttribute('aria-expanded', 'false');
-        hamburger.classList.remove('is-active');
-      });
-    });
-  }
+  import { initNavbar } from '@scripts/navbar';
+  initNavbar();
 </script>
 
 <style lang="scss">
@@ -79,9 +58,9 @@ const menuItems = [
 
   .navbar-wrapper {
     position: fixed;
-    top: 1rem;
+    top: 1.5rem;
     width: 100%;
-    padding: 0 1rem;
+    padding: 0 1.5rem;
     z-index: 100;
 
     @include breakpoint-up($breakpoint-desktop) {
@@ -97,9 +76,9 @@ const menuItems = [
     background: var(--bg-surface);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--border-surface);
     border-radius: 100px;
-    padding: 0.6rem 1rem;
+    padding: 0.5rem 1rem;
     margin: 0 auto;
     box-shadow: 0 4px 26px var(--shadow-surface);
     max-width: 1200px;
@@ -114,14 +93,27 @@ const menuItems = [
     align-items: center;
     gap: 1rem;
     text-decoration: none;
-    color: #fff;
     cursor: pointer;
-    transition: opacity 0.2s ease;
+    transition: color 0.4s ease;
 
     @include breakpoint-up($breakpoint-desktop) {
       &:hover {
-        opacity: 0.8;
+        color: var(--accent-primary);
       }
+    }
+  }
+
+  .logo-text {
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.15em;
+
+    .underscore {
+      color: var(--accent-primary);
+    }
+
+    @include breakpoint-up($breakpoint-desktop) {
+      font-size: unset;
     }
   }
 
@@ -146,28 +138,21 @@ const menuItems = [
     }
   }
 
-  .logo-text {
-    font-weight: 700;
-    font-size: 1.1rem;
-    letter-spacing: 0.15em;
-
-    .underscore {
-      color: var(--accent-primary);
-    }
-  }
-
   .menu-toggle {
+    appearance: none;
+    -webkit-appearance: none;
+    background: none;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 30%;
+    width: 44px;
+    height: 44px;
     cursor: pointer;
-    padding: 0;
-    transition: background 0.2s ease;
 
     @include breakpoint-up($breakpoint-tablet) {
       display: none;
@@ -178,7 +163,7 @@ const menuItems = [
     position: relative;
     width: 18px;
     height: 2px;
-    background: #fff;
+    background: var(--text-primary);
     border-radius: 2px;
     transition: all 0.3s ease;
 
@@ -189,7 +174,7 @@ const menuItems = [
       left: 0;
       width: 18px;
       height: 2px;
-      background: #fff;
+      background: var(--text-primary);
       border-radius: 2px;
       transition: all 0.3s ease;
     }
@@ -230,30 +215,64 @@ const menuItems = [
   }
 
   .nav-mobile {
-    display: none;
+    display: flex;
     flex-direction: column;
-    gap: 0;
     position: absolute;
-    top: calc(100% + 0.75rem);
+    top: calc(100% + 1rem);
     left: 1rem;
     right: 1rem;
-    background: rgba(12, 12, 18, 0.6);
+    background: var(--bg-surface);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--border-surface);
     border-radius: 1.5rem;
     padding: 2rem;
     gap: 2rem;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-12px);
+    pointer-events: none;
+    transition:
+      opacity 0.25s ease,
+      transform 0.25s ease,
+      visibility 0s linear 0.25s; 
 
     &.is-open {
-      display: flex;
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      pointer-events: auto;
+      transition:
+        opacity 0.25s ease,
+        transform 0.25s ease,
+        visibility 0s linear 0s; 
+
+      li {
+        opacity: 0;
+        transform: translateY(-6px);
+        animation: navItemIn 0.3s ease forwards;
+
+        @for $i from 1 through 5 {
+          &:nth-child(#{$i}) {
+            animation-delay: #{$i * 0.06}s;
+          }
+        }
+      }
     }
 
     @include breakpoint-up($breakpoint-tablet) {
-      display: none !important;
+      display: none;
     }
   }
+
+  @keyframes navItemIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
 
   .menu-items {
     list-style: none;
@@ -272,17 +291,19 @@ const menuItems = [
     }
 
     a {
-      color: rgba(255, 255, 255, 0.5);
+      color: var(--text-primary);
       text-decoration: none;
-      font-family: var(--font-body-mono);
-      font-size: 0.8rem;
-      font-weight: 600;
-      letter-spacing: 0.15em;
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      transition: color 0.3s ease;
+      transition: color 0.4s ease;
 
-      &:hover {
-        color: #fff;
+      @include breakpoint-up($breakpoint-tablet) {
+        &:hover {
+          color: var(--accent-primary);
+        }
       }
     }
   }

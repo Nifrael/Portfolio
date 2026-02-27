@@ -17,4 +17,9 @@ body {
 
 main {
   flex: 1;
+  padding-top: var(--navbar-offset);
+
+  @include breakpoint-up($breakpoint-desktop) {
+    padding-top: var(--navbar-offset-desktop);
+  }
 }
