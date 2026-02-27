@@ -3,6 +3,13 @@ import { defineConfig, fontProviders } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
+    vite: {
+        resolve: {
+            alias: {
+                '@scripts': new URL('./src/scripts', import.meta.url).pathname,
+            },
+        },
+    },
     experimental: {
         fonts: [{
             provider: fontProviders.google(),
