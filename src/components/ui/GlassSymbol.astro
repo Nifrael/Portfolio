@@ -1,0 +1,28 @@
+---
+interface Props {
+  symbol: string;
+  class?: string;
+}
+
+const { symbol, class: className } = Astro.props;
+---
+
+<div class:list={["glass-symbol", className]}>
+  <span>{symbol}</span>
+</div>
+
+<style lang="scss">
+  .glass-symbol {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1.5rem;
+    backdrop-filter: blur(12px);
+
+    span {
+      font-family: var(--font-body);
+      font-size: 2rem;
+      color: rgba(255, 255, 255, 0.3);
+    }
+  }
+</style>
