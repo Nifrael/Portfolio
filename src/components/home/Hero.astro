@@ -1,0 +1,413 @@
+---
+import GlassSymbol from '@components/ui/GlassSymbol.astro';
+---
+
+<section class="hero" aria-label="Introduction">
+  <div class="hero__backdrop" aria-hidden="true">
+    <div class="hero__grid"></div>
+    <div class="hero__glow hero__glow--top-left"></div>
+    <div class="hero__glow hero__glow--bottom-right"></div>
+    <div class="hero__beam"></div>
+  </div>
+
+  <div class="hero__symbols" aria-hidden="true">
+    <GlassSymbol symbol="△" class="hero__symbol--triangle" />
+    <GlassSymbol symbol="○" class="hero__symbol--circle" />
+    <GlassSymbol symbol="×" class="hero__symbol--cross" />
+    <GlassSymbol symbol="□" class="hero__symbol--square" />
+  </div>
+
+  <div class="hero-content">
+
+
+    <div class="heading-title">
+      <h1 class="heading-name">
+        <span class="heading-name-main">JULIEN</span>
+        <span class="heading-name-outline">MARCHAND</span>
+      </h1>
+
+
+
+      <p class="hero-subtitle">
+        Vous accompagner dans vos projets de <em class="hero-highlight">sites web</em>.
+      </p>
+    </div>
+
+              <div class="hero-badge">
+      <span class="hero-badge-dot">
+        <span class="hero-badge-ping"></span>
+        <span class="hero-badge-core"></span>
+      </span>
+      <span class="hero-badge-text">Disponible</span>
+    </div>
+
+    <div class="hero__actions">
+      <a href="#projets" class="hero__cta">
+        Access_Projects
+        <span class="hero__cta-corner hero__cta-corner--top-right" aria-hidden="true"></span>
+        <span class="hero__cta-corner hero__cta-corner--bottom-left" aria-hidden="true"></span>
+      </a>
+      <div class="hero__status">
+        <span class="hero__status-line" aria-hidden="true"></span>
+        Status: v1.0 // Deploying
+      </div>
+    </div>
+  </div>
+</section>
+
+<style lang="scss">
+  @use "@styles/config/variables" as *;
+  @use "@styles/config/mixin" as *;
+
+  @keyframes float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33%      { transform: translate(10px, -20px) rotate(2deg); }
+    66%      { transform: translate(-10px, 10px) rotate(-2deg); }
+  }
+
+  @keyframes ping {
+    75%, 100% {
+      transform: scale(2);
+      opacity: 0;
+    }
+  }
+
+  @keyframes beam-flow {
+    0%   { transform: translateX(-100%) rotate(-15deg); opacity: 0; }
+    20%  { opacity: 0.25; }
+    80%  { opacity: 0.25; }
+    100% { transform: translateX(200%) rotate(-15deg); opacity: 0; }
+  }
+
+  .hero {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+    padding: 6rem 1.5rem 4rem;
+
+    @include breakpoint-up($breakpoint-desktop) {
+      padding: 10rem 5rem 4rem;
+    }
+  }
+
+  .hero__backdrop {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .hero__grid {
+    position: absolute;
+    inset: 0;
+    opacity: 0.3;
+    background-size: 80px 80px;
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  }
+
+  .hero__glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(150px);
+  }
+
+  .hero__glow--top-left {
+    top: -10%;
+    left: -10%;
+    width: 60%;
+    height: 60%;
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .hero__glow--bottom-right {
+    bottom: -10%;
+    right: -10%;
+    width: 70%;
+    height: 70%;
+    background: rgba(0, 229, 239, 0.04);
+  }
+
+  .hero__beam {
+    position: absolute;
+    top: 33%;
+    left: 0;
+    width: 100%;
+    height: 3rem;
+    background: linear-gradient(90deg, transparent, rgba(0, 229, 239, 0.35), white, rgba(0, 229, 239, 0.35), transparent);
+    filter: blur(40px);
+    animation: beam-flow 10s linear infinite;
+  }
+
+  .hero__symbols {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+
+    :global(.hero__symbol--triangle) {
+      position: absolute;
+      top: -2rem;
+      left: -4rem;
+      width: 16rem;
+      height: 16rem;
+      transform: rotate(12deg);
+      opacity: 0.35;
+      animation: float 18s ease-in-out infinite;
+
+      span { font-size: 7rem; }
+
+      @include breakpoint-up($breakpoint-desktop) {
+        width: 20rem;
+        height: 20rem;
+        left: -5rem;
+        span { font-size: 9rem; }
+      }
+    }
+
+    :global(.hero__symbol--circle) {
+      position: absolute;
+      top: 50%;
+      right: -6rem;
+      width: 18rem;
+      height: 18rem;
+      transform: translateY(-50%) rotate(-12deg);
+      opacity: 0.25;
+      animation: float 12s ease-in-out infinite;
+
+      span { font-size: 10rem; }
+
+      @include breakpoint-up($breakpoint-desktop) {
+        width: 24rem;
+        height: 24rem;
+        right: -8rem;
+        span { font-size: 12rem; }
+      }
+    }
+
+    :global(.hero__symbol--cross) {
+      position: absolute;
+      bottom: -4rem;
+      left: 25%;
+      width: 12rem;
+      height: 12rem;
+      transform: rotate(45deg);
+      opacity: 0.35;
+      animation: float 8s ease-in-out infinite;
+
+      span { font-size: 5rem; }
+
+      @include breakpoint-up($breakpoint-desktop) {
+        width: 16rem;
+        height: 16rem;
+        span { font-size: 8rem; }
+      }
+    }
+
+    :global(.hero__symbol--square) {
+      position: absolute;
+      top: 5rem;
+      right: 25%;
+      width: 8rem;
+      height: 8rem;
+      transform: rotate(-6deg);
+      opacity: 0.15;
+      animation: float 12s ease-in-out infinite;
+      animation-delay: -4s;
+
+      span { font-size: 4rem; }
+
+      @include breakpoint-up($breakpoint-desktop) {
+        width: 10rem;
+        height: 10rem;
+        span { font-size: 6rem; }
+      }
+    }
+  }
+
+  .hero-content {
+    position: relative;
+    min-height: 70vh;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-width: 80rem;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.375rem 1rem;
+    border-radius: 1rem;
+    backdrop-filter: blur(12px);
+    width: fit-content;
+    margin-bottom: 3rem;
+  }
+
+  .hero-badge-dot {
+    position: relative;
+    display: flex;
+    width: 0.5rem;
+    height: 0.5rem;
+  }
+
+  .hero-badge-ping {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--green);
+    opacity: 0.75;
+    animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+
+  .hero-badge-core {
+    position: relative;
+    display: inline-flex;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--green);
+  }
+
+  .hero-badge-text {
+    font-family: var(--font-body);
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+  }
+
+  .heading-title {
+    display: flex;
+    flex-direction: column; 
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .heading-name {
+    font-family: var(--font-title);
+    font-size: clamp(3rem, 14vw, 11rem);
+    font-weight: 700;
+    line-height: 0.85;
+    letter-spacing: -0.03em;
+    font-style: italic;
+    margin: 0 auto;
+
+    span:first-child {
+      color: var(--accent-primary);
+    }
+
+    span:last-child {
+      -webkit-text-stroke: 1.5px var(--text-primary);
+      color: transparent;
+      display: inline-block;
+      margin-top: -0.5rem;
+      margin-left: 10vw;
+
+    @include breakpoint-up($breakpoint-desktop) {
+      margin-top: -1rem;
+      margin-left: 15vw;
+    }
+    }
+  }
+
+  .hero-subtitle {
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-family: var(--font-body);
+    font-weight: 200;
+    line-height: 1.5;
+  }
+
+  .hero-highlight {
+    color: var(--accent-primary);
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2rem;
+    margin-top: 4rem;
+
+    @include breakpoint-up($breakpoint-tablet) {
+      flex-direction: row;
+      align-items: center;
+      gap: 3rem;
+    }
+
+    @include breakpoint-up($breakpoint-desktop) {
+      margin-top: 6rem;
+    }
+  }
+
+  .hero__cta {
+    position: relative;
+    display: inline-block;
+    padding: 1.25rem 2.5rem;
+    background: var(--accent-primary);
+    color: var(--bg-base);
+    font-family: var(--font-body);
+    font-weight: 900;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    box-shadow: 0 0 15px rgba(0, 229, 239, 0.4), 0 0 40px rgba(0, 229, 239, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    @include breakpoint-up($breakpoint-desktop) {
+      &:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 25px rgba(0, 229, 239, 0.6), 0 0 60px rgba(0, 229, 239, 0.3);
+      }
+    }
+  }
+
+  .hero__cta-corner {
+    position: absolute;
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+
+  .hero__cta-corner--top-right {
+    top: -0.25rem;
+    right: -0.25rem;
+    border-top: 2px solid var(--text-primary);
+    border-right: 2px solid var(--text-primary);
+  }
+
+  .hero__cta-corner--bottom-left {
+    bottom: -0.25rem;
+    left: -0.25rem;
+    border-bottom: 2px solid var(--text-primary);
+    border-left: 2px solid var(--text-primary);
+  }
+
+  .hero__status {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-family: var(--font-body);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.35);
+  }
+
+  .hero__status-line {
+    display: inline-block;
+    width: 3rem;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.15);
+  }
+</style>
