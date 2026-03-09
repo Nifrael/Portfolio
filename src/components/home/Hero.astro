@@ -304,11 +304,16 @@ import GlassSymbol from '@components/ui/GlassSymbol.astro';
     margin: 0 auto;
 
     span:first-child {
-      color: var(--accent-primary);
+      background: linear-gradient(to right, var(--text-primary), var(--accent-primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      color: transparent;
+      padding-right: 0.3em;
     }
 
     span:last-child {
-      -webkit-text-stroke: 1.5px var(--text-primary);
+      -webkit-text-stroke: 1.5px var(--accent-primary);
       color: transparent;
       display: inline-block;
       margin-top: -0.5rem;
