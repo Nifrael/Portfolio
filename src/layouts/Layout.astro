@@ -2,6 +2,7 @@
 import { Font } from 'astro:assets';
 import "@styles/main.scss";
 import Navbar from '@components/global/Navbar.astro';
+import Footer from '@components/global/Footer.astro';
 
 interface Props {
 	fullBleed?: boolean;
@@ -27,5 +28,6 @@ const { fullBleed = false } = Astro.props;
 		<main class:list={[{ 'main-full-bleed': fullBleed }]}>
 			<slot />
 		</main>
+		<Footer />
 	</body>
 </html>

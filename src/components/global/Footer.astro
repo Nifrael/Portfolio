@@ -1,0 +1,67 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="footer__inner">
+    <a href="/" class="footer__logo" aria-label="Home">
+      NIFRA<span class="footer__accent">DEV</span>
+    </a>
+
+    <p class="footer__copy">
+      &copy; {currentYear} NifraDev. Tous droits réservés.
+    </p>
+  </div>
+</footer>
+
+<style lang="scss">
+  @use "@styles/config/variables" as *;
+  @use "@styles/config/mixin" as *;
+
+  .footer {
+    border-top: 1px solid var(--border-surface);
+    padding: 2rem 1.5rem;
+
+    @include breakpoint-up($breakpoint-desktop) {
+      padding: 2rem;
+    }
+  }
+
+  .footer__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+
+    @include breakpoint-up($breakpoint-tablet) {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  }
+
+  .footer__logo {
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.15em;
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: color 0.4s ease;
+
+    &:hover {
+      color: var(--accent-primary);
+    }
+  }
+
+  .footer__accent {
+    color: var(--accent-primary);
+  }
+
+  .footer__copy {
+    margin: 0;
+    font-size: 0.85rem;
+    color: rgba(241, 241, 241, 0.5);
+    letter-spacing: 0.03em;
+  }
+</style>
