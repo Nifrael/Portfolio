@@ -3,12 +3,12 @@ const currentYear = new Date().getFullYear();
 ---
 
 <footer class="footer">
-  <div class="footer__inner">
-    <a href="/" class="footer__logo" aria-label="Home">
-      NIFRA<span class="footer__accent">DEV</span>
+  <div class="footer-inner">
+    <a href="/" class="footer-logo" aria-label="Home">
+      NIFRA<span class="footer-accent">DEV</span>
     </a>
 
-    <p class="footer__copy">
+    <p class="footer-copy">
       &copy; {currentYear} NifraDev. Tous droits réservés.
     </p>
   </div>
@@ -27,7 +27,7 @@ const currentYear = new Date().getFullYear();
     }
   }
 
-  .footer__inner {
+  .footer-inner {
     max-width: 1200px;
     margin: 0 auto;
     display: flex;
@@ -41,7 +41,7 @@ const currentYear = new Date().getFullYear();
     }
   }
 
-  .footer__logo {
+  .footer-logo {
     font-weight: 700;
     font-size: 1rem;
     letter-spacing: 0.15em;
@@ -54,11 +54,11 @@ const currentYear = new Date().getFullYear();
     }
   }
 
-  .footer__accent {
+  .footer-accent {
     color: var(--accent-primary);
   }
 
-  .footer__copy {
+  .footer-copy {
     margin: 0;
     font-size: 0.85rem;
     color: rgba(241, 241, 241, 0.5);
