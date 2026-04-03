@@ -1,0 +1,29 @@
+@use "@styles/config/variables" as *;
+@use "@styles/config/mixin" as *;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--bg-base); 
+}
+
+main {
+  flex: 1;
+  padding-top: var(--navbar-offset);
+
+  @include breakpoint-up($breakpoint-desktop) {
+    padding-top: var(--navbar-offset-desktop);
+  }
+}
+
+	.main-full-bleed {
+		padding-top: 0;
+	}
