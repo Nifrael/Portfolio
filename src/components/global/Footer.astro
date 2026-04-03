@@ -4,9 +4,9 @@ const currentYear = new Date().getFullYear();
 
 <footer class="footer">
   <div class="footer-inner">
-    <a href="/" class="footer-logo" aria-label="Home">
+    <h3 class="footer-logo">
       NIFRA<span class="footer-accent">DEV</span>
-    </a>
+    </h3>
 
     <p class="footer-copy">
       &copy; {currentYear} NifraDev. Tous droits réservés.
@@ -21,6 +21,7 @@ const currentYear = new Date().getFullYear();
   .footer {
     border-top: 1px solid var(--border-surface);
     padding: 2rem 1.5rem;
+    background: transparent;
 
     @include breakpoint-up($breakpoint-desktop) {
       padding: 2rem;
