@@ -9,10 +9,12 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^6.4.6"
+    "astro": "^6.4.8"
   },
   "devDependencies": {
     "@types/node": "^25.5.0",
+    "prettier": "^3.8.4",
+    "prettier-plugin-astro": "^0.14.1",
     "sass-embedded": "^1.97.3"
   }
 }
