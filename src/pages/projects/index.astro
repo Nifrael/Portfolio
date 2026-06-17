@@ -42,7 +42,6 @@ const sortedProjects = projects.sort((a, b) => b.data.publishDate.valueOf() - a.
                     height={450}
                     class="project-image"
                   />
-                  <div class="project-image-overlay" />
                 </div>
 
                 <div class="project-info">
@@ -116,9 +115,6 @@ const sortedProjects = projects.sort((a, b) => b.data.publishDate.valueOf() - a.
                     )}
                   </div>
                 </div>
-
-                <span class="corner corner-tr" aria-hidden="true" />
-                <span class="corner corner-bl" aria-hidden="true" />
               </article>
             );
           })
@@ -272,6 +268,31 @@ const sortedProjects = projects.sort((a, b) => b.data.publishDate.valueOf() - a.
     overflow: hidden;
     transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 
+    // Coins décoratifs
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      width: 0.5rem;
+      height: 0.5rem;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    &::before {
+      top: -1px;
+      right: -1px;
+      border-top: 2px solid var(--text-primary);
+      border-right: 2px solid var(--text-primary);
+    }
+
+    &::after {
+      bottom: -1px;
+      left: -1px;
+      border-bottom: 2px solid var(--text-primary);
+      border-left: 2px solid var(--text-primary);
+    }
+
     &:hover {
       border-color: rgba(0, 229, 239, 0.3);
       transform: translateY(-4px);
@@ -281,7 +302,7 @@ const sortedProjects = projects.sort((a, b) => b.data.publishDate.valueOf() - a.
         transform: scale(1.03);
       }
 
-      .project-image-overlay {
+      .project-image-wrapper::after {
         opacity: 0.1;
       }
     }
@@ -292,6 +313,17 @@ const sortedProjects = projects.sort((a, b) => b.data.publishDate.valueOf() - a.
     aspect-ratio: 16 / 9;
     overflow: hidden;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+    // Overlay d'image
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--bg-base);
+      opacity: 0.3;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
   }
 
   .project-image {
@@ -299,14 +331,6 @@ const sortedProjects = projects.sort((a, b) => b.data.publishDate.valueOf() - a.
     height: 100%;
     object-fit: cover;
     transition: transform 0.5s ease;
-  }
-
-  .project-image-overlay {
-    position: absolute;
-    inset: 0;
-    background: var(--bg-base);
-    opacity: 0.3;
-    transition: opacity 0.3s ease;
   }
 
   .project-info {
@@ -408,25 +432,4 @@ const sortedProjects = projects.sort((a, b) => b.data.publishDate.valueOf() - a.
     }
   }
 
-  // Corners
-  .corner {
-    position: absolute;
-    width: 0.5rem;
-    height: 0.5rem;
-    pointer-events: none;
-
-    &-tr {
-      top: -1px;
-      right: -1px;
-      border-top: 2px solid var(--text-primary);
-      border-right: 2px solid var(--text-primary);
-    }
-
-    &-bl {
-      bottom: -1px;
-      left: -1px;
-      border-bottom: 2px solid var(--text-primary);
-      border-left: 2px solid var(--text-primary);
-    }
-  }
 </style>
