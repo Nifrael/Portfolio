@@ -1,77 +1,42 @@
 ---
-import GlassSymbol from '@components/ui/GlassSymbol.astro';
+import HeroBackdrop from "./HeroBackdrop.astro";
+import HeroSymbols from "./HeroSymbols.astro";
+import HeroPortrait from "./HeroPortrait.astro";
+import AvailabilityBadge from "@components/ui/AvailabilityBadge.astro";
+import CtaButton from "@components/ui/CtaButton.astro";
 ---
 
 <section class="hero" aria-label="Introduction">
-  <div class="backdrop" aria-hidden="true">
-    <div class="grid"></div>
-    <div class="glow glow-tl"></div>
-    <div class="glow glow-br"></div>
-    <div class="beam"></div>
-  </div>
-
-  <div class="symbols" aria-hidden="true">
-    <GlassSymbol symbol="△" class="sym-triangle" />
-    <GlassSymbol symbol="○" class="sym-circle" />
-    <GlassSymbol symbol="×" class="sym-cross" />
-    <GlassSymbol symbol="□" class="sym-square" />
-  </div>
+  <HeroBackdrop />
+  <HeroSymbols />
 
   <div class="content">
-    <div class="title-block">
-      <h1 class="name">
-        <span class="name-main">JULIEN</span>
-        <span class="name-outline">MARCHAND</span>
-      </h1>
+    <div class="text-side">
+      <div class="title-block">
+        <h1 class="name">
+          <span class="name-main">JULIEN</span>
+          <span class="name-outline">MARCHAND</span>
+        </h1>
 
-      <p class="subtitle">
-        Développeur web <em class="highlight">full-stack</em>.
-      </p>
-    </div>
+        <p class="subtitle">
+          Développeur web <em class="highlight">full-stack</em>.
+        </p>
+      </div>
 
-    <div class="badge">
-      <span class="badge-dot">
-        <span class="badge-ping"></span>
-        <span class="badge-core"></span>
-      </span>
-      <span class="badge-text">Disponible</span>
-    </div>
+      <AvailabilityBadge status="available" />
 
-    <div class="actions">
-      <a href="#projets" class="cta">
-        Projets
-        <span class="corner corner-tr" aria-hidden="true"></span>
-        <span class="corner corner-bl" aria-hidden="true"></span>
-      </a>
-      <a href="#projets" class="cta">
-        Mon Parcours
-        <span class="corner corner-tr" aria-hidden="true"></span>
-        <span class="corner corner-bl" aria-hidden="true"></span>
-      </a>
+      <div class="actions">
+        <CtaButton href="#projets" label="Projets" />
+        <CtaButton href="#projets" label="Mon Parcours" />
+      </div>
     </div>
+    <HeroPortrait />
   </div>
 </section>
 
 <style lang="scss">
   @use "@styles/config/variables" as *;
   @use "@styles/config/mixin" as *;
-
-  @keyframes float {
-    0%, 100% { transform: translate(0, 0) rotate(0deg); }
-    33%      { transform: translate(10px, -20px) rotate(2deg); }
-    66%      { transform: translate(-10px, 10px) rotate(-2deg); }
-  }
-
-  @keyframes ping {
-    75%, 100% { transform: scale(2); opacity: 0; }
-  }
-
-  @keyframes beam-flow {
-    0%   { transform: translateX(-100%) rotate(-15deg); opacity: 0; }
-    20%  { opacity: 0.25; }
-    80%  { opacity: 0.25; }
-    100% { transform: translateX(200%) rotate(-15deg); opacity: 0; }
-  }
 
   .hero {
     position: relative;
@@ -82,176 +47,31 @@ import GlassSymbol from '@components/ui/GlassSymbol.astro';
     padding: 6rem 1.5rem 4rem;
 
     @include breakpoint-up($breakpoint-desktop) {
-      padding: 10rem 5rem 4rem;
-    }
-  }
-
-  .backdrop {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .grid {
-    position: absolute;
-    inset: 0;
-    opacity: 0.3;
-    background-size: 80px 80px;
-    background-image:
-      linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  }
-
-  .glow {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(150px);
-
-    &-tl {
-      top: -10%; left: -10%;
-      width: 60%; height: 60%;
-      background: rgba(255, 255, 255, 0.04);
+      padding: 10rem 3rem 4rem;
     }
 
-    &-br {
-      bottom: -10%; right: -10%;
-      width: 70%; height: 70%;
-      background: rgba(0, 229, 239, 0.04);
-    }
-  }
-
-  .beam {
-    position: absolute;
-    top: 33%; left: 0;
-    width: 100%; height: 3rem;
-    background: linear-gradient(90deg, transparent, rgba(0, 229, 239, 0.35), white, rgba(0, 229, 239, 0.35), transparent);
-    filter: blur(40px);
-    animation: beam-flow 10s linear infinite;
-  }
-
-  .symbols {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 1;
-
-    :global(.sym-triangle) {
-      position: absolute;
-      top: -2rem; left: -4rem;
-      width: 16rem; height: 16rem;
-      transform: rotate(12deg);
-      opacity: 0.35;
-      animation: float 18s ease-in-out infinite;
-      span { font-size: 7rem; }
-
-      @include breakpoint-up($breakpoint-desktop) {
-        width: 20rem; height: 20rem; left: -5rem;
-        span { font-size: 9rem; }
-      }
-    }
-
-    :global(.sym-circle) {
-      position: absolute;
-      top: 50%; right: -6rem;
-      width: 18rem; height: 18rem;
-      transform: translateY(-50%) rotate(-12deg);
-      opacity: 0.25;
-      animation: float 12s ease-in-out infinite;
-      span { font-size: 10rem; }
-
-      @include breakpoint-up($breakpoint-desktop) {
-        width: 24rem; height: 24rem; right: -8rem;
-        span { font-size: 12rem; }
-      }
-    }
-
-    :global(.sym-cross) {
-      position: absolute;
-      bottom: -4rem; left: 25%;
-      width: 12rem; height: 12rem;
-      transform: rotate(45deg);
-      opacity: 0.35;
-      animation: float 8s ease-in-out infinite;
-      span { font-size: 5rem; }
-
-      @include breakpoint-up($breakpoint-desktop) {
-        width: 16rem; height: 16rem;
-        span { font-size: 8rem; }
-      }
-    }
-
-    :global(.sym-square) {
-      position: absolute;
-      top: 5rem; right: 25%;
-      width: 8rem; height: 8rem;
-      transform: rotate(-6deg);
-      opacity: 0.15;
-      animation: float 12s ease-in-out infinite -4s;
-      span { font-size: 4rem; }
-
-      @include breakpoint-up($breakpoint-desktop) {
-        width: 10rem; height: 10rem;
-        span { font-size: 6rem; }
-      }
+    @include breakpoint-up($breakpoint-desktop-xl) {
+      padding: 8rem 2rem 4rem;
     }
   }
 
   .content {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+    justify-content: center;
+    align-items: center;
     position: relative;
     min-height: 70vh;
     z-index: 10;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     max-width: 80rem;
     margin: 0 auto;
     width: 100%;
-  }
 
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.375rem 1rem;
-    border-radius: 1rem;
-    backdrop-filter: blur(12px);
-    width: fit-content;
-    margin-bottom: 3rem;
-  }
-
-  .badge-dot {
-    position: relative;
-    display: flex;
-    width: 0.5rem; height: 0.5rem;
-  }
-
-  .badge-ping,
-  .badge-core {
-    width: 0.5rem; height: 0.5rem;
-    border-radius: 50%;
-    background: var(--green);
-  }
-
-  .badge-ping {
-    position: absolute;
-    inset: 0;
-    opacity: 0.75;
-    animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
-  }
-
-  .badge-core {
-    position: relative;
-    display: inline-flex;
-  }
-
-  .badge-text {
-    font-family: var(--font-body);
-    font-size: 0.65rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    text-transform: uppercase;
-    letter-spacing: 0.3em;
+    @include breakpoint-up($breakpoint-desktop) {
+      grid-template-columns: 1fr 2fr;
+      grid-template-rows: 1fr;
+    }
   }
 
   .title-block {
@@ -264,7 +84,7 @@ import GlassSymbol from '@components/ui/GlassSymbol.astro';
 
   .name {
     font-family: var(--font-title);
-    font-size: clamp(3rem, 14vw, 11rem);
+    font-size: clamp(1rem, 9vw, 8rem);
     font-weight: 700;
     line-height: 0.85;
     letter-spacing: -0.03em;
@@ -273,7 +93,11 @@ import GlassSymbol from '@components/ui/GlassSymbol.astro';
   }
 
   .name-main {
-    background: linear-gradient(to right, var(--text-primary), var(--accent-primary));
+    background: linear-gradient(
+      to right,
+      var(--text-primary),
+      var(--accent-primary)
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -286,11 +110,9 @@ import GlassSymbol from '@components/ui/GlassSymbol.astro';
     color: transparent;
     display: inline-block;
     margin-top: -0.5rem;
-    margin-left: 10vw;
 
     @include breakpoint-up($breakpoint-desktop) {
       margin-top: -1rem;
-      margin-left: 15vw;
     }
   }
 
@@ -321,46 +143,6 @@ import GlassSymbol from '@components/ui/GlassSymbol.astro';
 
     @include breakpoint-up($breakpoint-desktop) {
       margin-top: 2rem;
-    }
-  }
-
-  .cta {
-    position: relative;
-    display: inline-block;
-    padding: 1.25rem 2.5rem;
-    background: var(--accent-primary);
-    color: var(--bg-base);
-    font-family: var(--font-body);
-    font-weight: 900;
-    font-size: 0.8rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    text-decoration: none;
-    box-shadow: 0 0 15px rgba(0, 229, 239, 0.4), 0 0 40px rgba(0, 229, 239, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-    @include breakpoint-up($breakpoint-desktop) {
-      &:hover {
-        transform: scale(1.05);
-        box-shadow: 0 0 25px rgba(0, 229, 239, 0.6), 0 0 60px rgba(0, 229, 239, 0.3);
-      }
-    }
-  }
-
-  .corner {
-    position: absolute;
-    width: 0.75rem; height: 0.75rem;
-
-    &-tr {
-      top: -0.25rem; right: -0.25rem;
-      border-top: 2px solid var(--text-primary);
-      border-right: 2px solid var(--text-primary);
-    }
-
-    &-bl {
-      bottom: -0.25rem; left: -0.25rem;
-      border-bottom: 2px solid var(--text-primary);
-      border-left: 2px solid var(--text-primary);
     }
   }
 </style>
