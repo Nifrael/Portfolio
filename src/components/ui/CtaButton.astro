@@ -1,0 +1,76 @@
+---
+/**
+ * CtaButton — Bouton d'appel à l'action avec coins décoratifs.
+ *
+ * @prop {string} href   - URL de destination du lien.
+ * @prop {string} label  - Texte affiché dans le bouton.
+ * @prop {string} [class] - Classes CSS additionnelles.
+ */
+interface Props {
+  href: string;
+  label: string;
+  class?: string;
+}
+
+const { href, label, class: className } = Astro.props;
+---
+
+<a href={href} class:list={["cta", className]}>
+  {label}
+  <span class="corner corner-tr" aria-hidden="true"></span>
+  <span class="corner corner-bl" aria-hidden="true"></span>
+</a>
+
+<style lang="scss">
+  @use "@styles/config/variables" as *;
+  @use "@styles/config/mixin" as *;
+
+  .cta {
+    position: relative;
+    padding: 0.5rem 1rem;
+    background: var(--accent-primary);
+    color: var(--bg-base);
+    font-family: var(--font-body);
+    font-weight: 900;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    box-shadow:
+      0 0 15px rgba(0, 229, 239, 0.4),
+      0 0 40px rgba(0, 229, 239, 0.2);
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
+
+    @include breakpoint-up($breakpoint-desktop) {
+      padding: 1rem 1.5rem;
+      &:hover {
+        transform: scale(1.05);
+        box-shadow:
+          0 0 25px rgba(0, 229, 239, 0.6),
+          0 0 60px rgba(0, 229, 239, 0.3);
+      }
+    }
+  }
+
+  .corner {
+    position: absolute;
+    width: 0.5rem;
+    height: 0.5rem;
+
+    &-tr {
+      top: -0.25rem;
+      right: -0.25rem;
+      border-top: 2px solid var(--text-primary);
+      border-right: 2px solid var(--text-primary);
+    }
+
+    &-bl {
+      bottom: -0.25rem;
+      left: -0.25rem;
+      border-bottom: 2px solid var(--text-primary);
+      border-left: 2px solid var(--text-primary);
+    }
+  }
+</style>

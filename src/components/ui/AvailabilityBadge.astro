@@ -1,0 +1,91 @@
+---
+/**
+ * AvailabilityBadge — Badge animé indiquant la disponibilité.
+ *
+ * @prop {"available" | "unavailable"} [status="available"] - Statut affiché.
+ * @prop {string} [class] - Classes CSS additionnelles.
+ */
+interface Props {
+  status?: "available" | "unavailable";
+  class?: string;
+}
+
+const { status = "available", class: className } = Astro.props;
+
+const labelMap: Record<string, string> = {
+  available: "Disponible",
+  unavailable: "Indisponible",
+};
+---
+
+<div class:list={["badge", `badge--${status}`, className]}>
+  <span class="badge-dot">
+    {status === "available" && <span class="badge-ping"></span>}
+    <span class="badge-core"></span>
+  </span>
+  <span class="badge-text">{labelMap[status]}</span>
+</div>
+
+<style lang="scss">
+  @keyframes ping {
+    75%,
+    100% {
+      transform: scale(2);
+      opacity: 0;
+    }
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.375rem 1rem;
+    border-radius: 1rem;
+    backdrop-filter: blur(12px);
+    width: fit-content;
+  }
+
+  .badge-dot {
+    position: relative;
+    display: flex;
+    width: 0.5rem;
+    height: 0.5rem;
+  }
+
+  .badge-ping,
+  .badge-core {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+  }
+
+  .badge--available .badge-ping,
+  .badge--available .badge-core {
+    background: var(--green);
+  }
+
+  .badge--unavailable .badge-core {
+    background: rgba(255, 100, 100, 0.4);
+  }
+
+  .badge-ping {
+    position: absolute;
+    inset: 0;
+    opacity: 0.75;
+    animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+
+  .badge-core {
+    position: relative;
+    display: inline-flex;
+  }
+
+  .badge-text {
+    font-family: var(--font-body);
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+  }
+</style>
