@@ -1,0 +1,82 @@
+<div class="backdrop" aria-hidden="true">
+  <div class="grid"></div>
+  <div class="glow glow-tl"></div>
+  <div class="glow glow-br"></div>
+  <div class="beam"></div>
+</div>
+
+<style lang="scss">
+  @keyframes beam-flow {
+    0% {
+      transform: translateX(-100%) rotate(-15deg);
+      opacity: 0;
+    }
+    20% {
+      opacity: 0.25;
+    }
+    80% {
+      opacity: 0.25;
+    }
+    100% {
+      transform: translateX(200%) rotate(-15deg);
+      opacity: 0;
+    }
+  }
+
+  .backdrop {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .grid {
+    position: absolute;
+    inset: 0;
+    opacity: 0.3;
+    background-size: 80px 80px;
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  }
+
+  .glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(150px);
+
+    &-tl {
+      top: -10%;
+      left: -10%;
+      width: 60%;
+      height: 60%;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    &-br {
+      bottom: -10%;
+      right: -10%;
+      width: 70%;
+      height: 70%;
+      background: rgba(0, 229, 239, 0.04);
+    }
+  }
+
+  .beam {
+    position: absolute;
+    top: 33%;
+    left: 0;
+    width: 100%;
+    height: 3rem;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(0, 229, 239, 0.35),
+      white,
+      rgba(0, 229, 239, 0.35),
+      transparent
+    );
+    filter: blur(40px);
+    animation: beam-flow 10s linear infinite;
+  }
+</style>
