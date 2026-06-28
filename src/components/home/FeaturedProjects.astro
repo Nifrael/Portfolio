@@ -1,8 +1,6 @@
 ---
 import { getCollection } from "astro:content";
-import { Image } from "astro:assets";
-import Github from "@assets/icons/Github.svg";
-import ExternalLink from "@assets/icons/ExternalLink.svg";
+import ProjectCard from "@components/ui/ProjectCard.astro";
 
 const projects = await getCollection("projects");
 const featuredProjects = projects
@@ -24,72 +22,9 @@ const featuredProjects = projects
 
   <div class="projects-grid">
     {
-      featuredProjects.map((project) => {
-        const { title, description, tags, cover, links } = project.data;
-        return (
-          <article class="project-card">
-            <div class="project-image-wrapper">
-              <Image
-                src={cover.src}
-                alt={cover.alt}
-                width={800}
-                height={450}
-                class="project-image"
-              />
-            </div>
-
-            <div class="project-info">
-              <div class="project-tags">
-                {tags.map((tag) => (
-                  <span class="tag">{tag}</span>
-                ))}
-              </div>
-
-              <h3 class="project-card-title">{title}</h3>
-              <p class="project-description">{description}</p>
-
-              <div class="project-footer">
-                <a
-                  href={`/projects/${project.id}`}
-                  class="project-details-link"
-                >
-                  Détails
-                  <span class="arrow" aria-hidden="true">
-                    →
-                  </span>
-                </a>
-
-                {links && (
-                  <div class="project-links">
-                    {links.repository && (
-                      <a
-                        href={links.repository}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="project-icon-link"
-                        aria-label={`Code source de ${title}`}
-                      >
-                        <Github />
-                      </a>
-                    )}
-                    {links.live && (
-                      <a
-                        href={links.live}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="project-icon-link"
-                        aria-label={`Démonstration en direct de ${title}`}
-                      >
-                        <ExternalLink />
-                      </a>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-          </article>
-        );
-      })
+      featuredProjects.map((project) => (
+        <ProjectCard project={project} featured={true} />
+      ))
     }
   </div>
 
@@ -168,225 +103,10 @@ const featuredProjects = projects
     opacity: 0.8;
   }
 
-  @keyframes reveal-blur {
-    from {
-      opacity: 0;
-      filter: blur(15px);
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      filter: blur(0);
-      transform: translateY(0);
-    }
-  }
-
-  @supports (animation-timeline: scroll()) {
-    .section-title {
-      animation: reveal-blur both;
-      animation-timeline: scroll();
-      animation-range: entry 30% cover 40%;
-    }
-
-    .section-subtitle {
-      animation: reveal-blur both;
-      animation-timeline: scroll();
-      animation-range: entry 30% cover 50%;
-    }
-  }
-
   .projects-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: 3rem;
-  }
-
-  .project-card {
-    position: relative;
-    border: 1px solid var(--border-surface);
-    backdrop-filter: blur(20px);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    transition:
-      border-color 0.3s ease,
-      transform 0.3s ease,
-      box-shadow 0.3s ease;
-
-    &::before,
-    &::after {
-      content: "";
-      position: absolute;
-      width: 0.5rem;
-      height: 0.5rem;
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    &::before {
-      top: -1px;
-      right: -1px;
-      border-top: 2px solid var(--text-primary);
-      border-right: 2px solid var(--text-primary);
-    }
-
-    &::after {
-      bottom: -1px;
-      left: -1px;
-      border-bottom: 2px solid var(--text-primary);
-      border-left: 2px solid var(--text-primary);
-    }
-
-    @include breakpoint-up($breakpoint-tablet) {
-      width: 80%;
-      max-height: 70vh;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 2fr 3fr;
-
-      &:hover {
-        border-color: var(--accent-primary);
-        transform: translateY(-4px);
-        box-shadow: 0 10px 30px var(--shadow-surface);
-
-        .project-image {
-          transform: scale(1.01);
-        }
-
-        .project-image-wrapper::after {
-          opacity: 0.1;
-        }
-      }
-    }
-  }
-
-  .project-image-wrapper {
-    position: relative;
-    aspect-ratio: 16 / 9;
-    overflow: hidden;
-
-    &::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: var(--bg-base);
-      opacity: 0.3;
-      transition: opacity 0.3s ease;
-    }
-
-    @include breakpoint-up($breakpoint-tablet) {
-      aspect-ratio: auto;
-      height: 100%;
-    }
-  }
-
-  .project-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-  }
-
-  .project-info {
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-  }
-
-  .project-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-  }
-
-  .tag {
-    font-family: var(--font-body);
-    font-size: 0.65rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--accent-primary);
-    background: rgba(0, 229, 239, 0.06);
-    padding: 0.25rem 0.65rem;
-    border-radius: 0.25rem;
-    border: 1px solid rgba(0, 229, 239, 0.1);
-  }
-
-  .project-card-title {
-    font-family: var(--font-title);
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin: 0 0 1rem 0;
-    letter-spacing: -0.01em;
-  }
-
-  .project-description {
-    font-family: var(--font-body);
-    font-size: 0.9rem;
-    line-height: 1.6;
-    color: var(--text-primary);
-    opacity: 0.7;
-    margin: 0 0 2rem 0;
-    flex-grow: 1;
-  }
-
-  .project-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: auto;
-    padding-top: 1.5rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-  }
-
-  .project-details-link {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-family: var(--font-body);
-    font-weight: 700;
-    font-size: 0.8rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-primary);
-    text-decoration: none;
-    transition: color 0.3s ease;
-
-    .arrow {
-      transition: transform 0.3s ease;
-    }
-
-    &:hover {
-      color: var(--accent-primary);
-
-      .arrow {
-        transform: translateX(4px);
-      }
-    }
-  }
-
-  .project-links {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-  }
-
-  .project-icon-link {
-    color: var(--text-primary);
-    opacity: 0.6;
-    transition:
-      color 0.3s ease,
-      opacity 0.3s ease,
-      transform 0.2s ease;
-
-    &:hover {
-      color: var(--accent-primary);
-      opacity: 1;
-      transform: translateY(-2px);
-    }
   }
 
   .btn-all-projects {
@@ -426,6 +146,33 @@ const featuredProjects = projects
       .arrow {
         transform: translateX(4px);
       }
+    }
+  }
+
+  @keyframes reveal-blur {
+    from {
+      opacity: 0;
+      filter: blur(15px);
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      filter: blur(0);
+      transform: translateY(0);
+    }
+  }
+
+  @supports (animation-timeline: view()) {
+    .section-title {
+      animation: reveal-blur both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 40%;
+    }
+
+    .section-subtitle {
+      animation: reveal-blur both;
+      animation-timeline: view();
+      animation-range: entry 15% cover 45%;
     }
   }
 </style>
