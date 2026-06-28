@@ -9,11 +9,6 @@ const sortedProjects = projects.sort((a, b) => b.data.publishDate.valueOf() - a.
 
 <Layout>
   <div class="projects-page">
-    <div class="backdrop" aria-hidden="true">
-      <div class="grid"></div>
-      <div class="glow"></div>
-    </div>
-
     <div class="container">
       <header class="page-header">
         <a href="/" class="back-home-link">
@@ -52,34 +47,6 @@ const sortedProjects = projects.sort((a, b) => b.data.publishDate.valueOf() - a.
     @include breakpoint-up($breakpoint-desktop) {
       padding: 10rem 5rem 8rem;
     }
-  }
-
-  .backdrop {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .grid {
-    position: absolute;
-    inset: 0;
-    opacity: 0.15;
-    background-size: 80px 80px;
-    background-image:
-      linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  }
-
-  .glow {
-    position: absolute;
-    top: -10%;
-    right: -10%;
-    width: 60%;
-    height: 60%;
-    border-radius: 50%;
-    background: rgba(0, 229, 239, 0.02);
-    filter: blur(150px);
   }
 
   .container {
