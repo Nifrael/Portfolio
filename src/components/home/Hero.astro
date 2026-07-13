@@ -19,13 +19,12 @@ import CtaButton from "@components/ui/CtaButton.astro";
       </div>
 
       <AvailabilityBadge status="available" />
-
-      <div class="actions">
-        <CtaButton href="#projets" label="Projets" />
-        <CtaButton href="#projets" label="Mon Parcours" />
-      </div>
     </div>
     <HeroPortrait />
+    <div class="actions">
+      <CtaButton href="#projets" label="Projets" />
+      <CtaButton href="#projets" label="Parcours" />
+    </div>
   </div>
 </section>
 
@@ -52,7 +51,7 @@ import CtaButton from "@components/ui/CtaButton.astro";
 
   .content {
     display: grid;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: 35% 55% 10%;
     align-items: center;
     position: relative;
     min-height: 70vh;
@@ -63,7 +62,7 @@ import CtaButton from "@components/ui/CtaButton.astro";
 
     @include breakpoint-up($breakpoint-desktop) {
       grid-template-columns: 1fr 2fr;
-      grid-template-rows: 1fr;
+      grid-template-rows: 90% 10%;
     }
   }
 
@@ -80,7 +79,7 @@ import CtaButton from "@components/ui/CtaButton.astro";
     line-height: 0.85;
     letter-spacing: -0.03em;
     font-style: italic;
-    margin: 2rem auto 0;
+    margin: 0 auto;
     @include breakpoint-up($breakpoint-desktop) {
       font-size: clamp(1rem, 9vw, 8rem);
     }
@@ -120,19 +119,26 @@ import CtaButton from "@components/ui/CtaButton.astro";
 
   .actions {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
     gap: 2rem;
-    margin-top: 4rem;
+    margin-top: 2rem;
 
     @include breakpoint-up($breakpoint-tablet) {
-      flex-direction: row;
-      align-items: center;
       gap: 3rem;
     }
 
     @include breakpoint-up($breakpoint-desktop) {
-      margin-top: 2rem;
+      grid-column: 1;
+      align-self: start;
+    }
+  }
+
+  .image-side {
+    @include breakpoint-up($breakpoint-desktop) {
+      grid-column: 2;
+      grid-row: 1 / -1;
     }
   }
 </style>
