@@ -79,12 +79,15 @@ import CtaButton from "@components/ui/CtaButton.astro";
 
   .name {
     font-family: var(--font-title);
-    font-size: clamp(1rem, 9vw, 8rem);
+    font-size: clamp(3rem, 15vw, 8rem);
     font-weight: 700;
     line-height: 0.85;
     letter-spacing: -0.03em;
     font-style: italic;
-    margin: 0 auto;
+    margin: 2rem auto 0;
+    @include breakpoint-up($breakpoint-desktop) {
+      font-size: clamp(1rem, 9vw, 8rem);
+    }
   }
 
   .name-main {
