@@ -3,6 +3,7 @@ title: "L'Instant Soleana"
 description: "Site présentant les soins et prestations de l'Instant Soleana."
 publishDate: "2026"
 featured: true
+shape: "triangle"
 tags: ["Astro", "SCSS", "HTML", "JavaScript"]
 cover:
   src: "../../assets/projects/Soleana.jpg"

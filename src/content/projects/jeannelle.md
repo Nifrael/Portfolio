@@ -3,6 +3,7 @@ title: "Jeannelle"
 description: "Un site vitrine présentant Jeannelle, un espace bien-être atypique."
 publishDate: "2025"
 featured: true
+shape: "circle"
 tags: ["Astro", "TypeScript", "Sass"]
 cover:
   src: "../../assets/projects/Jeannelle.jpg"
