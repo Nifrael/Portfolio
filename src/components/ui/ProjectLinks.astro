@@ -1,0 +1,84 @@
+---
+import type { CollectionEntry } from "astro:content";
+import Github from "@assets/icons/Github.svg";
+import ExternalLink from "@assets/icons/ExternalLink.svg";
+
+/**
+ * ProjectLinks — Icônes vers le dépôt GitHub et la démo en ligne d'un projet.
+ * Ne rend rien si le projet n'a aucun lien.
+ *
+ * @prop {object} [links]  - Liens du projet (frontmatter `links`).
+ * @prop {string} title    - Titre du projet (pour les aria-labels).
+ */
+interface Props {
+  links: CollectionEntry<"projects">["data"]["links"];
+  title: string;
+}
+
+const { links, title } = Astro.props;
+---
+
+{
+  links && (
+    <div class="project-links">
+      {links.repository && (
+        <a
+          href={links.repository}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="project-icon-link"
+          aria-label={`Code source de ${title}`}
+        >
+          <Github />
+        </a>
+      )}
+      {links.live && (
+        <a
+          href={links.live}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="project-icon-link"
+          aria-label={`Démonstration en direct de ${title}`}
+        >
+          <ExternalLink />
+        </a>
+      )}
+    </div>
+  )
+}
+
+<style lang="scss">
+  @use "@styles/config/variables" as *;
+  @use "@styles/config/mixin" as *;
+
+  .project-links {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .project-icon-link {
+    color: var(--text-primary);
+    opacity: 0.6;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      color 0.3s ease,
+      opacity 0.3s ease,
+      transform 0.2s ease;
+
+    // Retour tactile au tap (mobile) et au clic maintenu (desktop)
+    &:active {
+      color: var(--accent-primary);
+      opacity: 1;
+      transition-duration: 0.1s;
+    }
+
+    @include breakpoint-up($breakpoint-desktop) {
+      &:hover {
+        color: var(--accent-primary);
+        opacity: 1;
+        transform: translateY(-2px);
+      }
+    }
+  }
+</style>
