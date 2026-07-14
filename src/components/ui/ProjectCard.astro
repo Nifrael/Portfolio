@@ -1,22 +1,20 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { Image } from "astro:assets";
-import Github from "@assets/icons/Github.svg";
-import ExternalLink from "@assets/icons/ExternalLink.svg";
 import TagList from "@components/ui/TagList.astro";
 import ArrowLink from "@components/ui/ArrowLink.astro";
+import ProjectLinks from "@components/ui/ProjectLinks.astro";
 import CornerAccents from "@components/ui/CornerAccents.astro";
 
 interface Props {
   project: CollectionEntry<"projects">;
-  featured?: boolean;
 }
 
-const { project, featured = false } = Astro.props;
+const { project } = Astro.props;
 const { title, description, tags, cover, links } = project.data;
 ---
 
-<article class={`project-card ${featured ? 'featured' : ''}`}>
+<article class="project-card">
   <CornerAccents />
 
   <div class="project-image-wrapper">
@@ -32,45 +30,13 @@ const { title, description, tags, cover, links } = project.data;
   <div class="project-info">
     <TagList tags={tags} class="project-card-tags" />
 
-    {featured ? (
-      <h3 class="project-card-title">{title}</h3>
-    ) : (
-      <h2 class="project-card-title">{title}</h2>
-    )}
+    <h2 class="project-card-title">{title}</h2>
 
     <p class="project-description">{description}</p>
 
     <div class="project-footer">
       <ArrowLink href={`/projects/${project.id}`}>Détails</ArrowLink>
-
-      {
-        links && (
-          <div class="project-links">
-            {links.repository && (
-              <a
-                href={links.repository}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="project-icon-link"
-                aria-label={`Code source de ${title}`}
-              >
-                <Github />
-              </a>
-            )}
-            {links.live && (
-              <a
-                href={links.live}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="project-icon-link"
-                aria-label={`Démonstration en direct de ${title}`}
-              >
-                <ExternalLink />
-              </a>
-            )}
-          </div>
-        )
-      }
+      <ProjectLinks links={links} title={title} />
     </div>
   </div>
 </article>
@@ -175,61 +141,4 @@ const { title, description, tags, cover, links } = project.data;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
   }
 
-  .project-links {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-  }
-
-  .project-icon-link {
-    color: var(--text-primary);
-    opacity: 0.6;
-    -webkit-tap-highlight-color: transparent;
-    transition:
-      color 0.3s ease,
-      opacity 0.3s ease,
-      transform 0.2s ease;
-
-    // Retour tactile au tap (mobile) et au clic maintenu (desktop)
-    &:active {
-      color: var(--accent-primary);
-      opacity: 1;
-      transition-duration: 0.1s;
-    }
-
-    @include breakpoint-up($breakpoint-desktop) {
-      &:hover {
-        color: var(--accent-primary);
-        opacity: 1;
-        transform: translateY(-2px);
-      }
-    }
-  }
-
-  // Styles spécifiques pour la version "Featured" (horizontale)
-  .project-card.featured {
-    @include breakpoint-up($breakpoint-tablet) {
-      width: 80%;
-      max-height: 70vh;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 2fr 3fr;
-    }
-
-    @include breakpoint-up($breakpoint-desktop) {
-      &:hover {
-        .project-image {
-          transform: scale(1.01);
-        }
-      }
-    }
-
-    .project-image-wrapper {
-      @include breakpoint-up($breakpoint-tablet) {
-        aspect-ratio: auto;
-        height: 100%;
-        border-bottom: none;
-      }
-    }
-  }
 </style>
