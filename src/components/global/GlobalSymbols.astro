@@ -32,7 +32,11 @@ import GlassSymbol from "@components/ui/GlassSymbol.astro";
     pointer-events: none;
     z-index: -1;
 
+    // La taille du glyphe se pilote via --symbol-size (héritée par l'enfant),
+    // sans percer l'encapsulation du composant GlassSymbol.
     :global(.sym-triangle) {
+      --symbol-size: 2rem;
+
       position: absolute;
       top: -2rem;
       left: -4rem;
@@ -41,21 +45,19 @@ import GlassSymbol from "@components/ui/GlassSymbol.astro";
       transform: rotate(12deg);
       opacity: 0.35;
       animation: float 18s ease-in-out infinite;
-      span {
-        font-size: 7rem;
-      }
 
       @include breakpoint-up($breakpoint-desktop) {
+        --symbol-size: 9rem;
+
         width: 20rem;
         height: 20rem;
         left: -5rem;
-        span {
-          font-size: 9rem;
-        }
       }
     }
 
     :global(.sym-circle) {
+      --symbol-size: 2rem;
+
       position: absolute;
       top: 50%;
       right: -6rem;
@@ -64,21 +66,19 @@ import GlassSymbol from "@components/ui/GlassSymbol.astro";
       transform: translateY(-50%) rotate(-12deg);
       opacity: 0.25;
       animation: float 12s ease-in-out infinite;
-      span {
-        font-size: 10rem;
-      }
 
       @include breakpoint-up($breakpoint-desktop) {
+        --symbol-size: 12rem;
+
         width: 24rem;
         height: 24rem;
         right: -8rem;
-        span {
-          font-size: 12rem;
-        }
       }
     }
 
     :global(.sym-cross) {
+      --symbol-size: 2rem;
+
       position: absolute;
       bottom: -4rem;
       left: 25%;
@@ -87,20 +87,18 @@ import GlassSymbol from "@components/ui/GlassSymbol.astro";
       transform: rotate(45deg);
       opacity: 0.35;
       animation: float 8s ease-in-out infinite;
-      span {
-        font-size: 5rem;
-      }
 
       @include breakpoint-up($breakpoint-desktop) {
+        --symbol-size: 8rem;
+
         width: 16rem;
         height: 16rem;
-        span {
-          font-size: 8rem;
-        }
       }
     }
 
     :global(.sym-square) {
+      --symbol-size: 2rem;
+
       position: absolute;
       top: 5rem;
       right: 25%;
@@ -109,16 +107,12 @@ import GlassSymbol from "@components/ui/GlassSymbol.astro";
       transform: rotate(-6deg);
       opacity: 0.15;
       animation: float 12s ease-in-out infinite -4s;
-      span {
-        font-size: 4rem;
-      }
 
       @include breakpoint-up($breakpoint-desktop) {
+        --symbol-size: 6rem;
+
         width: 10rem;
         height: 10rem;
-        span {
-          font-size: 6rem;
-        }
       }
     }
   }

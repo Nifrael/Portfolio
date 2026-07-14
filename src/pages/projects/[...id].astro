@@ -2,6 +2,13 @@
 import Layout from '@layouts/Layout.astro';
 import { getCollection, render } from 'astro:content';
 import { Image } from 'astro:assets';
+import Github from '@assets/icons/Github.svg';
+import ExternalLink from '@assets/icons/ExternalLink.svg';
+import TagList from '@components/ui/TagList.astro';
+import ArrowLink from '@components/ui/ArrowLink.astro';
+import CtaButton from '@components/ui/CtaButton.astro';
+import CornerAccents from '@components/ui/CornerAccents.astro';
+import { formatMonthYear } from '@utils/date';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
@@ -15,28 +22,19 @@ const { project } = Astro.props;
 const { title, description, tags, cover, links, publishDate } = project.data;
 const { Content } = await render(project);
 
-const formattedDate = new Intl.DateTimeFormat('fr-FR', {
-  year: 'numeric',
-  month: 'long',
-}).format(publishDate);
+const formattedDate = formatMonthYear(publishDate);
 ---
 
-<Layout>
+<Layout title={`${title} — NifraDev`} description={description}>
   <article class="project-detail-page">
     <div class="container">
       <header class="project-header">
         <nav class="breadcrumb" aria-label="Fil d'ariane">
-          <a href="/projects" class="back-link">
-            <span class="arrow">←</span> Tous les projets
-          </a>
+          <ArrowLink href="/projects" direction="left" muted>Tous les projets</ArrowLink>
         </nav>
 
         <div class="title-section">
-          <div class="project-tags">
-            {tags.map((tag) => (
-              <span class="tag">{tag}</span>
-            ))}
-          </div>
+          <TagList tags={tags} />
           <h1 class="project-title">{title}</h1>
           <p class="project-meta">Réalisé en {formattedDate}</p>
         </div>
@@ -51,9 +49,10 @@ const formattedDate = new Intl.DateTimeFormat('fr-FR', {
               width={1200}
               height={675}
               class="hero-image"
+              loading="eager"
+              fetchpriority="high"
             />
-            <span class="corner corner-tr" aria-hidden="true"></span>
-            <span class="corner corner-bl" aria-hidden="true"></span>
+            <CornerAccents />
           </div>
 
           <div class="markdown-content">
@@ -65,27 +64,29 @@ const formattedDate = new Intl.DateTimeFormat('fr-FR', {
           <div class="sidebar-widget">
             <h2 class="widget-title">En résumé</h2>
             <p class="project-excerpt">{description}</p>
-            
+
             {links && (
               <div class="project-actions">
                 {links.live && (
-                  <a href={links.live} target="_blank" rel="noopener noreferrer" class="btn-primary">
-                    Démonstration
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="icon-external"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                  </a>
+                  <CtaButton href={links.live} label="Démonstration" external>
+                    <ExternalLink slot="icon" width={16} height={16} />
+                  </CtaButton>
                 )}
                 {links.repository && (
-                  <a href={links.repository} target="_blank" rel="noopener noreferrer" class="btn-secondary">
-                    Code source
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="icon-github"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
-                  </a>
+                  <CtaButton
+                    href={links.repository}
+                    label="Code source"
+                    variant="outline"
+                    external
+                  >
+                    <Github slot="icon" width={16} height={16} />
+                  </CtaButton>
                 )}
               </div>
             )}
           </div>
-          
-          <span class="corner corner-tr" aria-hidden="true"></span>
-          <span class="corner corner-bl" aria-hidden="true"></span>
+
+          <CornerAccents />
         </aside>
       </div>
     </div>
@@ -119,58 +120,14 @@ const formattedDate = new Intl.DateTimeFormat('fr-FR', {
     margin-bottom: 4rem;
   }
 
-  .back-link {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-family: var(--font-body);
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    text-decoration: none;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    opacity: 0.6;
-    transition: opacity 0.3s ease, color 0.3s ease;
+  .breadcrumb {
     margin-bottom: 2rem;
-
-    .arrow {
-      transition: transform 0.3s ease;
-    }
-
-    &:hover {
-      opacity: 1;
-      color: var(--accent-primary);
-
-      .arrow {
-        transform: translateX(-4px);
-      }
-    }
   }
 
   .title-section {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-  }
-
-  .project-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .tag {
-    font-family: var(--font-body);
-    font-size: 0.65rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--accent-primary);
-    background: rgba(0, 229, 239, 0.06);
-    padding: 0.25rem 0.65rem;
-    border-radius: 0.25rem;
-    border: 1px solid rgba(0, 229, 239, 0.1);
   }
 
   .project-title {
@@ -218,6 +175,8 @@ const formattedDate = new Intl.DateTimeFormat('fr-FR', {
     object-fit: cover;
   }
 
+  // :global() est requis : le HTML rendu par <Content /> ne porte pas
+  // l'attribut de scope Astro, les sélecteurs scopés ne le matchent jamais.
   .markdown-content {
     color: var(--text-primary);
     font-family: var(--font-body);
@@ -225,7 +184,7 @@ const formattedDate = new Intl.DateTimeFormat('fr-FR', {
     line-height: 1.8;
     opacity: 0.85;
 
-    h2 {
+    :global(h2) {
       font-family: var(--font-title);
       font-size: 1.8rem;
       font-style: italic;
@@ -235,7 +194,7 @@ const formattedDate = new Intl.DateTimeFormat('fr-FR', {
       padding-bottom: 0.5rem;
     }
 
-    h3 {
+    :global(h3) {
       font-family: var(--font-title);
       font-size: 1.3rem;
       font-style: italic;
@@ -243,20 +202,21 @@ const formattedDate = new Intl.DateTimeFormat('fr-FR', {
       margin: 2rem 0 1rem;
     }
 
-    p {
+    :global(p) {
       margin-bottom: 1.5rem;
     }
 
-    ul, ol {
+    :global(ul),
+    :global(ol) {
       margin-bottom: 2rem;
       padding-left: 1.5rem;
     }
 
-    li {
+    :global(li) {
       margin-bottom: 0.5rem;
     }
 
-    code {
+    :global(code) {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.08);
       padding: 0.2rem 0.4rem;
@@ -295,74 +255,5 @@ const formattedDate = new Intl.DateTimeFormat('fr-FR', {
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
-  }
-
-  .btn-primary {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-    padding: 1rem 1.5rem;
-    background: var(--accent-primary);
-    border: 1px solid var(--accent-primary);
-    color: var(--bg-base);
-    font-family: var(--font-body);
-    font-weight: 900;
-    font-size: 0.8rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    text-decoration: none;
-    box-shadow: 0 0 15px rgba(0, 229, 239, 0.3);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 25px rgba(0, 229, 239, 0.5);
-    }
-  }
-
-  .btn-secondary {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-    padding: 1rem 1.5rem;
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: var(--text-primary);
-    font-family: var(--font-body);
-    font-weight: 700;
-    font-size: 0.8rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    text-decoration: none;
-    transition: border-color 0.3s ease, color 0.3s ease;
-
-    &:hover {
-      border-color: var(--text-primary);
-      color: var(--accent-primary);
-    }
-  }
-
-  // Corners
-  .corner {
-    position: absolute;
-    width: 0.5rem;
-    height: 0.5rem;
-    pointer-events: none;
-
-    &-tr {
-      top: -1px;
-      right: -1px;
-      border-top: 2px solid var(--text-primary);
-      border-right: 2px solid var(--text-primary);
-    }
-
-    &-bl {
-      bottom: -1px;
-      left: -1px;
-      border-bottom: 2px solid var(--text-primary);
-      border-left: 2px solid var(--text-primary);
-    }
   }
 </style>

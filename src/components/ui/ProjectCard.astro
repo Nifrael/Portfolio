@@ -3,6 +3,9 @@ import type { CollectionEntry } from "astro:content";
 import { Image } from "astro:assets";
 import Github from "@assets/icons/Github.svg";
 import ExternalLink from "@assets/icons/ExternalLink.svg";
+import TagList from "@components/ui/TagList.astro";
+import ArrowLink from "@components/ui/ArrowLink.astro";
+import CornerAccents from "@components/ui/CornerAccents.astro";
 
 interface Props {
   project: CollectionEntry<"projects">;
@@ -14,6 +17,8 @@ const { title, description, tags, cover, links } = project.data;
 ---
 
 <article class={`project-card ${featured ? 'featured' : ''}`}>
+  <CornerAccents />
+
   <div class="project-image-wrapper">
     <Image
       src={cover.src}
@@ -25,23 +30,18 @@ const { title, description, tags, cover, links } = project.data;
   </div>
 
   <div class="project-info">
-    <div class="project-tags">
-      {tags.map((tag) => <span class="tag">{tag}</span>)}
-    </div>
+    <TagList tags={tags} class="project-card-tags" />
 
     {featured ? (
       <h3 class="project-card-title">{title}</h3>
     ) : (
       <h2 class="project-card-title">{title}</h2>
     )}
-    
+
     <p class="project-description">{description}</p>
 
     <div class="project-footer">
-      <a href={`/projects/${project.id}`} class="project-details-link">
-        Détails
-        <span class="arrow" aria-hidden="true">→</span>
-      </a>
+      <ArrowLink href={`/projects/${project.id}`}>Détails</ArrowLink>
 
       {
         links && (
@@ -92,31 +92,6 @@ const { title, description, tags, cover, links } = project.data;
       transform 0.3s ease,
       box-shadow 0.3s ease;
 
-    // Coins décoratifs
-    &::before,
-    &::after {
-      content: "";
-      position: absolute;
-      width: 0.5rem;
-      height: 0.5rem;
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    &::before {
-      top: -1px;
-      right: -1px;
-      border-top: 2px solid var(--text-primary);
-      border-right: 2px solid var(--text-primary);
-    }
-
-    &::after {
-      bottom: -1px;
-      left: -1px;
-      border-bottom: 2px solid var(--text-primary);
-      border-left: 2px solid var(--text-primary);
-    }
-
     &:hover {
       border-color: rgba(0, 229, 239, 0.3);
       transform: translateY(-4px);
@@ -164,24 +139,10 @@ const { title, description, tags, cover, links } = project.data;
     flex-grow: 1;
   }
 
-  .project-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+  // :global() requis : la classe est portée par le composant enfant TagList,
+  // qui ne reçoit pas l'attribut de scope de ce composant.
+  .project-info :global(.project-card-tags) {
     margin-bottom: 1rem;
-  }
-
-  .tag {
-    font-family: var(--font-body);
-    font-size: 0.65rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--accent-primary);
-    background: rgba(0, 229, 239, 0.06);
-    padding: 0.25rem 0.65rem;
-    border-radius: 0.25rem;
-    border: 1px solid rgba(0, 229, 239, 0.1);
   }
 
   .project-card-title {
@@ -210,32 +171,6 @@ const { title, description, tags, cover, links } = project.data;
     margin-top: auto;
     padding-top: 1.5rem;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
-  }
-
-  .project-details-link {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-family: var(--font-body);
-    font-weight: 700;
-    font-size: 0.8rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-primary);
-    text-decoration: none;
-    transition: color 0.3s ease;
-
-    .arrow {
-      transition: transform 0.3s ease;
-    }
-
-    &:hover {
-      color: var(--accent-primary);
-
-      .arrow {
-        transform: translateX(4px);
-      }
-    }
   }
 
   .project-links {

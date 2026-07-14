@@ -12,7 +12,7 @@ interface Props {
 
 const { status = "available", class: className } = Astro.props;
 
-const labelMap: Record<string, string> = {
+const labelMap: Record<NonNullable<Props["status"]>, string> = {
   available: "Disponible",
   unavailable: "Indisponible",
 };

@@ -1,0 +1,5 @@
+# TODO: remplacer par l'URL de production réelle avant le déploiement
+User-agent: *
+Allow: /
+
+Sitemap: https://www.nifradev.fr/sitemap-index.xml

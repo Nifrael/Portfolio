@@ -1,4 +1,13 @@
 ---
+/**
+ * GlassSymbol — Symbole décoratif sur fond verre dépoli.
+ *
+ * La taille du glyphe se règle via la custom property `--symbol-size`
+ * (défaut : 2rem), le positionnement est laissé au parent.
+ *
+ * @prop {string} symbol   - Caractère affiché.
+ * @prop {string} [class]  - Classes CSS additionnelles.
+ */
 interface Props {
   symbol: string;
   class?: string;
@@ -21,7 +30,7 @@ const { symbol, class: className } = Astro.props;
 
     span {
       font-family: var(--font-body);
-      font-size: 2rem;
+      font-size: var(--symbol-size, 2rem);
       color: rgba(255, 255, 255, 0.3);
     }
   }

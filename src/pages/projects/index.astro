@@ -1,23 +1,22 @@
 ---
 import Layout from '@layouts/Layout.astro';
-import { getCollection } from 'astro:content';
 import ProjectCard from '@components/ui/ProjectCard.astro';
+import SectionTitle from '@components/ui/SectionTitle.astro';
+import ArrowLink from '@components/ui/ArrowLink.astro';
+import { getSortedProjects } from '@utils/projects';
 
-const projects = await getCollection('projects');
-const sortedProjects = projects.sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
+const sortedProjects = await getSortedProjects();
 ---
 
-<Layout>
+<Layout
+  title="Mes projets — NifraDev"
+  description="L'ensemble des travaux de Julien Marchand en architecture web et développement full-stack."
+>
   <div class="projects-page">
     <div class="container">
       <header class="page-header">
-        <a href="/" class="back-home-link">
-          <span class="arrow">←</span> Retour à l'accueil
-        </a>
-        <h1 class="page-title">
-          <span class="title-outline">MES</span>
-          <span class="title-main">PROJETS</span>
-        </h1>
+        <ArrowLink href="/" direction="left" muted>Retour à l'accueil</ArrowLink>
+        <SectionTitle as="h1" outline="MES" main="PROJETS" />
         <p class="page-subtitle">
           Découvrez l'ensemble de mes travaux en architecture web et développement full-stack.
         </p>
@@ -58,64 +57,13 @@ const sortedProjects = projects.sort((a, b) => b.data.publishDate.valueOf() - a.
   }
 
   .page-header {
+    --title-size: clamp(2.5rem, 8vw, 5rem);
+
     margin-bottom: 5rem;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 1.5rem;
-  }
-
-  .back-home-link {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-family: var(--font-body);
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    text-decoration: none;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    opacity: 0.6;
-    transition: opacity 0.3s ease, color 0.3s ease;
-
-    .arrow {
-      transition: transform 0.3s ease;
-    }
-
-    &:hover {
-      opacity: 1;
-      color: var(--accent-primary);
-
-      .arrow {
-        transform: translateX(-4px);
-      }
-    }
-  }
-
-  .page-title {
-    font-family: var(--font-title);
-    font-size: clamp(2.5rem, 8vw, 5rem);
-    font-weight: 700;
-    line-height: 0.9;
-    font-style: italic;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    letter-spacing: -0.02em;
-  }
-
-  .title-outline {
-    -webkit-text-stroke: 1.5px var(--accent-primary);
-    color: transparent;
-  }
-
-  .title-main {
-    background: linear-gradient(to right, var(--text-primary), var(--accent-primary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    color: transparent;
   }
 
   .page-subtitle {

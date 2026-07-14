@@ -3,40 +3,33 @@ import { Image } from "astro:assets";
 import Julien from "@assets/images/Julien.jpg";
 ---
 
-<div class="image-side">
-  <div class="hero-image-container">
-    <Image src={Julien} alt="Photo de Julien Marchand" class="triangle-image" />
+<div class="hero-image-container">
+  <Image
+    src={Julien}
+    alt="Photo de Julien Marchand"
+    class="triangle-image"
+    loading="eager"
+    fetchpriority="high"
+  />
 
-    <svg
-      class="triangle-border"
-      viewBox="0 0 100 100"
-      preserveAspectRatio="none"
-      aria-hidden="true"
-    >
-      <defs>
-        <linearGradient id="neon-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="var(--accent-primary)"></stop>
-        </linearGradient>
-      </defs>
-      <polygon
-        points="100,0 0,51 65,100"
-        fill="none"
-        stroke="url(#neon-gradient)"
-        stroke-width="2.5"
-        vector-effect="non-scaling-stroke"></polygon>
-    </svg>
-  </div>
+  <svg
+    class="triangle-border"
+    viewBox="0 0 100 100"
+    preserveAspectRatio="none"
+    aria-hidden="true"
+  >
+    <polygon
+      points="100,0 0,51 65,100"
+      fill="none"
+      stroke="var(--accent-primary)"
+      stroke-width="2.5"
+      vector-effect="non-scaling-stroke"></polygon>
+  </svg>
 </div>
 
 <style lang="scss">
   @use "@styles/config/mixin" as *;
   @use "@styles/config/variables" as *;
-
-  .image-side {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
 
   .hero-image-container {
     position: relative;

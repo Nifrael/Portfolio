@@ -60,7 +60,7 @@ graph TD
 ### 🧱 Zoom sur les Choix Structurants
 
 - **Architecture d'Îles (Islands)** : L'interactivité JavaScript n'est activée que là où elle apporte une réelle valeur. Le reste du site est compilé en HTML statique ultra-léger lors du build.
-- **Content Collections & Zod** : Chaque projet (comme [L'Instant Soleana](https://www.linstant-soleana.fr/) ou la [Plateforme E-Commerce](https://demo-ecommerce.nifradev.fr)) dispose de métadonnées rigoureusement validées par schéma (tags, URLs, images). Si un projet manque d'une information cruciale, le build échoue immédiatement. Pas de mauvaise surprise en production.
+- **Content Collections & Zod** : Chaque projet (comme [L'Instant Soleana](https://www.linstant-soleana.fr/) ou [Jeannelle](https://www.jeannelle.me/)) dispose de métadonnées rigoureusement validées par schéma (tags, URLs, images). Si un projet manque d'une information cruciale, le build échoue immédiatement. Pas de mauvaise surprise en production.
 - **Design System Modulaire** : Construit en SCSS via `@styles/config/variables` et `_mixin.scss` pour des grilles fluides, une typographie proportionnelle et un support natif du mode sombre.
 
 ---
@@ -83,7 +83,7 @@ La qualité d'un site web ne se mesure pas seulement à ce que l'on voit, mais �
 
 - **Score Lighthouse parfait (100/100)** : Optimisation agressive des images via le service d'images Astro (génération automatique des formats `.webp` et `.avif`), minification des assets et pré-chargement des routes.
 - **Accessibilité (A11y)** : Conforme WCAG 2.1 AA. Le site est entièrement navigable au clavier avec des indicateurs de focus soignés, des balises ARIA là où c'est nécessaire et des contrastes de couleurs validés pour les personnes malvoyantes.
-- **Sécurité et Éco-conception** : Zéro secret exposé (protection stricte avec variables d'environnement), implémentation de règles de Content Security Policy (CSP), et une empreinte carbone minimale grâce à un poids de page réduit au strict minimum.
+- **Sécurité et Éco-conception** : Zéro secret exposé (protection stricte avec variables d'environnement) et une empreinte carbone minimale grâce à un poids de page réduit au strict minimum.
 
 ---
 

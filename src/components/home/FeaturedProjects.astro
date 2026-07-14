@@ -1,19 +1,24 @@
 ---
-import { getCollection } from "astro:content";
 import ProjectCard from "@components/ui/ProjectCard.astro";
+import SectionTitle from "@components/ui/SectionTitle.astro";
+import CtaButton from "@components/ui/CtaButton.astro";
+import type { Project } from "@utils/projects";
 
-const projects = await getCollection("projects");
-const featuredProjects = projects
-  .filter((project) => project.data.featured)
-  .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
+/**
+ * FeaturedProjects — Section des projets mis en avant sur la page d'accueil.
+ *
+ * @prop {Project[]} projects - Projets à afficher (fournis par la page).
+ */
+interface Props {
+  projects: Project[];
+}
+
+const { projects } = Astro.props;
 ---
 
 <section class="featured-projects" id="projets" aria-label="Projets phares">
   <div class="section-header">
-    <h2 class="section-title">
-      <span class="title-outline">QUELQUES</span>
-      <span class="title-main">PROJETS</span>
-    </h2>
+    <SectionTitle outline="QUELQUES" main="PROJETS" class="reveal-title" />
     <p class="section-subtitle">
       Sélection de réalisations techniques axées sur la performance et
       l'architecture logicielle.
@@ -21,17 +26,17 @@ const featuredProjects = projects
   </div>
 
   <div class="projects-grid">
-    {
-      featuredProjects.map((project) => (
-        <ProjectCard project={project} featured={true} />
-      ))
-    }
+    {projects.map((project) => <ProjectCard project={project} featured={true} />)}
   </div>
 
-  <a href="/projects" class="btn-all-projects">
-    Voir tous les projets
-    <span class="arrow" aria-hidden="true">→</span>
-  </a>
+  <div class="all-projects">
+    <CtaButton
+      href="/projects"
+      label="Voir tous les projets"
+      variant="outline"
+      arrow
+    />
+  </div>
 </section>
 
 <style lang="scss">
@@ -64,35 +69,6 @@ const featuredProjects = projects
     }
   }
 
-  .section-title {
-    font-family: var(--font-title);
-    font-size: clamp(2rem, 6vw, 4rem);
-    font-weight: 700;
-    line-height: 0.9;
-    font-style: italic;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    letter-spacing: -0.02em;
-  }
-
-  .title-outline {
-    -webkit-text-stroke: 1.5px var(--accent-primary);
-    color: transparent;
-  }
-
-  .title-main {
-    background: linear-gradient(
-      to right,
-      var(--text-primary),
-      var(--accent-primary)
-    );
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    color: transparent;
-  }
-
   .section-subtitle {
     color: var(--text-primary);
     font-size: 1rem;
@@ -109,44 +85,10 @@ const featuredProjects = projects
     gap: 3rem;
   }
 
-  .btn-all-projects {
-    position: relative;
+  .all-projects {
     display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 1rem 2rem;
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: var(--text-primary);
-    font-family: var(--font-body);
-    font-weight: 700;
-    font-size: 0.8rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    text-decoration: none;
-    transition:
-      border-color 0.3s ease,
-      color 0.3s ease,
-      background-color 0.3s ease;
-
-    // Centrage et espacement sans div parente
-    width: fit-content;
-    margin: 5rem auto 0;
-
-    .arrow {
-      transition: transform 0.3s ease;
-    }
-
-    &:hover {
-      border-color: var(--accent-primary);
-      color: var(--bg-base);
-      background-color: var(--accent-primary);
-      box-shadow: 0 0 20px rgba(0, 229, 239, 0.3);
-
-      .arrow {
-        transform: translateX(4px);
-      }
-    }
+    justify-content: center;
+    margin-top: 5rem;
   }
 
   @keyframes reveal-blur {
@@ -163,7 +105,9 @@ const featuredProjects = projects
   }
 
   @supports (animation-timeline: view()) {
-    .section-title {
+    // :global() requis : la classe est portée par le composant enfant
+    // SectionTitle, qui ne reçoit pas l'attribut de scope de ce composant.
+    .section-header :global(.reveal-title) {
       animation: reveal-blur both;
       animation-timeline: view();
       animation-range: entry 10% cover 40%;

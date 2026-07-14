@@ -1,24 +1,48 @@
 ---
+import CornerAccents from "@components/ui/CornerAccents.astro";
+
 /**
- * CtaButton — Bouton d'appel à l'action avec coins décoratifs.
+ * CtaButton — Bouton d'appel à l'action unifié.
  *
- * @prop {string} href   - URL de destination du lien.
- * @prop {string} label  - Texte affiché dans le bouton.
- * @prop {string} [class] - Classes CSS additionnelles.
+ * @prop {string} href                        - URL de destination du lien.
+ * @prop {string} label                       - Texte affiché dans le bouton.
+ * @prop {"solid" | "outline"} [variant]      - Style du bouton (défaut : "solid").
+ * @prop {boolean} [external]                 - Ouvre dans un nouvel onglet (target/rel).
+ * @prop {boolean} [corners]                  - Affiche les coins décoratifs.
+ * @prop {boolean} [arrow]                    - Affiche une flèche animée au survol.
+ * @prop {string} [class]                     - Classes CSS additionnelles.
+ * @slot icon                                 - Icône affichée après le libellé.
  */
 interface Props {
   href: string;
   label: string;
+  variant?: "solid" | "outline";
+  external?: boolean;
+  corners?: boolean;
+  arrow?: boolean;
   class?: string;
 }
 
-const { href, label, class: className } = Astro.props;
+const {
+  href,
+  label,
+  variant = "solid",
+  external = false,
+  corners = false,
+  arrow = false,
+  class: className,
+} = Astro.props;
+
+const externalAttrs = external
+  ? { target: "_blank", rel: "noopener noreferrer" }
+  : {};
 ---
 
-<a href={href} class:list={["cta", className]}>
+<a href={href} class:list={["cta", `cta--${variant}`, className]} {...externalAttrs}>
   {label}
-  <span class="corner corner-tr" aria-hidden="true"></span>
-  <span class="corner corner-bl" aria-hidden="true"></span>
+  <slot name="icon" />
+  {arrow && <span class="arrow" aria-hidden="true">→</span>}
+  {corners && <CornerAccents />}
 </a>
 
 <style lang="scss">
@@ -26,27 +50,43 @@ const { href, label, class: className } = Astro.props;
   @use "@styles/config/mixin" as *;
 
   .cta {
+    --corner-offset: -0.25rem;
+
     position: relative;
-    padding: 0.5rem 1rem;
-    background: var(--accent-primary);
-    color: var(--bg-base);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
     font-family: var(--font-body);
-    font-weight: 900;
+    font-weight: 700;
     font-size: 0.8rem;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
     text-decoration: none;
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease,
+      border-color 0.3s ease,
+      color 0.3s ease,
+      background-color 0.3s ease;
+
+    .arrow {
+      transition: transform 0.3s ease;
+    }
+  }
+
+  .cta--solid {
+    background: var(--accent-primary);
+    border: 1px solid var(--accent-primary);
+    color: var(--bg-base);
     box-shadow:
       0 0 15px rgba(0, 229, 239, 0.4),
       0 0 40px rgba(0, 229, 239, 0.2);
-    transition:
-      transform 0.3s ease,
-      box-shadow 0.3s ease;
 
-    @include breakpoint-up($breakpoint-desktop) {
-      padding: 1rem 1.5rem;
+    @media (hover: hover) {
       &:hover {
-        transform: scale(1.05);
+        transform: translateY(-2px);
         box-shadow:
           0 0 25px rgba(0, 229, 239, 0.6),
           0 0 60px rgba(0, 229, 239, 0.3);
@@ -54,23 +94,22 @@ const { href, label, class: className } = Astro.props;
     }
   }
 
-  .corner {
-    position: absolute;
-    width: 0.5rem;
-    height: 0.5rem;
+  .cta--outline {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
 
-    &-tr {
-      top: -0.25rem;
-      right: -0.25rem;
-      border-top: 2px solid var(--text-primary);
-      border-right: 2px solid var(--text-primary);
-    }
+    @media (hover: hover) {
+      &:hover {
+        border-color: var(--accent-primary);
+        background-color: var(--accent-primary);
+        color: var(--bg-base);
+        box-shadow: 0 0 20px rgba(0, 229, 239, 0.3);
 
-    &-bl {
-      bottom: -0.25rem;
-      left: -0.25rem;
-      border-bottom: 2px solid var(--text-primary);
-      border-left: 2px solid var(--text-primary);
+        .arrow {
+          transform: translateX(4px);
+        }
+      }
     }
   }
 </style>

@@ -2,9 +2,16 @@
 import Layout from '@layouts/Layout.astro';
 import Hero from '@components/home/Hero.astro';
 import FeaturedProjects from '@components/home/FeaturedProjects.astro';
+import { getFeaturedProjects } from '@utils/projects';
+
+const featuredProjects = await getFeaturedProjects();
 ---
 
-<Layout fullBleed>
+<Layout
+	fullBleed
+	title="Julien Marchand — Développeur web full-stack | NifraDev"
+	description="Portfolio de Julien Marchand, développeur web full-stack : projets et réalisations axés sur la performance, l'accessibilité et l'architecture web."
+>
 	<Hero />
-	<FeaturedProjects />
+	<FeaturedProjects projects={featuredProjects} />
 </Layout>

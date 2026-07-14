@@ -20,10 +20,11 @@ import CtaButton from "@components/ui/CtaButton.astro";
 
       <AvailabilityBadge status="available" />
     </div>
-    <HeroPortrait />
+    <div class="portrait-area">
+      <HeroPortrait />
+    </div>
     <div class="actions">
-      <CtaButton href="#projets" label="Projets" />
-      <CtaButton href="#projets" label="Parcours" />
+      <CtaButton href="/#projets" label="Projets" corners />
     </div>
   </div>
 </section>
@@ -135,7 +136,11 @@ import CtaButton from "@components/ui/CtaButton.astro";
     }
   }
 
-  .image-side {
+  .portrait-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     @include breakpoint-up($breakpoint-desktop) {
       grid-column: 2;
       grid-row: 1 / -1;
