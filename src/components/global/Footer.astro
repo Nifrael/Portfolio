@@ -50,8 +50,10 @@ const currentYear = new Date().getFullYear();
     color: var(--text-primary);
     transition: color 0.4s ease;
 
-    &:hover {
-      color: var(--accent-primary);
+    @include breakpoint-up($breakpoint-desktop) {
+      &:hover {
+        color: var(--accent-primary);
+      }
     }
   }
 

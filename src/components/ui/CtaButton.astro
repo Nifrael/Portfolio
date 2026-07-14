@@ -38,10 +38,20 @@ const externalAttrs = external
   : {};
 ---
 
-<a href={href} class:list={["cta", `cta--${variant}`, className]} {...externalAttrs}>
+<a
+  href={href}
+  class:list={["cta", `cta--${variant}`, className]}
+  {...externalAttrs}
+>
   {label}
   <slot name="icon" />
-  {arrow && <span class="arrow" aria-hidden="true">→</span>}
+  {
+    arrow && (
+      <span class="arrow" aria-hidden="true">
+        →
+      </span>
+    )
+  }
   {corners && <CornerAccents />}
 </a>
 
@@ -57,13 +67,14 @@ const externalAttrs = external
     align-items: center;
     justify-content: center;
     gap: 0.75rem;
-    padding: 1rem 1.5rem;
+    padding: 1rem 1rem;
     font-family: var(--font-body);
     font-weight: 700;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     letter-spacing: 0.15em;
     text-transform: uppercase;
     text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
     transition:
       transform 0.3s ease,
       box-shadow 0.3s ease,
@@ -84,7 +95,13 @@ const externalAttrs = external
       0 0 15px rgba(0, 229, 239, 0.4),
       0 0 40px rgba(0, 229, 239, 0.2);
 
-    @media (hover: hover) {
+    // Retour tactile au tap (mobile) et au clic maintenu (desktop)
+    &:active {
+      transform: scale(0.97);
+      transition-duration: 0.1s;
+    }
+
+    @include breakpoint-up($breakpoint-desktop) {
       &:hover {
         transform: translateY(-2px);
         box-shadow:
@@ -99,7 +116,19 @@ const externalAttrs = external
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: var(--text-primary);
 
-    @media (hover: hover) {
+    // Retour tactile au tap : même rendu que le hover desktop
+    &:active {
+      border-color: var(--accent-primary);
+      background-color: var(--accent-primary);
+      color: var(--bg-base);
+      transition-duration: 0.1s;
+
+      .arrow {
+        transform: translateX(4px);
+      }
+    }
+
+    @include breakpoint-up($breakpoint-desktop) {
       &:hover {
         border-color: var(--accent-primary);
         background-color: var(--accent-primary);

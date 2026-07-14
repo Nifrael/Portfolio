@@ -92,17 +92,19 @@ const { title, description, tags, cover, links } = project.data;
       transform 0.3s ease,
       box-shadow 0.3s ease;
 
-    &:hover {
-      border-color: rgba(0, 229, 239, 0.3);
-      transform: translateY(-4px);
-      box-shadow: 0 10px 30px rgba(0, 229, 239, 0.05);
+    @include breakpoint-up($breakpoint-desktop) {
+      &:hover {
+        border-color: rgba(0, 229, 239, 0.3);
+        transform: translateY(-4px);
+        box-shadow: 0 10px 30px rgba(0, 229, 239, 0.05);
 
-      .project-image {
-        transform: scale(1.02);
-      }
+        .project-image {
+          transform: scale(1.02);
+        }
 
-      .project-image-wrapper::after {
-        opacity: 0.1;
+        .project-image-wrapper::after {
+          opacity: 0.1;
+        }
       }
     }
   }
@@ -182,15 +184,25 @@ const { title, description, tags, cover, links } = project.data;
   .project-icon-link {
     color: var(--text-primary);
     opacity: 0.6;
+    -webkit-tap-highlight-color: transparent;
     transition:
       color 0.3s ease,
       opacity 0.3s ease,
       transform 0.2s ease;
 
-    &:hover {
+    // Retour tactile au tap (mobile) et au clic maintenu (desktop)
+    &:active {
       color: var(--accent-primary);
       opacity: 1;
-      transform: translateY(-2px);
+      transition-duration: 0.1s;
+    }
+
+    @include breakpoint-up($breakpoint-desktop) {
+      &:hover {
+        color: var(--accent-primary);
+        opacity: 1;
+        transform: translateY(-2px);
+      }
     }
   }
 
@@ -202,7 +214,9 @@ const { title, description, tags, cover, links } = project.data;
       margin: 0 auto;
       display: grid;
       grid-template-columns: 2fr 3fr;
+    }
 
+    @include breakpoint-up($breakpoint-desktop) {
       &:hover {
         .project-image {
           transform: scale(1.01);

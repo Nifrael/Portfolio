@@ -18,13 +18,14 @@ import CtaButton from "@components/ui/CtaButton.astro";
         </p>
       </div>
 
-      <AvailabilityBadge status="available" />
+      <!-- <AvailabilityBadge status="available" /> -->
     </div>
     <div class="portrait-area">
       <HeroPortrait />
     </div>
     <div class="actions">
       <CtaButton href="/#projets" label="Projets" corners />
+      <CtaButton href="/#contact" label="Me contacter" corners />
     </div>
   </div>
 </section>
@@ -52,7 +53,7 @@ import CtaButton from "@components/ui/CtaButton.astro";
 
   .content {
     display: grid;
-    grid-template-rows: 35% 55% 10%;
+    grid-template-rows: 30% 55% 15%;
     align-items: center;
     position: relative;
     min-height: 70vh;
@@ -63,7 +64,10 @@ import CtaButton from "@components/ui/CtaButton.astro";
 
     @include breakpoint-up($breakpoint-desktop) {
       grid-template-columns: 1fr 2fr;
-      grid-template-rows: 90% 10%;
+      // Rows au contenu : les actions restent collées sous le bloc texte,
+      // l'ensemble est centré verticalement dans le hero.
+      grid-template-rows: auto auto;
+      align-content: center;
     }
   }
 

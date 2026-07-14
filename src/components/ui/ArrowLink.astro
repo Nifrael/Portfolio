@@ -24,6 +24,9 @@ const { href, direction = "right", muted = false, class: className } = Astro.pro
 </a>
 
 <style lang="scss">
+  @use "@styles/config/variables" as *;
+  @use "@styles/config/mixin" as *;
+
   .arrow-link {
     display: flex;
     align-items: center;
@@ -36,6 +39,7 @@ const { href, direction = "right", muted = false, class: className } = Astro.pro
     text-decoration: none;
     text-transform: uppercase;
     letter-spacing: 0.1em;
+    -webkit-tap-highlight-color: transparent;
     transition:
       opacity 0.3s ease,
       color 0.3s ease;
@@ -44,15 +48,23 @@ const { href, direction = "right", muted = false, class: className } = Astro.pro
       transition: transform 0.3s ease;
     }
 
-    &:hover {
+    // Retour tactile au tap (mobile) et au clic maintenu (desktop)
+    &:active {
       color: var(--accent-primary);
+      transition-duration: 0.1s;
+    }
 
-      .arrow-left {
-        transform: translateX(-4px);
-      }
+    @include breakpoint-up($breakpoint-desktop) {
+      &:hover {
+        color: var(--accent-primary);
 
-      .arrow-right {
-        transform: translateX(4px);
+        .arrow-left {
+          transform: translateX(-4px);
+        }
+
+        .arrow-right {
+          transform: translateX(4px);
+        }
       }
     }
   }
@@ -60,8 +72,15 @@ const { href, direction = "right", muted = false, class: className } = Astro.pro
   .muted {
     opacity: 0.6;
 
-    &:hover {
+    &:active {
       opacity: 1;
+      transition-duration: 0.1s;
+    }
+
+    @include breakpoint-up($breakpoint-desktop) {
+      &:hover {
+        opacity: 1;
+      }
     }
   }
 </style>
