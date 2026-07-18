@@ -13,6 +13,11 @@ export default defineConfig({
   site: "https://www.nifradev.fr",
   integrations: [sitemap()],
   vite: {
+    build: {
+      // safari15 nécessite -webkit-backdrop-filter : force esbuild à émettre
+      // le préfixe au lieu de supprimer l'une des deux déclarations du blur
+      cssTarget: ["chrome100", "firefox100", "safari15"],
+    },
     resolve: {
       alias: {
         "@scripts": new URL("./src/scripts", import.meta.url).pathname,
