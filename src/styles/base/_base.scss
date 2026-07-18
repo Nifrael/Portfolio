@@ -12,7 +12,7 @@ body {
   flex-direction: column;
   margin: 0;
   min-height: 100vh;
-  background-color: var(--bg-base); 
+  background-color: var(--bg-base);
 }
 
 main {
@@ -24,6 +24,12 @@ main {
   }
 }
 
-	.main-full-bleed {
-		padding-top: 0;
-	}
+.main-full-bleed {
+  padding-top: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
