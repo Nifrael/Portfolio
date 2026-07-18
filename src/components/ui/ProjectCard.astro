@@ -35,7 +35,7 @@ const { title, description, tags, cover, links } = project.data;
     <p class="project-description">{description}</p>
 
     <div class="project-footer">
-      <ArrowLink href={`/projects/${project.id}`}>Détails</ArrowLink>
+      <ArrowLink href={`/projets/${project.id}`}>Détails</ArrowLink>
       <ProjectLinks links={links} title={title} />
     </div>
   </div>
@@ -140,5 +140,4 @@ const { title, description, tags, cover, links } = project.data;
     padding-top: 1.5rem;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
   }
-
 </style>

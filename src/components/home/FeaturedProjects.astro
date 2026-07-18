@@ -44,7 +44,7 @@ const { projects } = Astro.props;
 
   <div class="all-projects">
     <CtaButton
-      href="/projects"
+      href="/projets"
       label="Voir tous les projets"
       variant="outline"
       arrow
@@ -62,6 +62,7 @@ const { projects } = Astro.props;
     background: transparent;
     max-width: 95%;
     margin: 0 auto;
+    scroll-margin-top: var(--navbar-offset);
 
     @include breakpoint-up($breakpoint-desktop) {
       padding: 6rem 5rem;
