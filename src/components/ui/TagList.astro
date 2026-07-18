@@ -1,0 +1,65 @@
+---
+/**
+ * TagList — Liste de tags techniques d'un projet.
+ *
+ * Chaque techno connue a sa couleur (mapping ci-dessous, insensible à la
+ * casse) ; un tag inconnu retombe sur le cyan du site.
+ *
+ * @prop {string[]} tags   - Libellés à afficher.
+ * @prop {string} [class]  - Classes CSS additionnelles (espacement géré par le parent).
+ */
+interface Props {
+  tags: string[];
+  class?: string;
+}
+
+const TAG_COLORS: Record<string, string> = {
+  astro: "rgb(168 85 247)", // violet
+  scss: "rgb(244 114 182)", // rose
+  sass: "rgb(244 114 182)", // rose (alias de scss)
+  typescript: "rgb(59 130 246)", // bleu
+  javascript: "rgb(250 204 21)", // jaune
+};
+
+const tagColor = (tag: string): string | undefined =>
+  TAG_COLORS[tag.toLowerCase()];
+
+const { tags, class: className } = Astro.props;
+---
+
+<ul class:list={["tag-list", className]}>
+  {
+    tags.map((tag) => (
+      <li
+        class="tag"
+        style={tagColor(tag) && `--tag-color: ${tagColor(tag)}`}
+      >
+        {tag}
+      </li>
+    ))
+  }
+</ul>
+
+<style lang="scss">
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .tag {
+    font-family: var(--font-body);
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--tag-color, var(--accent-primary));
+    background: rgb(from var(--tag-color, var(--accent-primary)) r g b / 0.06);
+    padding: 0.25rem 0.65rem;
+    border-radius: 0.25rem;
+    border: 1px solid rgb(from var(--tag-color, var(--accent-primary)) r g b / 0.15);
+  }
+</style>

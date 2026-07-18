@@ -1,0 +1,110 @@
+---
+import { Image } from "astro:assets";
+import Julien from "@assets/images/Julien.jpg";
+---
+
+<div class="hero-image-container">
+  <Image
+    src={Julien}
+    alt="Photo de Julien Marchand"
+    class="triangle-image"
+    loading="eager"
+    fetchpriority="high"
+  />
+
+  <svg
+    class="triangle-border"
+    viewBox="0 0 100 100"
+    preserveAspectRatio="none"
+    aria-hidden="true"
+  >
+    <polygon
+      points="100,0 0,51 65,100"
+      fill="none"
+      stroke="var(--accent-primary)"
+      stroke-width="2.5"
+      vector-effect="non-scaling-stroke"></polygon>
+  </svg>
+</div>
+
+<style lang="scss">
+  @use "@styles/config/mixin" as *;
+  @use "@styles/config/variables" as *;
+
+  .hero-image-container {
+    position: relative;
+    width: 75%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .triangle-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    clip-path: polygon(100% 0%, 0% 51%, 65% 100%);
+    transition:
+      transform 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+      filter 0.5s ease;
+    z-index: 2;
+  }
+
+  .triangle-border {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    pointer-events: none;
+    overflow: visible;
+    filter: drop-shadow(0 0 6px var(--accent-primary))
+      drop-shadow(0 0 12px var(--accent-primary));
+    transition:
+      transform 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+      filter 0.5s ease;
+  }
+
+  .hero-image-container::before {
+    content: "";
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    background: linear-gradient(135deg, var(--accent-primary) 0%);
+    clip-path: polygon(-5% 12%, 34% 93%, 112% 49%);
+    filter: blur(25px);
+    opacity: 0.35;
+    transition:
+      opacity 0.5s ease,
+      filter 0.5s ease;
+    z-index: 1;
+
+    @include breakpoint-up($breakpoint-desktop) {
+      clip-path: polygon(25% -15%, 10% 125%, 130% 55%);
+    }
+  }
+
+  @include breakpoint-up($breakpoint-desktop) {
+    .hero-image-container:hover {
+      .triangle-image {
+        transform: scale(1.01) translateY(-5px);
+      }
+
+      .triangle-border {
+        transform: scale(1.01) translateY(-5px);
+        filter: drop-shadow(0 0 12px var(--accent-primary))
+          drop-shadow(0 0 24px var(--accent-primary))
+          drop-shadow(0 0 36px var(--accent-primary));
+      }
+
+      &::before {
+        opacity: 0.65;
+        filter: blur(35px);
+      }
+    }
+  }
+</style>

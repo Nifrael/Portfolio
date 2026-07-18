@@ -1,5 +1,10 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+import { z } from 'astro:schema';
 import { glob } from 'astro/loaders';
+
+/** Symboles géométriques associés aux projets featured (écho aux GlassSymbols). */
+export const PROJECT_SHAPES = ['triangle', 'circle', 'cross', 'square'] as const;
+export type ProjectShape = (typeof PROJECT_SHAPES)[number];
 
 const projects = defineCollection({
   loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: './src/content/projects' }),
@@ -8,6 +13,7 @@ const projects = defineCollection({
     description: z.string().max(250),
     publishDate: z.coerce.date(),
     featured: z.boolean().default(false),
+    shape: z.enum(PROJECT_SHAPES).optional(),
     tags: z.array(z.string()),
     cover: z.object({
       src: image(),

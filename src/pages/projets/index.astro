@@ -1,0 +1,88 @@
+---
+import Layout from "@layouts/Layout.astro";
+import ProjectCard from "@components/ui/ProjectCard.astro";
+import SectionTitle from "@components/ui/SectionTitle.astro";
+import ArrowLink from "@components/ui/ArrowLink.astro";
+import { getSortedProjects } from "@utils/projects";
+
+const sortedProjects = await getSortedProjects();
+---
+
+<Layout
+  title="Mes projets — NifraDev"
+  description="L'ensemble des travaux de Julien Marchand en architecture web et développement full-stack."
+>
+  <div class="projects-page">
+    <div class="container">
+      <header class="page-header">
+        <ArrowLink href="/" direction="left" muted>Retour à l'accueil</ArrowLink
+        >
+        <SectionTitle as="h1" outline="MES" main="PROJETS" />
+        <p class="page-subtitle">
+          Découvrez l'ensemble de mes travaux en architecture web et
+          développement full-stack.
+        </p>
+      </header>
+
+      <div class="projects-grid">
+        {sortedProjects.map((project) => <ProjectCard project={project} />)}
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style lang="scss">
+  @use "@styles/config/variables" as *;
+  @use "@styles/config/mixin" as *;
+
+  .projects-page {
+    position: relative;
+    padding: 8rem 1.5rem 6rem;
+    min-height: 100vh;
+    overflow: hidden;
+
+    @include breakpoint-up($breakpoint-desktop) {
+      padding: 10rem 5rem 8rem;
+    }
+  }
+
+  .container {
+    position: relative;
+    max-width: 80rem;
+    margin: 0 auto;
+    width: 100%;
+    z-index: 10;
+  }
+
+  .page-header {
+    --title-size: clamp(2.5rem, 8vw, 5rem);
+
+    margin-bottom: 5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+
+  .page-subtitle {
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    font-family: var(--font-body);
+    font-weight: 200;
+    max-width: 35rem;
+    line-height: 1.6;
+    margin: 0;
+    opacity: 0.8;
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+
+    @include breakpoint-up($breakpoint-tablet) {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2.5rem;
+    }
+  }
+</style>

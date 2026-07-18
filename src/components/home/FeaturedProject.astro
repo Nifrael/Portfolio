@@ -1,0 +1,276 @@
+---
+import { Image } from "astro:assets";
+import TagList from "@components/ui/TagList.astro";
+import ArrowLink from "@components/ui/ArrowLink.astro";
+import ProjectLinks from "@components/ui/ProjectLinks.astro";
+import type { Project } from "@utils/projects";
+import type { ProjectShape } from "../../content.config";
+
+/**
+ * FeaturedProject — Vitrine éditoriale d'un projet featured, dont le visuel
+ * est associé à l'un des quatre symboles du site (△ ○ × □).
+ *
+ * Le triangle et le cercle découpent le screenshot (clip-path + contour SVG
+ * lumineux, même technique que HeroPortrait). Le carré l'encadre en entier.
+ * La croix ne découpe pas (illisible) : le screenshot reste entier, le
+ * symbole × est posé en badge lumineux qui déborde du cadre.
+ *
+ * @prop {Project} project        - Projet à afficher.
+ * @prop {ProjectShape} shape     - Symbole associé.
+ * @prop {boolean} [reverse]      - Inverse visuel/texte en desktop (zigzag).
+ */
+interface Props {
+  project: Project;
+  shape: ProjectShape;
+  reverse?: boolean;
+}
+
+const { project, shape, reverse = false } = Astro.props;
+const { title, description, tags, cover, links } = project.data;
+---
+
+<article class:list={["featured-project", `shape-${shape}`, { reverse }]}>
+  <div class="visual">
+    <div class="frame">
+      <Image
+        src={cover.src}
+        alt={cover.alt}
+        width={800}
+        height={800}
+        class="cover"
+      />
+
+      {
+        shape === "triangle" && (
+          <svg
+            class="outline"
+            viewBox="0 0 100 100"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            <polygon
+              points="0,0 100,0 50,100"
+              vector-effect="non-scaling-stroke"
+            />
+          </svg>
+        )
+      }
+      {
+        shape === "circle" && (
+          <svg class="outline" viewBox="0 0 100 100" aria-hidden="true">
+            <circle cx="50" cy="50" r="49" vector-effect="non-scaling-stroke" />
+          </svg>
+        )
+      }
+      {
+        shape === "square" && (
+          <svg
+            class="outline"
+            viewBox="0 0 100 100"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            <rect
+              x="1"
+              y="1"
+              width="98"
+              height="98"
+              vector-effect="non-scaling-stroke"
+            />
+          </svg>
+        )
+      }
+      {
+        shape === "cross" && (
+          <svg class="cross-badge" viewBox="0 0 100 100" aria-hidden="true">
+            <path
+              d="M15 15 L85 85 M85 15 L15 85"
+              vector-effect="non-scaling-stroke"
+            />
+          </svg>
+        )
+      }
+    </div>
+  </div>
+
+  <div class="details">
+    <TagList tags={tags} />
+    <h3 class="title">{title}</h3>
+    <p class="description">{description}</p>
+    <div class="details-footer">
+      <ArrowLink href={`/projets/${project.id}`}>Détails</ArrowLink>
+      <ProjectLinks links={links} title={title} />
+    </div>
+  </div>
+</article>
+
+<style lang="scss">
+  @use "@styles/config/variables" as *;
+  @use "@styles/config/mixin" as *;
+
+  .featured-project {
+    display: grid;
+    gap: 2.5rem;
+    align-items: center;
+    width: 100%;
+    max-width: 62rem;
+    margin-inline: auto;
+
+    @include breakpoint-up($breakpoint-desktop) {
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+
+      &.reverse {
+        .visual {
+          order: 2;
+        }
+
+        .details {
+          order: 1;
+        }
+      }
+    }
+  }
+
+  .visual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .frame {
+    position: relative;
+    width: min(100%, 22rem);
+    aspect-ratio: 1;
+    transform: rotate(var(--frame-tilt, 0deg));
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+
+    @include breakpoint-up($breakpoint-desktop) {
+      width: min(100%, 26rem);
+
+      &:hover {
+        transform: rotate(var(--frame-tilt, 0deg)) scale(1.02);
+      }
+    }
+  }
+
+  .cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  // Bordure "néon chaud" : trait épais presque blanc, halo serré blanc
+  // puis halo large cyan (même esprit que la maquette).
+  .outline,
+  .cross-badge {
+    position: absolute;
+    pointer-events: none;
+    overflow: visible;
+    fill: none;
+    stroke: var(--text-primary);
+    stroke-width: 6;
+    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.8))
+      drop-shadow(0 0 14px var(--accent-primary))
+      drop-shadow(0 0 30px var(--accent-primary));
+  }
+
+  .outline {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  // Formes qui découpent le screenshot
+  // Triangle inversé (pointe en bas), légèrement incliné comme la maquette
+  .shape-triangle {
+    --frame-tilt: -8deg;
+
+    .cover {
+      clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+    }
+  }
+
+  .shape-circle .cover {
+    clip-path: circle(49%);
+  }
+
+  // Formes qui gardent le screenshot entier
+  .shape-square .cover,
+  .shape-cross .cover {
+    border: 1px solid var(--border-surface);
+  }
+
+  // La croix est un badge qui déborde du coin du cadre
+  .cross-badge {
+    top: -1.5rem;
+    right: -1.5rem;
+    width: 5rem;
+    height: 5rem;
+
+    @include breakpoint-up($breakpoint-desktop) {
+      top: -2rem;
+      right: -2rem;
+      width: 6.5rem;
+      height: 6.5rem;
+    }
+  }
+
+  .details {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.25rem;
+  }
+
+  .title {
+    font-family: var(--font-title);
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    font-style: italic;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    margin: 0;
+  }
+
+  .description {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--text-primary);
+    opacity: 0.7;
+    max-width: 34rem;
+    margin: 0;
+  }
+
+  .details-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 34rem;
+    margin-top: 0.75rem;
+  }
+
+  // Révélation au scroll, en CSS pur (même pattern que le titre de section)
+  @keyframes project-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @supports (animation-timeline: view()) {
+    .featured-project {
+      animation: project-reveal both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 35%;
+    }
+  }
+</style>

@@ -1,0 +1,86 @@
+---
+/**
+ * ArrowLink — Lien texte avec flèche animée au survol.
+ *
+ * @prop {string} href                       - URL de destination.
+ * @prop {"left" | "right"} [direction]      - Côté de la flèche (défaut : "right").
+ * @prop {boolean} [muted]                   - Version atténuée (liens de retour).
+ * @prop {string} [class]                    - Classes CSS additionnelles.
+ */
+interface Props {
+  href: string;
+  direction?: "left" | "right";
+  muted?: boolean;
+  class?: string;
+}
+
+const { href, direction = "right", muted = false, class: className } = Astro.props;
+---
+
+<a href={href} class:list={["arrow-link", { muted }, className]}>
+  {direction === "left" && <span class="arrow arrow-left" aria-hidden="true">←</span>}
+  <slot />
+  {direction === "right" && <span class="arrow arrow-right" aria-hidden="true">→</span>}
+</a>
+
+<style lang="scss">
+  @use "@styles/config/variables" as *;
+  @use "@styles/config/mixin" as *;
+
+  .arrow-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: fit-content;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      opacity 0.3s ease,
+      color 0.3s ease;
+
+    .arrow {
+      transition: transform 0.3s ease;
+    }
+
+    // Retour tactile au tap (mobile) et au clic maintenu (desktop)
+    &:active {
+      color: var(--accent-primary);
+      transition-duration: 0.1s;
+    }
+
+    @include breakpoint-up($breakpoint-desktop) {
+      &:hover {
+        color: var(--accent-primary);
+
+        .arrow-left {
+          transform: translateX(-4px);
+        }
+
+        .arrow-right {
+          transform: translateX(4px);
+        }
+      }
+    }
+  }
+
+  .muted {
+    opacity: 0.6;
+
+    &:active {
+      opacity: 1;
+      transition-duration: 0.1s;
+    }
+
+    @include breakpoint-up($breakpoint-desktop) {
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+</style>

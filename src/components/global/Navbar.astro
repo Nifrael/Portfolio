@@ -1,9 +1,9 @@
 ---
 const menuItems = [
-  { href: "#projets", label: "PROJETS" },
+  { href: "#/projets", label: "PROJETS" },
   { href: "#a-propos", label: "A PROPOS" },
-  { href: "#contact", label: "CONTACT" }
-]
+  { href: "#contact", label: "CONTACT" },
+];
 ---
 
 <header class="navbar-wrapper">
@@ -17,7 +17,12 @@ const menuItems = [
       </div>
     </a>
 
-    <button class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false" id="navbar-toggle">
+    <button
+      class="menu-toggle"
+      aria-label="Toggle navigation"
+      aria-expanded="false"
+      id="navbar-toggle"
+    >
       <span class="hamburger"></span>
     </button>
 
@@ -48,7 +53,7 @@ const menuItems = [
 </header>
 
 <script>
-  import { initNavbar } from '@scripts/navbar';
+  import { initNavbar } from "@scripts/navbar";
   initNavbar();
 </script>
 
@@ -169,7 +174,7 @@ const menuItems = [
 
     &::before,
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       left: 0;
       width: 18px;
@@ -236,7 +241,7 @@ const menuItems = [
     transition:
       opacity 0.25s ease,
       transform 0.25s ease,
-      visibility 0s linear 0.25s; 
+      visibility 0s linear 0.25s;
 
     &.is-open {
       opacity: 1;
@@ -246,7 +251,7 @@ const menuItems = [
       transition:
         opacity 0.25s ease,
         transform 0.25s ease,
-        visibility 0s linear 0s; 
+        visibility 0s linear 0s;
 
       li {
         opacity: 0;
@@ -272,7 +277,6 @@ const menuItems = [
       transform: translateY(0);
     }
   }
-
 
   .menu-items {
     list-style: none;

@@ -1,0 +1,144 @@
+---
+import CornerAccents from "@components/ui/CornerAccents.astro";
+
+/**
+ * CtaButton — Bouton d'appel à l'action unifié.
+ *
+ * @prop {string} href                        - URL de destination du lien.
+ * @prop {string} label                       - Texte affiché dans le bouton.
+ * @prop {"solid" | "outline"} [variant]      - Style du bouton (défaut : "solid").
+ * @prop {boolean} [external]                 - Ouvre dans un nouvel onglet (target/rel).
+ * @prop {boolean} [corners]                  - Affiche les coins décoratifs.
+ * @prop {boolean} [arrow]                    - Affiche une flèche animée au survol.
+ * @prop {string} [class]                     - Classes CSS additionnelles.
+ * @slot icon                                 - Icône affichée après le libellé.
+ */
+interface Props {
+  href: string;
+  label: string;
+  variant?: "solid" | "outline";
+  external?: boolean;
+  corners?: boolean;
+  arrow?: boolean;
+  class?: string;
+}
+
+const {
+  href,
+  label,
+  variant = "solid",
+  external = false,
+  corners = false,
+  arrow = false,
+  class: className,
+} = Astro.props;
+
+const externalAttrs = external
+  ? { target: "_blank", rel: "noopener noreferrer" }
+  : {};
+---
+
+<a
+  href={href}
+  class:list={["cta", `cta--${variant}`, className]}
+  {...externalAttrs}
+>
+  {label}
+  <slot name="icon" />
+  {
+    arrow && (
+      <span class="arrow" aria-hidden="true">
+        →
+      </span>
+    )
+  }
+  {corners && <CornerAccents />}
+</a>
+
+<style lang="scss">
+  @use "@styles/config/variables" as *;
+  @use "@styles/config/mixin" as *;
+
+  .cta {
+    --corner-offset: -0.25rem;
+
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1rem 1rem;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease,
+      border-color 0.3s ease,
+      color 0.3s ease,
+      background-color 0.3s ease;
+
+    .arrow {
+      transition: transform 0.3s ease;
+    }
+  }
+
+  .cta--solid {
+    background: var(--accent-primary);
+    border: 1px solid var(--accent-primary);
+    color: var(--bg-base);
+    box-shadow:
+      0 0 15px rgba(0, 229, 239, 0.4),
+      0 0 40px rgba(0, 229, 239, 0.2);
+
+    // Retour tactile au tap (mobile) et au clic maintenu (desktop)
+    &:active {
+      transform: scale(0.97);
+      transition-duration: 0.1s;
+    }
+
+    @include breakpoint-up($breakpoint-desktop) {
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow:
+          0 0 25px rgba(0, 229, 239, 0.6),
+          0 0 60px rgba(0, 229, 239, 0.3);
+      }
+    }
+  }
+
+  .cta--outline {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+
+    // Retour tactile au tap : même rendu que le hover desktop
+    &:active {
+      border-color: var(--accent-primary);
+      background-color: var(--accent-primary);
+      color: var(--bg-base);
+      transition-duration: 0.1s;
+
+      .arrow {
+        transform: translateX(4px);
+      }
+    }
+
+    @include breakpoint-up($breakpoint-desktop) {
+      &:hover {
+        border-color: var(--accent-primary);
+        background-color: var(--accent-primary);
+        color: var(--bg-base);
+        box-shadow: 0 0 20px rgba(0, 229, 239, 0.3);
+
+        .arrow {
+          transform: translateX(4px);
+        }
+      }
+    }
+  }
+</style>

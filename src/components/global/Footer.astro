@@ -4,9 +4,9 @@ const currentYear = new Date().getFullYear();
 
 <footer class="footer">
   <div class="footer-inner">
-    <h3 class="footer-logo">
+    <p class="footer-logo">
       NIFRA<span class="footer-accent">DEV</span>
-    </h3>
+    </p>
 
     <p class="footer-copy">
       &copy; {currentYear} NifraDev. Tous droits réservés.
@@ -50,8 +50,10 @@ const currentYear = new Date().getFullYear();
     color: var(--text-primary);
     transition: color 0.4s ease;
 
-    &:hover {
-      color: var(--accent-primary);
+    @include breakpoint-up($breakpoint-desktop) {
+      &:hover {
+        color: var(--accent-primary);
+      }
     }
   }
 

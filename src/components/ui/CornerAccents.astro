@@ -1,0 +1,35 @@
+---
+/**
+ * CornerAccents — Paire de coins décoratifs (haut-droit / bas-gauche).
+ *
+ * Le parent doit être en `position: relative`. Le décalage se règle via la
+ * custom property `--corner-offset` (défaut : -1px).
+ */
+---
+
+<span class="corner corner-tr" aria-hidden="true"></span>
+<span class="corner corner-bl" aria-hidden="true"></span>
+
+<style lang="scss">
+  .corner {
+    position: absolute;
+    width: 0.5rem;
+    height: 0.5rem;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .corner-tr {
+    top: var(--corner-offset, -1px);
+    right: var(--corner-offset, -1px);
+    border-top: 2px solid var(--text-primary);
+    border-right: 2px solid var(--text-primary);
+  }
+
+  .corner-bl {
+    bottom: var(--corner-offset, -1px);
+    left: var(--corner-offset, -1px);
+    border-bottom: 2px solid var(--text-primary);
+    border-left: 2px solid var(--text-primary);
+  }
+</style>
