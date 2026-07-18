@@ -1,17 +1,17 @@
 ---
-import Layout from '@layouts/Layout.astro';
-import { getCollection, render } from 'astro:content';
-import { Image } from 'astro:assets';
-import Github from '@assets/icons/Github.svg';
-import ExternalLink from '@assets/icons/ExternalLink.svg';
-import TagList from '@components/ui/TagList.astro';
-import ArrowLink from '@components/ui/ArrowLink.astro';
-import CtaButton from '@components/ui/CtaButton.astro';
-import CornerAccents from '@components/ui/CornerAccents.astro';
-import { formatMonthYear } from '@utils/date';
+import Layout from "@layouts/Layout.astro";
+import { getCollection, render } from "astro:content";
+import { Image } from "astro:assets";
+import Github from "@assets/icons/Github.svg";
+import ExternalLink from "@assets/icons/ExternalLink.svg";
+import TagList from "@components/ui/TagList.astro";
+import ArrowLink from "@components/ui/ArrowLink.astro";
+import CtaButton from "@components/ui/CtaButton.astro";
+import CornerAccents from "@components/ui/CornerAccents.astro";
+import { formatMonthYear } from "@utils/date";
 
 export async function getStaticPaths() {
-  const projects = await getCollection('projects');
+  const projects = await getCollection("projects");
   return projects.map((project) => ({
     params: { id: project.id },
     props: { project },
@@ -30,7 +30,9 @@ const formattedDate = formatMonthYear(publishDate);
     <div class="container">
       <header class="project-header">
         <nav class="breadcrumb" aria-label="Fil d'ariane">
-          <ArrowLink href="/projects" direction="left" muted>Tous les projets</ArrowLink>
+          <ArrowLink href="/projets" direction="left" muted
+            >Tous les projets</ArrowLink
+          >
         </nav>
 
         <div class="title-section">
@@ -65,25 +67,27 @@ const formattedDate = formatMonthYear(publishDate);
             <h2 class="widget-title">En résumé</h2>
             <p class="project-excerpt">{description}</p>
 
-            {links && (
-              <div class="project-actions">
-                {links.live && (
-                  <CtaButton href={links.live} label="Démonstration" external>
-                    <ExternalLink slot="icon" width={16} height={16} />
-                  </CtaButton>
-                )}
-                {links.repository && (
-                  <CtaButton
-                    href={links.repository}
-                    label="Code source"
-                    variant="outline"
-                    external
-                  >
-                    <Github slot="icon" width={16} height={16} />
-                  </CtaButton>
-                )}
-              </div>
-            )}
+            {
+              links && (
+                <div class="project-actions">
+                  {links.live && (
+                    <CtaButton href={links.live} label="Démonstration" external>
+                      <ExternalLink slot="icon" width={16} height={16} />
+                    </CtaButton>
+                  )}
+                  {links.repository && (
+                    <CtaButton
+                      href={links.repository}
+                      label="Code source"
+                      variant="outline"
+                      external
+                    >
+                      <Github slot="icon" width={16} height={16} />
+                    </CtaButton>
+                  )}
+                </div>
+              )
+            }
           </div>
 
           <CornerAccents />

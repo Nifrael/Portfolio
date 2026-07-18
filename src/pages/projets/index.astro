@@ -1,9 +1,9 @@
 ---
-import Layout from '@layouts/Layout.astro';
-import ProjectCard from '@components/ui/ProjectCard.astro';
-import SectionTitle from '@components/ui/SectionTitle.astro';
-import ArrowLink from '@components/ui/ArrowLink.astro';
-import { getSortedProjects } from '@utils/projects';
+import Layout from "@layouts/Layout.astro";
+import ProjectCard from "@components/ui/ProjectCard.astro";
+import SectionTitle from "@components/ui/SectionTitle.astro";
+import ArrowLink from "@components/ui/ArrowLink.astro";
+import { getSortedProjects } from "@utils/projects";
 
 const sortedProjects = await getSortedProjects();
 ---
@@ -15,19 +15,17 @@ const sortedProjects = await getSortedProjects();
   <div class="projects-page">
     <div class="container">
       <header class="page-header">
-        <ArrowLink href="/" direction="left" muted>Retour à l'accueil</ArrowLink>
+        <ArrowLink href="/" direction="left" muted>Retour à l'accueil</ArrowLink
+        >
         <SectionTitle as="h1" outline="MES" main="PROJETS" />
         <p class="page-subtitle">
-          Découvrez l'ensemble de mes travaux en architecture web et développement full-stack.
+          Découvrez l'ensemble de mes travaux en architecture web et
+          développement full-stack.
         </p>
       </header>
 
       <div class="projects-grid">
-        {
-          sortedProjects.map((project) => (
-            <ProjectCard project={project} />
-          ))
-        }
+        {sortedProjects.map((project) => <ProjectCard project={project} />)}
       </div>
     </div>
   </div>
