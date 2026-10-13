@@ -26,6 +26,8 @@ const { outline, main, as: Heading = "h2", class: className }: Props = Astro.pro
 </Heading>
 
 <style lang="scss">
+  @use "@styles/config/mixin" as *;
+
   .section-title {
     font-family: var(--font-title);
     font-size: var(--title-size, clamp(2rem, 6vw, 4rem));
@@ -44,14 +46,6 @@ const { outline, main, as: Heading = "h2", class: className }: Props = Astro.pro
   }
 
   .title-main {
-    background: linear-gradient(
-      to right,
-      var(--color-text),
-      var(--color-accent)
-    );
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    color: transparent;
+    @include text-gradient;
   }
 </style>

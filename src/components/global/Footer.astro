@@ -3,7 +3,7 @@ const currentYear = new Date().getFullYear();
 ---
 
 <footer class="footer">
-  <div class="footer-inner">
+  <div class="footer-inner container">
     <p class="footer-logo">
       NIFRA<span class="footer-accent">DEV</span>
     </p>
@@ -20,17 +20,11 @@ const currentYear = new Date().getFullYear();
 
   .footer {
     border-top: 1px solid var(--color-border);
-    padding: var(--espace-l) var(--espace-m-plus);
+    padding-block: var(--espace-l);
     background: transparent;
-
-    @include breakpoint-up($breakpoint-desktop) {
-      padding: var(--espace-l);
-    }
   }
 
   .footer-inner {
-    max-width: var(--largeur-max-entete);
-    margin: 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;

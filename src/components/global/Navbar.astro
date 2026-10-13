@@ -65,13 +65,8 @@ const menuItems = [
     position: fixed;
     top: 1.5rem;
     width: 100%;
-    padding: 0 var(--espace-m-plus);
+    padding-inline: var(--gouttiere);
     z-index: 100;
-
-    @include breakpoint-up($breakpoint-desktop) {
-      padding: 0 var(--espace-l);
-      top: 1.5rem;
-    }
   }
 
   .navbar {
@@ -86,7 +81,7 @@ const menuItems = [
     padding: var(--espace-s) var(--espace-m);
     margin: 0 auto;
     box-shadow: 0 4px 16px -3px var(--color-shadow);
-    max-width: var(--largeur-max-entete);
+    max-width: var(--largeur-max);
 
     @include breakpoint-up($breakpoint-tablet) {
       padding: var(--espace-s-plus) var(--espace-m) var(--espace-s-plus) var(--espace-m-plus);
@@ -223,8 +218,7 @@ const menuItems = [
     flex-direction: column;
     position: absolute;
     top: calc(100% + 1rem);
-    left: 1rem;
-    right: 1rem;
+    inset-inline: var(--gouttiere);
     background: var(--color-bg-surface);
     -webkit-backdrop-filter: blur(24px);
     backdrop-filter: blur(24px);

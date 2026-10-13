@@ -5,7 +5,7 @@ import CtaButton from "@components/ui/CtaButton.astro";
 ---
 
 <section class="hero" aria-label="Introduction">
-  <div class="content">
+  <div class="content container">
     <div class="text-side">
       <div class="title-block">
         <h1 class="name">
@@ -40,14 +40,14 @@ import CtaButton from "@components/ui/CtaButton.astro";
     align-items: center;
     min-height: 100vh;
     overflow: hidden;
-    padding: var(--espace-xxl) var(--espace-m-plus) var(--espace-l) var(--espace-m-plus);
+    padding-block: var(--espace-xxl) var(--espace-l);
 
     @include breakpoint-up($breakpoint-desktop) {
-      padding: 10rem var(--espace-l-plus) var(--espace-m) var(--espace-l-plus);
+      padding-block: 10rem var(--espace-m);
     }
 
     @include breakpoint-up($breakpoint-desktop-xl) {
-      padding: 8rem var(--espace-l) var(--espace-m) var(--espace-l);
+      padding-block: 8rem var(--espace-m);
     }
   }
 
@@ -58,9 +58,6 @@ import CtaButton from "@components/ui/CtaButton.astro";
     position: relative;
     min-height: 70vh;
     z-index: 10;
-    max-width: var(--largeur-max);
-    margin: 0 auto;
-    width: 100%;
 
     @include breakpoint-up($breakpoint-desktop) {
       grid-template-columns: 1fr 2fr;
@@ -91,15 +88,7 @@ import CtaButton from "@components/ui/CtaButton.astro";
   }
 
   .name-main {
-    background: linear-gradient(
-      to right,
-      var(--color-text),
-      var(--color-accent)
-    );
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    padding-right: 0.3em;
+    @include text-gradient;
   }
 
   .name-outline {

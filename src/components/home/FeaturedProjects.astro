@@ -19,7 +19,7 @@ interface Props {
 const { projects } = Astro.props;
 ---
 
-<section class="featured-projects" id="projets" aria-label="Projets phares">
+<section class="featured-projects container" id="projets" aria-label="Projets phares">
   <div class="section-header">
     <SectionTitle outline="QUELQUES" main="PROJETS" class="reveal-title" />
     <p class="section-subtitle">
@@ -58,15 +58,9 @@ const { projects } = Astro.props;
 
   .featured-projects {
     position: relative;
-    padding: var(--espace-l-plus) var(--espace-m-plus);
+    padding-block: var(--espace-section);
     background: transparent;
-    max-width: 95%;
-    margin: 0 auto;
     scroll-margin-top: var(--navbar-offset);
-
-    @include breakpoint-up($breakpoint-desktop) {
-      padding: var(--espace-xxl) var(--espace-xl-plus);
-    }
   }
 
   .section-header {
