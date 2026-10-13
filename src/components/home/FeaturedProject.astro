@@ -272,5 +272,11 @@ const { title, description, tags, cover, links } = project.data;
       animation-timeline: view();
       animation-range: entry 10% cover 35%;
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      .featured-project {
+        animation: none;
+      }
+    }
   }
 </style>

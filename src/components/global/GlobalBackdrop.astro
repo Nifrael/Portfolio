@@ -79,4 +79,11 @@
     filter: blur(40px);
     animation: beam-flow 10s linear infinite;
   }
+
+  // Le faisceau n'existe que par son animation : figé, il n'a pas de sens.
+  @media (prefers-reduced-motion: reduce) {
+    .beam {
+      display: none;
+    }
+  }
 </style>

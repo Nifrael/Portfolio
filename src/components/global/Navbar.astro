@@ -262,6 +262,13 @@ const menuItems = [
             animation-delay: #{$i * 0.06}s;
           }
         }
+
+        // Liens affichés d'emblée, sans entrée en cascade
+        @media (prefers-reduced-motion: reduce) {
+          opacity: 1;
+          transform: none;
+          animation: none;
+        }
       }
     }
 

@@ -73,6 +73,11 @@ const labelMap: Record<NonNullable<Props["status"]>, string> = {
     inset: 0;
     opacity: 0.75;
     animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+
+    // L'onde n'existe que par son animation : seul le point reste.
+    @media (prefers-reduced-motion: reduce) {
+      display: none;
+    }
   }
 
   .badge-core {
