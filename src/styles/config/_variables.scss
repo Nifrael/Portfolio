@@ -98,6 +98,7 @@ $jaune: #facc15;
   --espace-xl: 4rem;
   --espace-xl-plus: 5rem;
   --espace-xxl: 6rem;
+  --espace-section: var(--espace-l-plus);
 
   // Rayons
   --rayon-xs: 2px;
@@ -109,7 +110,6 @@ $jaune: #facc15;
 
   // Conteneur
   --largeur-max: 80rem;
-  --largeur-max-entete: 75rem;
   --gouttiere: var(--espace-m-plus);
 
   // Navbar
@@ -120,4 +120,13 @@ $jaune: #facc15;
   --navbar-offset-desktop: calc(
     var(--navbar-top-desktop) + var(--navbar-height) + 2rem
   );
+}
+
+// Gouttière et rythme vertical des sections plus généreux sur grand écran :
+// les tokens suivent, tout ce qui passe par `.container` s'aligne d'office.
+@media (width >= $breakpoint-desktop) {
+  :root {
+    --gouttiere: var(--espace-l);
+    --espace-section: var(--espace-xxl);
+  }
 }
