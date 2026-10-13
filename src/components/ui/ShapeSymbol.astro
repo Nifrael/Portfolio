@@ -1,0 +1,52 @@
+---
+import type { ProjectShape } from "../../content.config";
+
+/**
+ * ShapeSymbol — L'une des quatre formes de la charte (△ ○ × □), tracée en SVG.
+ *
+ * Le triangle pointe vers le bas, comme le portrait et les visuels de projets.
+ * La taille du tracé se règle via la custom property `--symbol-size`
+ * (défaut : 2rem), la couleur suit `color`, le positionnement est laissé au
+ * parent.
+ *
+ * @prop {ProjectShape} shape - Forme à tracer.
+ * @prop {string} [class]     - Classes CSS additionnelles.
+ */
+interface Props {
+  shape: ProjectShape;
+  class?: string;
+}
+
+const { shape, class: className } = Astro.props;
+---
+
+<div class:list={["shape-symbol", className]}>
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    {shape === "triangle" && <polygon points="2,6 98,6 50,94" />}
+    {shape === "circle" && <circle cx="50" cy="50" r="46" />}
+    {shape === "cross" && <path d="M10 10 L90 90 M90 10 L10 90" />}
+    {shape === "square" && <rect x="6" y="6" width="88" height="88" />}
+  </svg>
+</div>
+
+<style lang="scss">
+  .shape-symbol {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-decor-symbol);
+
+    svg {
+      width: var(--symbol-size, 2rem);
+      height: var(--symbol-size, 2rem);
+      overflow: visible;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+    }
+
+    svg :global(*) {
+      vector-effect: non-scaling-stroke;
+    }
+  }
+</style>

@@ -1,7 +1,4 @@
 <div class="backdrop" aria-hidden="true">
-  <div class="grid"></div>
-  <div class="glow glow-tl"></div>
-  <div class="glow glow-br"></div>
   <div class="beam"></div>
 </div>
 
@@ -28,38 +25,6 @@
     inset: 0;
     pointer-events: none;
     z-index: -1;
-  }
-
-  .grid {
-    position: absolute;
-    inset: 0;
-    opacity: 0.3;
-    background-size: 80px 80px;
-    background-image:
-      linear-gradient(to right, var(--color-decor-grid) 1px, transparent 1px),
-      linear-gradient(to bottom, var(--color-decor-grid) 1px, transparent 1px);
-  }
-
-  .glow {
-    position: absolute;
-    border-radius: var(--rayon-rond);
-    filter: blur(150px);
-
-    &-tl {
-      top: -10%;
-      left: -10%;
-      width: 60%;
-      height: 60%;
-      background: var(--color-decor-glow);
-    }
-
-    &-br {
-      bottom: -10%;
-      right: -10%;
-      width: 70%;
-      height: 70%;
-      background: var(--color-decor-glow-accent);
-    }
   }
 
   .beam {

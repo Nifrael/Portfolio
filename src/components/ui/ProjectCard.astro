@@ -4,7 +4,6 @@ import { Image } from "astro:assets";
 import TagList from "@components/ui/TagList.astro";
 import ArrowLink from "@components/ui/ArrowLink.astro";
 import ProjectLinks from "@components/ui/ProjectLinks.astro";
-import CornerAccents from "@components/ui/CornerAccents.astro";
 
 interface Props {
   project: CollectionEntry<"projects">;
@@ -15,8 +14,6 @@ const { title, description, tags, cover, links } = project.data;
 ---
 
 <article class="project-card">
-  <CornerAccents />
-
   <div class="project-image-wrapper">
     <Image
       src={cover.src}
