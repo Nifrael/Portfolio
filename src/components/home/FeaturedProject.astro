@@ -118,7 +118,7 @@ const { title, description, tags, cover, links } = project.data;
 
     @include breakpoint-up($breakpoint-desktop) {
       grid-template-columns: 1fr 1fr;
-      gap: 4rem;
+      gap: var(--espace-xl);
 
       &.reverse {
         .visual {
@@ -169,11 +169,11 @@ const { title, description, tags, cover, links } = project.data;
     pointer-events: none;
     overflow: visible;
     fill: none;
-    stroke: var(--text-primary);
+    stroke: var(--color-text);
     stroke-width: 6;
-    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.8))
-      drop-shadow(0 0 14px var(--accent-primary))
-      drop-shadow(0 0 30px var(--accent-primary));
+    filter: drop-shadow(0 0 4px var(--color-halo))
+      drop-shadow(0 0 14px var(--color-accent))
+      drop-shadow(0 0 30px var(--color-accent));
   }
 
   .outline {
@@ -199,7 +199,7 @@ const { title, description, tags, cover, links } = project.data;
   // Formes qui gardent le screenshot entier
   .shape-square .cover,
   .shape-cross .cover {
-    border: 1px solid var(--border-surface);
+    border: 1px solid var(--color-border);
   }
 
   // La croix est un badge qui déborde du coin du cadre
@@ -231,15 +231,15 @@ const { title, description, tags, cover, links } = project.data;
     font-style: italic;
     line-height: 1;
     letter-spacing: -0.02em;
-    color: var(--text-primary);
+    color: var(--color-text);
     margin: 0;
   }
 
   .description {
-    font-family: var(--font-body);
+    font-family: var(--font-text);
     font-size: 0.95rem;
     line-height: 1.7;
-    color: var(--text-primary);
+    color: var(--color-text);
     opacity: 0.7;
     max-width: 34rem;
     margin: 0;
@@ -251,7 +251,7 @@ const { title, description, tags, cover, links } = project.data;
     justify-content: space-between;
     width: 100%;
     max-width: 34rem;
-    margin-top: 0.75rem;
+    margin-top: var(--espace-s-plus);
   }
 
   // Révélation au scroll, en CSS pur (même pattern que le titre de section)

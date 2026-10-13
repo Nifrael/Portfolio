@@ -65,11 +65,11 @@ const menuItems = [
     position: fixed;
     top: 1.5rem;
     width: 100%;
-    padding: 0 1.5rem;
+    padding: 0 var(--espace-m-plus);
     z-index: 100;
 
     @include breakpoint-up($breakpoint-desktop) {
-      padding: 0 2rem;
+      padding: 0 var(--espace-l);
       top: 1.5rem;
     }
   }
@@ -78,68 +78,68 @@ const menuItems = [
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: var(--bg-surface);
+    background: var(--color-bg-surface);
     -webkit-backdrop-filter: blur(20px);
     backdrop-filter: blur(20px);
-    border: 1px solid var(--border-surface);
-    border-radius: 100px;
-    padding: 0.5rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--rayon-pilule);
+    padding: var(--espace-s) var(--espace-m);
     margin: 0 auto;
-    box-shadow: 0 4px 16px -3px var(--shadow-surface);
-    max-width: 1200px;
+    box-shadow: 0 4px 16px -3px var(--color-shadow);
+    max-width: var(--largeur-max-entete);
 
     @include breakpoint-up($breakpoint-tablet) {
-      padding: 0.75rem 1rem 0.75rem 1.5rem;
+      padding: var(--espace-s-plus) var(--espace-m) var(--espace-s-plus) var(--espace-m-plus);
     }
   }
 
   .logo {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: var(--espace-m);
     text-decoration: none;
     cursor: pointer;
     transition: color 0.4s ease;
 
     @include breakpoint-up($breakpoint-desktop) {
       &:hover {
-        color: var(--accent-primary);
+        color: var(--color-accent);
       }
     }
   }
 
   .logo-text {
     font-weight: 700;
-    font-size: 1rem;
+    font-size: var(--base-size);
     letter-spacing: 0.15em;
 
     .underscore {
-      color: var(--accent-primary);
+      color: var(--color-accent);
     }
 
     @include breakpoint-up($breakpoint-desktop) {
-      font-size: unset;
+      font-size: var(--p);
     }
   }
 
   .logo-icon {
     width: 40px;
     height: 40px;
-    border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--rayon-rond);
+    border: 1px solid var(--color-border-emphasis);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: var(--font-body);
-    font-size: 1rem;
+    font-family: var(--font-text);
+    font-size: var(--base-size);
     font-weight: 500;
 
     .chevron {
-      color: #fff;
+      color: var(--color-text-strong);
     }
 
     .underscore {
-      color: var(--accent-primary);
+      color: var(--color-accent);
     }
   }
 
@@ -148,7 +148,6 @@ const menuItems = [
     -webkit-appearance: none;
     background: none;
     border: none;
-    outline: none;
     box-shadow: none;
     padding: 0;
     margin: 0;
@@ -168,8 +167,8 @@ const menuItems = [
     position: relative;
     width: 18px;
     height: 2px;
-    background: var(--text-primary);
-    border-radius: 2px;
+    background: var(--color-text);
+    border-radius: var(--rayon-xs);
     transition: all 0.3s ease;
 
     &::before,
@@ -179,8 +178,8 @@ const menuItems = [
       left: 0;
       width: 18px;
       height: 2px;
-      background: var(--text-primary);
-      border-radius: 2px;
+      background: var(--color-text);
+      border-radius: var(--rayon-xs);
       transition: all 0.3s ease;
     }
 
@@ -211,11 +210,11 @@ const menuItems = [
     @include breakpoint-up($breakpoint-tablet) {
       display: flex;
       align-items: center;
-      gap: 2rem;
+      gap: var(--espace-l);
     }
 
     @include breakpoint-up($breakpoint-desktop) {
-      gap: 4rem;
+      gap: var(--espace-xl);
     }
   }
 
@@ -226,13 +225,13 @@ const menuItems = [
     top: calc(100% + 1rem);
     left: 1rem;
     right: 1rem;
-    background: var(--bg-surface);
+    background: var(--color-bg-surface);
     -webkit-backdrop-filter: blur(24px);
     backdrop-filter: blur(24px);
-    border: 1px solid var(--border-surface);
-    border-radius: 1.5rem;
-    padding: 2rem;
-    gap: 2rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--rayon-l);
+    padding: var(--espace-l);
+    gap: var(--espace-l);
 
     opacity: 0;
     visibility: hidden;
@@ -283,22 +282,22 @@ const menuItems = [
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1.5rem;
+    gap: var(--espace-m-plus);
     margin: 0;
     padding: 0;
 
     @include breakpoint-up($breakpoint-tablet) {
       flex-direction: row;
-      gap: 2rem;
+      gap: var(--espace-l);
       flex: 1;
       justify-content: center;
     }
 
     a {
-      color: var(--text-primary);
+      color: var(--color-text);
       text-decoration: none;
-      font-family: var(--font-body);
-      font-size: 1rem;
+      font-family: var(--font-text);
+      font-size: var(--base-size);
       font-weight: 400;
       letter-spacing: 0.1em;
       text-transform: uppercase;
@@ -306,7 +305,7 @@ const menuItems = [
 
       @include breakpoint-up($breakpoint-tablet) {
         &:hover {
-          color: var(--accent-primary);
+          color: var(--color-accent);
         }
       }
     }

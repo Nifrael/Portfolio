@@ -40,14 +40,14 @@ import CtaButton from "@components/ui/CtaButton.astro";
     align-items: center;
     min-height: 100vh;
     overflow: hidden;
-    padding: 6rem 1.5rem 2rem 1.5rem;
+    padding: var(--espace-xxl) var(--espace-m-plus) var(--espace-l) var(--espace-m-plus);
 
     @include breakpoint-up($breakpoint-desktop) {
-      padding: 10rem 3rem 1rem 3rem;
+      padding: 10rem var(--espace-l-plus) var(--espace-m) var(--espace-l-plus);
     }
 
     @include breakpoint-up($breakpoint-desktop-xl) {
-      padding: 8rem 2rem 1rem 2rem;
+      padding: 8rem var(--espace-l) var(--espace-m) var(--espace-l);
     }
   }
 
@@ -58,7 +58,7 @@ import CtaButton from "@components/ui/CtaButton.astro";
     position: relative;
     min-height: 70vh;
     z-index: 10;
-    max-width: 80rem;
+    max-width: var(--largeur-max);
     margin: 0 auto;
     width: 100%;
 
@@ -76,7 +76,7 @@ import CtaButton from "@components/ui/CtaButton.astro";
     flex-direction: column;
     align-items: flex-end;
     justify-content: space-between;
-    gap: 0.5rem;
+    gap: var(--espace-s);
   }
 
   .name {
@@ -93,8 +93,8 @@ import CtaButton from "@components/ui/CtaButton.astro";
   .name-main {
     background: linear-gradient(
       to right,
-      var(--text-primary),
-      var(--accent-primary)
+      var(--color-text),
+      var(--color-accent)
     );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -103,23 +103,24 @@ import CtaButton from "@components/ui/CtaButton.astro";
   }
 
   .name-outline {
-    -webkit-text-stroke: 1.5px var(--accent-primary);
+    -webkit-text-stroke: 1.5px var(--color-accent);
     color: transparent;
     display: inline-block;
-    margin-top: -0.5rem;
+    margin-top: calc(var(--espace-s) * -1);
 
     @include breakpoint-up($breakpoint-desktop) {
-      margin-top: -1rem;
+      margin-top: calc(var(--espace-m) * -1);
     }
   }
 
   .subtitle {
-    font-size: 1rem;
+    margin-block: var(--espace-m);
+    font-size: var(--base-size);
     font-weight: 200;
   }
 
   .highlight {
-    color: var(--accent-primary);
+    color: var(--color-accent);
   }
 
   .actions {
@@ -127,11 +128,11 @@ import CtaButton from "@components/ui/CtaButton.astro";
     flex-direction: row;
     align-items: center;
     justify-content: space-evenly;
-    gap: 2rem;
-    margin-top: 2rem;
+    gap: var(--espace-l);
+    margin-top: var(--espace-l);
 
     @include breakpoint-up($breakpoint-tablet) {
-      gap: 3rem;
+      gap: var(--espace-l-plus);
     }
 
     @include breakpoint-up($breakpoint-desktop) {

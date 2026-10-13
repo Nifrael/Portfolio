@@ -39,15 +39,15 @@ const { outline, main, as: Heading = "h2", class: className }: Props = Astro.pro
   }
 
   .title-outline {
-    -webkit-text-stroke: 1.5px var(--accent-primary);
+    -webkit-text-stroke: 1.5px var(--color-accent);
     color: transparent;
   }
 
   .title-main {
     background: linear-gradient(
       to right,
-      var(--text-primary),
-      var(--accent-primary)
+      var(--color-text),
+      var(--color-accent)
     );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;

@@ -66,9 +66,9 @@ const externalAttrs = external
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.75rem;
-    padding: 1rem 1rem;
-    font-family: var(--font-body);
+    gap: var(--espace-s-plus);
+    padding: var(--espace-m) var(--espace-m);
+    font-family: var(--font-text);
     font-weight: 700;
     font-size: 0.7rem;
     letter-spacing: 0.15em;
@@ -88,12 +88,12 @@ const externalAttrs = external
   }
 
   .cta--solid {
-    background: var(--accent-primary);
-    border: 1px solid var(--accent-primary);
-    color: var(--bg-base);
+    background: var(--color-accent);
+    border: 1px solid var(--color-accent);
+    color: var(--color-text-inversed);
     box-shadow:
-      0 0 15px rgba(0, 229, 239, 0.4),
-      0 0 40px rgba(0, 229, 239, 0.2);
+      0 0 15px var(--color-accent-glow-l),
+      0 0 40px var(--color-accent-glow-s);
 
     // Retour tactile au tap (mobile) et au clic maintenu (desktop)
     &:active {
@@ -105,22 +105,22 @@ const externalAttrs = external
       &:hover {
         transform: translateY(-2px);
         box-shadow:
-          0 0 25px rgba(0, 229, 239, 0.6),
-          0 0 60px rgba(0, 229, 239, 0.3);
+          0 0 25px var(--color-accent-glow-xl),
+          0 0 60px var(--color-accent-glow-m);
       }
     }
   }
 
   .cta--outline {
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: var(--text-primary);
+    border: 1px solid var(--color-border-strong);
+    color: var(--color-text);
 
     // Retour tactile au tap : même rendu que le hover desktop
     &:active {
-      border-color: var(--accent-primary);
-      background-color: var(--accent-primary);
-      color: var(--bg-base);
+      border-color: var(--color-accent);
+      background-color: var(--color-accent);
+      color: var(--color-text-inversed);
       transition-duration: 0.1s;
 
       .arrow {
@@ -130,10 +130,10 @@ const externalAttrs = external
 
     @include breakpoint-up($breakpoint-desktop) {
       &:hover {
-        border-color: var(--accent-primary);
-        background-color: var(--accent-primary);
-        color: var(--bg-base);
-        box-shadow: 0 0 20px rgba(0, 229, 239, 0.3);
+        border-color: var(--color-accent);
+        background-color: var(--color-accent);
+        color: var(--color-text-inversed);
+        box-shadow: 0 0 20px var(--color-accent-glow-m);
 
         .arrow {
           transform: translateX(4px);

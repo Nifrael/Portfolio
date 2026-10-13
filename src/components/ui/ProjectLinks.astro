@@ -53,12 +53,12 @@ const { links, title } = Astro.props;
 
   .project-links {
     display: flex;
-    gap: 1rem;
+    gap: var(--espace-m);
     align-items: center;
   }
 
   .project-icon-link {
-    color: var(--text-primary);
+    color: var(--color-text);
     opacity: 0.6;
     -webkit-tap-highlight-color: transparent;
     transition:
@@ -68,14 +68,14 @@ const { links, title } = Astro.props;
 
     // Retour tactile au tap (mobile) et au clic maintenu (desktop)
     &:active {
-      color: var(--accent-primary);
+      color: var(--color-accent);
       opacity: 1;
       transition-duration: 0.1s;
     }
 
     @include breakpoint-up($breakpoint-desktop) {
       &:hover {
-        color: var(--accent-primary);
+        color: var(--color-accent);
         opacity: 1;
         transform: translateY(-2px);
       }

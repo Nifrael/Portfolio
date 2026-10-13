@@ -28,8 +28,8 @@ import ArrowLink from '@components/ui/ArrowLink.astro';
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 1.5rem;
-    padding: 4rem 1.5rem;
+    gap: var(--espace-m-plus);
+    padding: var(--espace-xl) var(--espace-m-plus);
     text-align: center;
   }
 
@@ -44,15 +44,15 @@ import ArrowLink from '@components/ui/ArrowLink.astro';
   }
 
   .code-outline {
-    -webkit-text-stroke: 1.5px var(--accent-primary);
+    -webkit-text-stroke: 1.5px var(--color-accent);
     color: transparent;
   }
 
   .code-main {
     background: linear-gradient(
       to right,
-      var(--text-primary),
-      var(--accent-primary)
+      var(--color-text),
+      var(--color-accent)
     );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -61,10 +61,10 @@ import ArrowLink from '@components/ui/ArrowLink.astro';
   }
 
   .message {
-    font-family: var(--font-body);
+    font-family: var(--font-text);
     font-size: 1.1rem;
     font-weight: 200;
-    color: var(--text-primary);
+    color: var(--color-text);
     opacity: 0.8;
     margin: 0;
   }
