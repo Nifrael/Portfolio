@@ -7,7 +7,6 @@ import ExternalLink from "@assets/icons/ExternalLink.svg";
 import TagList from "@components/ui/TagList.astro";
 import ArrowLink from "@components/ui/ArrowLink.astro";
 import CtaButton from "@components/ui/CtaButton.astro";
-import CornerAccents from "@components/ui/CornerAccents.astro";
 import { formatMonthYear } from "@utils/date";
 
 export async function getStaticPaths() {
@@ -54,7 +53,6 @@ const formattedDate = formatMonthYear(publishDate);
               loading="eager"
               fetchpriority="high"
             />
-            <CornerAccents />
           </div>
 
           <div class="markdown-content">
@@ -89,8 +87,6 @@ const formattedDate = formatMonthYear(publishDate);
               )
             }
           </div>
-
-          <CornerAccents />
         </aside>
       </div>
     </div>

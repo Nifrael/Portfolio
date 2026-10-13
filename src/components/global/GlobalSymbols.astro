@@ -1,12 +1,12 @@
 ---
-import GlassSymbol from "@components/ui/GlassSymbol.astro";
+import ShapeSymbol from "@components/ui/ShapeSymbol.astro";
 ---
 
 <div class="symbols" aria-hidden="true">
-  <GlassSymbol symbol="△" class="sym-triangle" />
-  <GlassSymbol symbol="○" class="sym-circle" />
-  <GlassSymbol symbol="×" class="sym-cross" />
-  <GlassSymbol symbol="□" class="sym-square" />
+  <ShapeSymbol shape="triangle" class="sym-triangle" />
+  <ShapeSymbol shape="circle" class="sym-circle" />
+  <ShapeSymbol shape="cross" class="sym-cross" />
+  <ShapeSymbol shape="square" class="sym-square" />
 </div>
 
 <style lang="scss">
@@ -29,14 +29,14 @@ import GlassSymbol from "@components/ui/GlassSymbol.astro";
   .symbols {
     --symbol-size: 2rem;
 
+    @include breakpoint-up($breakpoint-desktop) {
+      --symbol-size: 3rem;
+    }
+
     position: fixed;
     inset: 0;
     pointer-events: none;
     z-index: -1;
-
-    @include breakpoint-up($breakpoint-desktop) {
-      --symbol-size: 4rem;
-    }
 
     :global(.sym-triangle) {
       position: absolute;
@@ -106,7 +106,7 @@ import GlassSymbol from "@components/ui/GlassSymbol.astro";
 
     // Symboles immobiles si l'utilisateur a demandé moins d'animations
     @media (prefers-reduced-motion: reduce) {
-      :global(.glass-symbol) {
+      :global(.shape-symbol) {
         animation: none;
       }
     }
