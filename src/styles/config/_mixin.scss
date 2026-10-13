@@ -1,7 +1,38 @@
 @use "variables" as *;
 
 @mixin breakpoint-up($size) {
-    @media (width >= $size) {
-        @content;
-    }
+  @media (width >= $size) {
+    @content;
+  }
+}
+
+@mixin focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+// `--largeur-max` borne le contenu : les gouttières s'ajoutent autour.
+@mixin container {
+  width: 100%;
+  max-width: calc(var(--largeur-max) + 2 * var(--gouttiere));
+  margin-inline: auto;
+  padding-inline: var(--gouttiere);
+}
+
+// Texte en dégradé (fond rogné sur les glyphes). Le fond ne se peint que dans
+// la boîte de l'élément, or l'italique et les accents en débordent : on élargit
+// la zone peinte avec un padding, annulé par une marge négative pour que la
+// mise en page ne bouge pas.
+@mixin text-gradient($bleed: 0.2em) {
+  background: linear-gradient(
+    to right,
+    var(--color-text),
+    var(--color-accent)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  padding: $bleed;
+  margin: calc($bleed * -1);
 }

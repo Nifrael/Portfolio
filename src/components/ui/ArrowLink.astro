@@ -30,12 +30,12 @@ const { href, direction = "right", muted = false, class: className } = Astro.pro
   .arrow-link {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: var(--espace-s);
     width: fit-content;
-    font-family: var(--font-body);
-    font-size: 0.8rem;
+    font-family: var(--font-text);
+    font-size: var(--little-text);
     font-weight: 700;
-    color: var(--text-primary);
+    color: var(--color-text);
     text-decoration: none;
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -50,13 +50,13 @@ const { href, direction = "right", muted = false, class: className } = Astro.pro
 
     // Retour tactile au tap (mobile) et au clic maintenu (desktop)
     &:active {
-      color: var(--accent-primary);
+      color: var(--color-accent);
       transition-duration: 0.1s;
     }
 
     @include breakpoint-up($breakpoint-desktop) {
       &:hover {
-        color: var(--accent-primary);
+        color: var(--color-accent);
 
         .arrow-left {
           transform: translateX(-4px);

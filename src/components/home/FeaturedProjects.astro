@@ -19,7 +19,7 @@ interface Props {
 const { projects } = Astro.props;
 ---
 
-<section class="featured-projects" id="projets" aria-label="Projets phares">
+<section class="featured-projects container" id="projets" aria-label="Projets phares">
   <div class="section-header">
     <SectionTitle outline="QUELQUES" main="PROJETS" class="reveal-title" />
     <p class="section-subtitle">
@@ -58,36 +58,30 @@ const { projects } = Astro.props;
 
   .featured-projects {
     position: relative;
-    padding: 3rem 1.5rem;
+    padding-block: var(--espace-section);
     background: transparent;
-    max-width: 95%;
-    margin: 0 auto;
     scroll-margin-top: var(--navbar-offset);
-
-    @include breakpoint-up($breakpoint-desktop) {
-      padding: 6rem 5rem;
-    }
   }
 
   .section-header {
-    margin-bottom: 5rem;
+    margin-bottom: var(--espace-xl-plus);
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--espace-m);
 
     @include breakpoint-up($breakpoint-tablet) {
       flex-direction: row;
       margin-bottom: 8rem;
       align-items: flex-end;
       justify-content: space-between;
-      gap: 3rem;
+      gap: var(--espace-l-plus);
     }
   }
 
   .section-subtitle {
-    color: var(--text-primary);
-    font-size: 1rem;
-    font-family: var(--font-body);
+    color: var(--color-text);
+    font-size: var(--base-size);
+    font-family: var(--font-text);
     font-weight: 200;
     line-height: 1.5;
     margin: 0;
@@ -97,17 +91,17 @@ const { projects } = Astro.props;
   .projects-showcase {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 4rem;
+    gap: var(--espace-xl);
 
     @include breakpoint-up($breakpoint-desktop) {
-      gap: 5rem;
+      gap: var(--espace-xl-plus);
     }
   }
 
   .all-projects {
     display: flex;
     justify-content: center;
-    margin-top: 5rem;
+    margin-top: var(--espace-xl-plus);
   }
 
   @keyframes reveal-blur {
@@ -136,6 +130,13 @@ const { projects } = Astro.props;
       animation: reveal-blur both;
       animation-timeline: view();
       animation-range: entry 15% cover 45%;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .section-header :global(.reveal-title),
+      .section-subtitle {
+        animation: none;
+      }
     }
   }
 </style>

@@ -103,5 +103,12 @@ import GlassSymbol from "@components/ui/GlassSymbol.astro";
         height: 10rem;
       }
     }
+
+    // Symboles immobiles si l'utilisateur a demandé moins d'animations
+    @media (prefers-reduced-motion: reduce) {
+      :global(.glass-symbol) {
+        animation: none;
+      }
+    }
   }
 </style>

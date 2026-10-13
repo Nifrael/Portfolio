@@ -105,6 +105,7 @@ const { title, description, tags, cover, links } = project.data;
 </article>
 
 <style lang="scss">
+  @use "sass:math";
   @use "@styles/config/variables" as *;
   @use "@styles/config/mixin" as *;
 
@@ -118,7 +119,7 @@ const { title, description, tags, cover, links } = project.data;
 
     @include breakpoint-up($breakpoint-desktop) {
       grid-template-columns: 1fr 1fr;
-      gap: 4rem;
+      gap: var(--espace-xl);
 
       &.reverse {
         .visual {
@@ -140,16 +141,18 @@ const { title, description, tags, cover, links } = project.data;
 
   .frame {
     position: relative;
-    width: min(100%, 22rem);
+    width: min(100% * var(--frame-fit, 1), 22rem);
     aspect-ratio: 1;
-    transform: rotate(var(--frame-tilt, 0deg));
+    transform: translateX(var(--frame-shift, 0%))
+      rotate(var(--frame-tilt, 0deg));
     transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 
     @include breakpoint-up($breakpoint-desktop) {
       width: min(100%, 26rem);
 
       &:hover {
-        transform: rotate(var(--frame-tilt, 0deg)) scale(1.02);
+        transform: translateX(var(--frame-shift, 0%))
+          rotate(var(--frame-tilt, 0deg)) scale(1.02);
       }
     }
   }
@@ -169,11 +172,11 @@ const { title, description, tags, cover, links } = project.data;
     pointer-events: none;
     overflow: visible;
     fill: none;
-    stroke: var(--text-primary);
+    stroke: var(--color-text);
     stroke-width: 6;
-    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.8))
-      drop-shadow(0 0 14px var(--accent-primary))
-      drop-shadow(0 0 30px var(--accent-primary));
+    filter: drop-shadow(0 0 4px var(--color-halo))
+      drop-shadow(0 0 14px var(--color-accent))
+      drop-shadow(0 0 30px var(--color-accent));
   }
 
   .outline {
@@ -184,8 +187,27 @@ const { title, description, tags, cover, links } = project.data;
 
   // Formes qui découpent le screenshot
   // Triangle inversé (pointe en bas), légèrement incliné comme la maquette
+  // Un carré incliné de θ occupe (cos θ + sin θ) fois sa largeur : en mobile,
+  // les coins du triangle sortaient de l'écran. `--frame-fit` réduit le cadre
+  // pour que son emprise inclinée tienne dans la colonne. Comme la rotation
+  // pivote autour du centre du cadre, un coin haut part plus loin que l'autre
+  // de (côté × sin θ / 2) : `--frame-shift` recentre le triangle visible, sans
+  // dépasser la gouttière pour ne jamais créer de défilement horizontal.
+  $triangle-tilt: -8deg;
+  $tilt-sin: math.abs(math.sin($triangle-tilt));
+  $tilt-cos: math.cos($triangle-tilt);
+
   .shape-triangle {
-    --frame-tilt: -8deg;
+    --frame-tilt: #{$triangle-tilt};
+    --frame-fit: #{math.div(1, $tilt-cos + $tilt-sin)};
+    --frame-shift: min(
+      #{math.percentage(math.div($tilt-sin, 2))},
+      var(--gouttiere)
+    );
+
+    @include breakpoint-up($breakpoint-desktop) {
+      --frame-shift: 0%;
+    }
 
     .cover {
       clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
@@ -199,7 +221,7 @@ const { title, description, tags, cover, links } = project.data;
   // Formes qui gardent le screenshot entier
   .shape-square .cover,
   .shape-cross .cover {
-    border: 1px solid var(--border-surface);
+    border: 1px solid var(--color-border);
   }
 
   // La croix est un badge qui déborde du coin du cadre
@@ -231,15 +253,15 @@ const { title, description, tags, cover, links } = project.data;
     font-style: italic;
     line-height: 1;
     letter-spacing: -0.02em;
-    color: var(--text-primary);
+    color: var(--color-text);
     margin: 0;
   }
 
   .description {
-    font-family: var(--font-body);
+    font-family: var(--font-text);
     font-size: 0.95rem;
     line-height: 1.7;
-    color: var(--text-primary);
+    color: var(--color-text);
     opacity: 0.7;
     max-width: 34rem;
     margin: 0;
@@ -251,7 +273,7 @@ const { title, description, tags, cover, links } = project.data;
     justify-content: space-between;
     width: 100%;
     max-width: 34rem;
-    margin-top: 0.75rem;
+    margin-top: var(--espace-s-plus);
   }
 
   // Révélation au scroll, en CSS pur (même pattern que le titre de section)
@@ -271,6 +293,12 @@ const { title, description, tags, cover, links } = project.data;
       animation: project-reveal both;
       animation-timeline: view();
       animation-range: entry 10% cover 35%;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .featured-project {
+        animation: none;
+      }
     }
   }
 </style>

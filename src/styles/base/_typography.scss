@@ -4,22 +4,30 @@
 @each $i in (1, 2, 3, 4, 5) {
   h#{$i} {
     font-size: var(--h#{$i});
-    color: var(--text-primary);
   }
 }
 
-h1, h2, h3 {
-    font-family: var(--font-title);
+h1,
+h2,
+h3 {
+  font-family: var(--font-title);
 }
 
-h4, h5, p, a {
-    font-family: var(--font-body);
+h4,
+h5,
+h6,
+p,
+a {
+  font-family: var(--font-text);
 }
-    
 
-p, a {
+h6,
+p {
   font-size: var(--p);
-  color: var(--text-primary);
+}
+
+a {
+  color: inherit;
 }
 
 @include breakpoint-up($breakpoint-desktop) {

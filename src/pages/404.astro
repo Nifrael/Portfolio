@@ -7,7 +7,7 @@ import ArrowLink from '@components/ui/ArrowLink.astro';
   title="Page introuvable — NifraDev"
   description="La page demandée n'existe pas ou a été déplacée."
 >
-  <div class="not-found">
+  <div class="not-found container">
     <h1 class="code">
       <span class="code-outline">4</span><span class="code-main">0</span><span
         class="code-outline">4</span
@@ -28,8 +28,8 @@ import ArrowLink from '@components/ui/ArrowLink.astro';
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 1.5rem;
-    padding: 4rem 1.5rem;
+    gap: var(--espace-m-plus);
+    padding-block: var(--espace-xl);
     text-align: center;
   }
 
@@ -44,27 +44,19 @@ import ArrowLink from '@components/ui/ArrowLink.astro';
   }
 
   .code-outline {
-    -webkit-text-stroke: 1.5px var(--accent-primary);
+    -webkit-text-stroke: 1.5px var(--color-accent);
     color: transparent;
   }
 
   .code-main {
-    background: linear-gradient(
-      to right,
-      var(--text-primary),
-      var(--accent-primary)
-    );
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    color: transparent;
+    @include text-gradient;
   }
 
   .message {
-    font-family: var(--font-body);
+    font-family: var(--font-text);
     font-size: 1.1rem;
     font-weight: 200;
-    color: var(--text-primary);
+    color: var(--color-text);
     opacity: 0.8;
     margin: 0;
   }

@@ -36,13 +36,13 @@
     opacity: 0.3;
     background-size: 80px 80px;
     background-image:
-      linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      linear-gradient(to right, var(--color-decor-grid) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--color-decor-grid) 1px, transparent 1px);
   }
 
   .glow {
     position: absolute;
-    border-radius: 50%;
+    border-radius: var(--rayon-rond);
     filter: blur(150px);
 
     &-tl {
@@ -50,7 +50,7 @@
       left: -10%;
       width: 60%;
       height: 60%;
-      background: rgba(255, 255, 255, 0.04);
+      background: var(--color-decor-glow);
     }
 
     &-br {
@@ -58,7 +58,7 @@
       right: -10%;
       width: 70%;
       height: 70%;
-      background: rgba(0, 229, 239, 0.04);
+      background: var(--color-decor-glow-accent);
     }
   }
 
@@ -71,12 +71,19 @@
     background: linear-gradient(
       90deg,
       transparent,
-      rgba(0, 229, 239, 0.35),
-      white,
-      rgba(0, 229, 239, 0.35),
+      var(--color-decor-beam),
+      var(--color-decor-beam-core),
+      var(--color-decor-beam),
       transparent
     );
     filter: blur(40px);
     animation: beam-flow 10s linear infinite;
+  }
+
+  // Le faisceau n'existe que par son animation : figé, il n'a pas de sens.
+  @media (prefers-reduced-motion: reduce) {
+    .beam {
+      display: none;
+    }
   }
 </style>

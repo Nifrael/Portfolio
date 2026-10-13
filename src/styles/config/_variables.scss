@@ -7,18 +7,112 @@ $breakpoint-desktop-xxl: 1440px;
 
 // Fin des breakpoints
 
-// Propriétés principales
+// Début des couleurs
+
+$noir: #0f0f0f;
+$anthracite: #191919;
+$gris: #b4b4b4;
+$blanc-casse: #f1f1f1;
+$blanc: #ffffff;
+
+$cyan: #00e5ef;
+
+$vert: #64ff64;
+$rouge: #ff6464;
+
+// Technos (tags)
+$violet: #a855f7;
+$rose: #f472b6;
+$bleu: #3b82f6;
+$jaune: #facc15;
+
+// Fin des couleurs
 
 :root {
-  // Couleurs
-  --bg-base: rgb(15, 15, 15);
-  --bg-surface: rgba(25, 25, 25, 0.227);
-  --border-surface: rgba(255, 255, 255, 0.08);
-  --shadow-surface: rgba(180, 180, 180, 0.2);
-  --text-primary: rgb(241, 241, 241);
-  --accent-primary: rgb(0, 229, 239);
-  --green: rgba(100, 255, 100, 0.3);
-  // Fin couleurs
+  // Fonds
+  --color-bg-primary: #{$noir};
+  --color-bg-surface: #{rgba($anthracite, 0.227)};
+  --color-bg-cards: #{rgba($blanc, 0.01)};
+  --color-bg-code: #{rgba($blanc, 0.05)};
+
+  // Textes
+  --color-text: #{$blanc-casse};
+  --color-text-secondary: #{rgba($blanc-casse, 0.5)};
+  --color-text-strong: #{$blanc};
+  --color-text-inversed: #{$noir};
+
+  // Traits et accents
+  --color-accent: #{$cyan};
+  --color-accent-border: #{rgba($cyan, 0.3)};
+  --color-border-subtle: #{rgba($blanc, 0.05)};
+  --color-border: #{rgba($blanc, 0.08)};
+  --color-border-strong: #{rgba($blanc, 0.1)};
+  --color-border-emphasis: #{rgba($blanc, 0.2)};
+
+  // Ombres et halos
+  --color-shadow: #{rgba($gris, 0.2)};
+  --color-halo: #{rgba($blanc, 0.8)};
+  --color-accent-glow-xs: #{rgba($cyan, 0.05)};
+  --color-accent-glow-s: #{rgba($cyan, 0.2)};
+  --color-accent-glow-m: #{rgba($cyan, 0.3)};
+  --color-accent-glow-l: #{rgba($cyan, 0.4)};
+  --color-accent-glow-xl: #{rgba($cyan, 0.6)};
+
+  // Décor (fond global, symboles)
+  --color-decor-grid: #{rgba($blanc, 0.02)};
+  --color-decor-glow: #{rgba($blanc, 0.04)};
+  --color-decor-glow-accent: #{rgba($cyan, 0.04)};
+  --color-decor-beam: #{rgba($cyan, 0.35)};
+  --color-decor-beam-core: #{$blanc};
+  --color-decor-symbol: #{rgba($blanc, 0.3)};
+
+  // États
+  --color-success: #{rgba($vert, 0.3)};
+  --color-error: #{rgba($rouge, 0.4)};
+
+  // Tags
+  --color-tag-astro: #{$violet};
+  --color-tag-scss: #{$rose};
+  --color-tag-typescript: #{$bleu};
+  --color-tag-javascript: #{$jaune};
+
+  // Échelle typographique
+  --base-size: 1rem;
+  --scale: 1.2;
+  --little-text: calc((var(--base-size) * 0.8));
+  --p: calc(var(--base-size) * var(--scale));
+  --h5: calc(var(--p) * var(--scale));
+  --h4: calc(var(--h5) * var(--scale));
+  --h3: calc(var(--h4) * var(--scale));
+  --h2: calc(var(--h3) * var(--scale));
+  --h1: calc(var(--h2) * var(--scale));
+
+  // Espacements
+  --espace-xs: 0.25rem;
+  --espace-s: 0.5rem;
+  --espace-s-plus: 0.75rem;
+  --espace-m: 1rem;
+  --espace-m-plus: 1.5rem;
+  --espace-l: 2rem;
+  --espace-l-plus: 3rem;
+  --espace-xl: 4rem;
+  --espace-xl-plus: 5rem;
+  --espace-xxl: 6rem;
+  --espace-section: var(--espace-l-plus);
+
+  // Rayons
+  --rayon-xs: 2px;
+  --rayon-s: 4px;
+  --rayon-m: 16px;
+  --rayon-l: 24px;
+  --rayon-pilule: 100px;
+  --rayon-rond: 50%;
+
+  // Conteneur
+  --largeur-max: 80rem;
+  --gouttiere: var(--espace-m-plus);
+
+  // Navbar
   --navbar-height: 60px;
   --navbar-top: 1rem;
   --navbar-top-desktop: 1.5rem;
@@ -26,15 +120,13 @@ $breakpoint-desktop-xxl: 1440px;
   --navbar-offset-desktop: calc(
     var(--navbar-top-desktop) + var(--navbar-height) + 2rem
   );
-
-  --base-size: 1rem;
-  --scale: 1.2;
-  --p: calc(var(--base-size) * var(--scale));
-  --h5: calc(var(--p) * var(--scale));
-  --h4: calc(var(--h5) * var(--scale));
-  --h3: calc(var(--h4) * var(--scale));
-  --h2: calc(var(--h3) * var(--scale));
-  --h1: calc(var(--h2) * var(--scale));
 }
 
-// Fin des propriétés principales
+// Gouttière et rythme vertical des sections plus généreux sur grand écran :
+// les tokens suivent, tout ce qui passe par `.container` s'aligne d'office.
+@media (width >= $breakpoint-desktop) {
+  :root {
+    --gouttiere: var(--espace-l);
+    --espace-section: var(--espace-xxl);
+  }
+}
