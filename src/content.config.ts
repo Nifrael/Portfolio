@@ -1,5 +1,5 @@
 import { defineCollection } from 'astro:content';
-import { z } from 'astro:schema';
+import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 
 /** Symboles géométriques associés aux projets featured (écho aux GlassSymbols). */
@@ -20,8 +20,8 @@ const projects = defineCollection({
       alt: z.string(),
     }),
     links: z.object({
-      live: z.string().url().optional(),
-      repository: z.string().url().optional(),
+      live: z.url().optional(),
+      repository: z.url().optional(),
     }).optional(),
   }),
 });
