@@ -11,8 +11,16 @@ export async function getSortedProjects(): Promise<Project[]> {
   return projects.sort(byNewestFirst);
 }
 
-/** Les projets mis en avant (featured), triés du plus récent au plus ancien. */
+/** Nombre maximum de projets en vitrine sur l'accueil (un par symbole △ ○ × □). */
+export const MAX_FEATURED_PROJECTS = 4;
+
+/**
+ * Les projets mis en avant (featured), du plus récent au plus ancien, limités
+ * à MAX_FEATURED_PROJECTS. Les autres restent visibles sur l'index /projets.
+ */
 export async function getFeaturedProjects(): Promise<Project[]> {
   const projects = await getSortedProjects();
-  return projects.filter((project) => project.data.featured);
+  return projects
+    .filter((project) => project.data.featured)
+    .slice(0, MAX_FEATURED_PROJECTS);
 }
