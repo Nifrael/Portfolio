@@ -1,0 +1,195 @@
+---
+import SectionTitle from "@components/ui/SectionTitle.astro";
+import type { MethodStep } from "./types";
+
+/**
+ * Method — Étapes de travail avec le client, le long d'un fil lumineux.
+ *
+ * CSS pur, même mécanique que ParcoursThread : le fil est révélé par un
+ * clip-path piloté par une view-timeline (`--method`), sa pointe suit le
+ * milieu de l'écran et chaque nœud s'allume à son passage. Sans support des
+ * scroll-driven animations (ou en mouvement réduit), tout est affiché allumé.
+ *
+ * @prop {MethodStep[]} steps - Étapes, dans l'ordre (fournies par la page).
+ */
+interface Props {
+  steps: MethodStep[];
+}
+
+const { steps } = Astro.props;
+---
+
+<section class="method container" id="methode" aria-label="Méthode de travail">
+  <SectionTitle outline="COMMENT ON" main="TRAVAILLE" class="method-title" />
+
+  <ol class="steps" role="list">
+    {
+      steps.map((step, index) => (
+        <li class="step">
+          <span class="node" aria-hidden="true">
+            {String(index + 1).padStart(2, "0")}
+          </span>
+          <div class="content">
+            <h3 class="titre">{step.titre}</h3>
+            <p class="texte">{step.texte}</p>
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+</section>
+
+<style lang="scss">
+  @use "@styles/config/variables" as *;
+  @use "@styles/config/mixin" as *;
+
+  .method {
+    --node-size: 2.75rem;
+
+    padding-block: var(--espace-section);
+    scroll-margin-top: var(--navbar-offset);
+
+    :global(.method-title) {
+      margin-bottom: var(--espace-xl);
+    }
+  }
+
+  .steps {
+    position: relative;
+    display: grid;
+    gap: var(--espace-xl);
+    max-width: 48rem;
+    margin-inline: auto;
+    view-timeline-name: --method;
+
+    // Fil vertical passant par le centre des nœuds :
+    // ::before = rail éteint, ::after = fil lumineux révélé au scroll
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      top: calc(var(--node-size) / 2);
+      bottom: 0;
+      left: calc(var(--node-size) / 2);
+      pointer-events: none;
+      transform: translateX(-50%);
+    }
+
+    &::before {
+      width: 1px;
+      background: var(--color-border-emphasis);
+    }
+
+    &::after {
+      width: 2px;
+      background: var(--color-text);
+      box-shadow:
+        0 0 4px var(--color-halo),
+        0 0 14px var(--color-accent);
+    }
+  }
+
+  .step {
+    display: grid;
+    grid-template-columns: var(--node-size) 1fr;
+    gap: var(--espace-m);
+    align-items: start;
+
+    @include breakpoint-up($breakpoint-tablet) {
+      gap: var(--espace-l);
+    }
+  }
+
+  // Nœud posé sur le fil : son fond masque le rail
+  .node {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: var(--node-size);
+    height: var(--node-size);
+    border: 1px solid var(--color-accent-border);
+    border-radius: var(--rayon-rond);
+    background: var(--color-bg-primary);
+    font-family: var(--font-title);
+    font-size: var(--little-text);
+    font-style: italic;
+    font-weight: 700;
+    color: var(--color-accent);
+    filter: drop-shadow(0 0 6px var(--color-accent));
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espace-s);
+    // Aligne la première ligne du titre sur le centre du nœud
+    padding-top: calc(var(--node-size) / 2 - 0.85rem);
+  }
+
+  .titre {
+    font-family: var(--font-title);
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+    font-style: italic;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--color-text-strong);
+  }
+
+  .texte {
+    max-width: 36rem;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--color-text);
+    opacity: 0.8;
+  }
+
+  // Insets horizontaux négatifs : le halo ne doit pas être rogné
+  @keyframes wire-unroll {
+    from {
+      clip-path: inset(0 -20px 100% -20px);
+    }
+    to {
+      clip-path: inset(0 -20px 0 -20px);
+    }
+  }
+
+  @keyframes node-on {
+    from {
+      color: var(--color-decor-symbol);
+      border-color: var(--color-border);
+      filter: none;
+    }
+  }
+
+  @keyframes step-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      // Pointe du fil au milieu de l'écran : la révélation commence quand le
+      // haut de la liste atteint le milieu, et finit quand le bas l'atteint.
+      .steps::after {
+        animation: wire-unroll linear both;
+        animation-timeline: --method;
+        animation-range: cover 50vh cover calc(100% - 50vh);
+      }
+
+      .node {
+        animation: node-on linear both;
+        animation-timeline: view();
+        animation-range: cover calc(50vh - var(--node-size) / 2) cover 50vh;
+      }
+
+      .content {
+        animation: step-reveal ease-out both;
+        animation-timeline: view();
+        animation-range: entry 10% cover 30%;
+      }
+    }
+  }
+</style>

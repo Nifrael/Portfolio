@@ -1,0 +1,107 @@
+---
+import type { ProofStat } from "./types";
+
+/**
+ * Proofs — Bande sobre de faits vérifiables, en langage client.
+ * Ne doit contenir que des faits mesurés ou tenus sur des projets réels.
+ *
+ * @prop {ProofStat[]} stats - Faits à afficher (fournis par la page).
+ * @prop {string} [source]    - Origine des mesures, affichée en note.
+ */
+interface Props {
+  stats: ProofStat[];
+  source?: string;
+}
+
+const { stats, source } = Astro.props;
+---
+
+<section class="proofs container" aria-labelledby="proofs-title">
+  <h2 id="proofs-title" class="visually-hidden">Quelques chiffres</h2>
+
+  <ul class="stats" role="list">
+    {
+      stats.map((stat, index) => (
+        <li class="stat" style={`--i: ${index}`}>
+          <p class="valeur">{stat.valeur}</p>
+          <p class="label">{stat.label}</p>
+        </li>
+      ))
+    }
+  </ul>
+
+  {source && <p class="source">{source}</p>}
+</section>
+
+<style lang="scss">
+  @use "@styles/config/variables" as *;
+  @use "@styles/config/mixin" as *;
+
+  .proofs {
+    padding-block: var(--espace-section);
+  }
+
+  .stats {
+    display: grid;
+    gap: var(--espace-xl) var(--espace-l);
+    max-width: 52rem;
+    margin-inline: auto;
+
+    @include breakpoint-up($breakpoint-tablet) {
+      grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    }
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--espace-s);
+    text-align: center;
+  }
+
+  .valeur {
+    font-family: var(--font-title);
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-style: italic;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    -webkit-text-stroke: 1px var(--color-text);
+    color: transparent;
+  }
+
+  .label {
+    max-width: 20rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--color-text);
+    opacity: 0.8;
+  }
+
+  .source {
+    margin-top: var(--espace-xl);
+    text-align: center;
+    font-size: var(--little-text);
+    color: var(--color-text-secondary);
+  }
+
+  @keyframes stat-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      // Apparition décalée d'un chiffre à l'autre
+      .stat {
+        animation: stat-reveal ease-out both;
+        animation-timeline: view();
+        animation-range: entry calc(5% + var(--i) * 8%) cover
+          calc(20% + var(--i) * 5%);
+      }
+    }
+  }
+</style>
