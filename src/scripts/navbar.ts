@@ -53,6 +53,17 @@ export function initNavbar(): void {
     });
   });
 
+  // Échap ferme le menu et rend le focus au bouton, pour ne pas perdre
+  // l'utilisateur clavier dans un menu devenu invisible
+  document.addEventListener("keydown", (event) => {
+    const isOpen = toggle.getAttribute("aria-expanded") === "true";
+
+    if (event.key === "Escape" && isOpen) {
+      closeMenu(toggle, mobileMenu, hamburger);
+      toggle.focus();
+    }
+  });
+
   document.addEventListener("click", (event) => {
     const target = event.target as Node;
     const isInsideMenu = mobileMenu.contains(target);

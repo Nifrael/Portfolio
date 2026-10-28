@@ -7,26 +7,46 @@ const menuItems = [
 ---
 
 <header class="navbar-wrapper">
-  <nav class="navbar">
-    <a href="/" class="logo" aria-label="Home">
-      <div class="logo-icon">
-        <span class="chevron">&gt;</span><span class="underscore">_</span>
-      </div>
-      <div class="logo-text">
-        NIFRA<span class="underscore">DEV</span>
-      </div>
-    </a>
+  {
+    /* Le <nav> englobe la barre ET le menu mobile : les lecteurs d'écran
+       annoncent ainsi les deux comme navigation. La barre reste un <div>, car
+       son backdrop-filter casserait le flou du menu mobile s'il y était imbriqué. */
+  }
+  <nav aria-label="Navigation principale">
+    <div class="navbar">
+      <a href="/" class="logo" aria-label="NifraDev, accueil">
+        <div class="logo-icon">
+          <span class="chevron">&gt;</span><span class="underscore">_</span>
+        </div>
+        <div class="logo-text">
+          NIFRA<span class="underscore">DEV</span>
+        </div>
+      </a>
 
-    <button
-      class="menu-toggle"
-      aria-label="Toggle navigation"
-      aria-expanded="false"
-      id="navbar-toggle"
-    >
-      <span class="hamburger"></span>
-    </button>
+      <button
+        class="menu-toggle"
+        aria-label="Menu"
+        aria-expanded="false"
+        aria-controls="navbar-mobile"
+        id="navbar-toggle"
+      >
+        <span class="hamburger" aria-hidden="true"></span>
+      </button>
 
-    <div class="nav-desktop">
+      <div class="nav-desktop">
+        <ul class="menu-items">
+          {
+            menuItems.map((item) => (
+              <li>
+                <a href={item.href}>{item.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <div class="nav-mobile" id="navbar-mobile" aria-hidden="true">
       <ul class="menu-items">
         {
           menuItems.map((item) => (
@@ -38,18 +58,6 @@ const menuItems = [
       </ul>
     </div>
   </nav>
-
-  <div class="nav-mobile" id="navbar-mobile" aria-hidden="true">
-    <ul class="menu-items">
-      {
-        menuItems.map((item) => (
-          <li>
-            <a href={item.href}>{item.label}</a>
-          </li>
-        ))
-      }
-    </ul>
-  </div>
 </header>
 
 <script>
@@ -84,7 +92,8 @@ const menuItems = [
     max-width: var(--largeur-max);
 
     @include breakpoint-up($breakpoint-tablet) {
-      padding: var(--espace-s-plus) var(--espace-m) var(--espace-s-plus) var(--espace-m-plus);
+      padding: var(--espace-s-plus) var(--espace-m) var(--espace-s-plus)
+        var(--espace-m-plus);
     }
   }
 
@@ -164,7 +173,7 @@ const menuItems = [
     height: 2px;
     background: var(--color-text);
     border-radius: var(--rayon-xs);
-    transition: all 0.3s ease;
+    transition: background-color 0.3s ease;
 
     &::before,
     &::after {
@@ -175,7 +184,7 @@ const menuItems = [
       height: 2px;
       background: var(--color-text);
       border-radius: var(--rayon-xs);
-      transition: all 0.3s ease;
+      transition: transform 0.3s ease;
     }
 
     &::before {
