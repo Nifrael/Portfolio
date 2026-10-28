@@ -54,13 +54,22 @@ const { steps } = Astro.props;
     }
   }
 
-  // Le fil part du centre du premier nœud
+  // Le fil part du centre du premier nœud (repli sans anchor positioning)
   .method :global(.method-thread) {
     --thread-width: var(--node-size);
     --thread-start: calc(var(--node-size) / 2);
 
     max-width: 48rem;
     margin-inline: auto;
+  }
+
+  // Le fil relie le centre du premier nœud à celui du dernier
+  .step:first-child :global(.thread-node) {
+    anchor-name: --thread-first;
+  }
+
+  .step:last-child :global(.thread-node) {
+    anchor-name: --thread-last;
   }
 
   .steps {

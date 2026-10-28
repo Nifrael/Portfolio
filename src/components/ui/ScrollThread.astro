@@ -14,6 +14,10 @@
  * - `--thread-width`  largeur de la colonne du fil (défaut : 2.75rem)
  * - `--thread-center` position horizontale de l'axe (défaut : moitié de la colonne)
  * - `--thread-start` / `--thread-end` retrait du fil en haut / en bas (défaut : 0)
+ *
+ * Pour que le fil commence et finisse pile au centre de deux nœuds, le parent
+ * leur donne `anchor-name: --thread-first` et `anchor-name: --thread-last`.
+ * Sans support de l'anchor positioning, les retraits ci-dessus s'appliquent.
  * - `--thread-stroke` épaisseur du fil allumé, en px (défaut : 2)
  *
  * @prop {number} [waves] - Nombre d'étapes : le fil ondule et recroise l'axe
@@ -64,6 +68,8 @@ const wirePath = buildWirePath(waves);
 <style lang="scss">
   .scroll-thread {
     position: relative;
+    // Ancres propres à chaque fil : deux fils sur une page ne se gênent pas
+    anchor-scope: --thread-first, --thread-last;
   }
 
   // Boîte du fil : porte la view-timeline, pour que la révélation suive
@@ -77,6 +83,11 @@ const wirePath = buildWirePath(waves);
     pointer-events: none;
     transform: translateX(-50%);
     view-timeline-name: --scroll-thread;
+
+    @supports (anchor-name: --thread-first) {
+      top: anchor(--thread-first center, var(--thread-start, 0px));
+      bottom: anchor(--thread-last center, var(--thread-end, 0px));
+    }
 
     svg {
       position: absolute;
