@@ -1,0 +1,157 @@
+---
+import SectionTitle from "@components/ui/SectionTitle.astro";
+import ShapeSymbol from "@components/ui/ShapeSymbol.astro";
+import TagList from "@components/ui/TagList.astro";
+import type { ShapeCard } from "./types";
+
+/**
+ * ShapeCards — Grille de compétences, chaque carte portant l'un des quatre
+ * symboles de la charte (△ ○ × □), qui s'allume au survol.
+ *
+ * @prop {string} outline       - Ligne en contour du titre de section.
+ * @prop {string} main          - Ligne en dégradé du titre de section.
+ * @prop {ShapeCard[]} items    - Cartes à afficher.
+ */
+interface Props {
+  outline: string;
+  main: string;
+  items: ShapeCard[];
+}
+
+const { outline, main, items } = Astro.props;
+---
+
+<section class="shape-cards container" aria-label={`${outline} ${main}`}>
+  <SectionTitle outline={outline} main={main} class="shape-cards-title" />
+
+  <ul class="grid" role="list">
+    {
+      items.map((item, index) => (
+        <li class="card" style={`--i: ${index}`}>
+          <div class="card-head">
+            <ShapeSymbol shape={item.shape} class="card-shape" />
+            <span class="index" aria-hidden="true">
+              {String(index + 1).padStart(2, "0")}
+            </span>
+          </div>
+          <h3 class="titre">{item.titre}</h3>
+          <p class="texte">{item.texte}</p>
+          <TagList tags={item.tags} class="card-tags" />
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style lang="scss">
+  @use "@styles/config/variables" as *;
+  @use "@styles/config/mixin" as *;
+
+  .shape-cards {
+    padding-block: var(--espace-section);
+
+    :global(.shape-cards-title) {
+      margin-bottom: var(--espace-xl);
+    }
+  }
+
+  .grid {
+    display: grid;
+    gap: var(--espace-m-plus);
+
+    @include breakpoint-up($breakpoint-tablet) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include breakpoint-up($breakpoint-desktop-xl) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espace-m);
+    padding: var(--espace-l);
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-cards);
+    backdrop-filter: blur(12px);
+    transition: border-color 0.3s ease;
+
+    &:hover {
+      border-color: var(--color-accent-border);
+    }
+
+    :global(.card-tags) {
+      margin-top: auto;
+    }
+  }
+
+  .card-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: var(--espace-m);
+
+    :global(.card-shape) {
+      --symbol-size: 3.5rem;
+
+      color: var(--color-decor-symbol);
+      transition:
+        color 0.4s ease,
+        filter 0.4s ease,
+        transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .card:hover & :global(.card-shape) {
+      color: var(--color-accent);
+      filter: drop-shadow(0 0 4px var(--color-halo))
+        drop-shadow(0 0 14px var(--color-accent));
+      transform: rotate(-8deg) scale(1.08);
+    }
+  }
+
+  .index {
+    font-family: var(--font-title);
+    font-size: 2.5rem;
+    font-style: italic;
+    font-weight: 700;
+    line-height: 1;
+    -webkit-text-stroke: 1px var(--color-border-emphasis);
+    color: transparent;
+  }
+
+  .titre {
+    font-family: var(--font-title);
+    font-size: 1.5rem;
+    font-style: italic;
+    font-weight: 700;
+    color: var(--color-text-strong);
+  }
+
+  .texte {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--color-text);
+    opacity: 0.8;
+  }
+
+  @keyframes card-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      // Apparition décalée d'une carte à l'autre
+      .card {
+        animation: card-reveal ease-out both;
+        animation-timeline: view();
+        animation-range: entry calc(5% + var(--i) * 10%) cover
+          calc(25% + var(--i) * 5%);
+      }
+    }
+  }
+</style>

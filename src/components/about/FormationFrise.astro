@@ -1,0 +1,246 @@
+---
+import SectionTitle from "@components/ui/SectionTitle.astro";
+import ShapeSymbol from "@components/ui/ShapeSymbol.astro";
+import type { FormationStep } from "./types";
+
+/**
+ * FormationFrise — Frise horizontale des étapes de formation.
+ *
+ * Par défaut : rail à défilement horizontal natif (scroll-snap, clavier).
+ * Avec les scroll-driven animations : la section devient haute, la frise
+ * reste collée à l'écran et défile latéralement au rythme du scroll vertical,
+ * pendant que la ligne néon se trace (view-timeline `--frise`).
+ *
+ * @prop {FormationStep[]} steps - Étapes, de la plus ancienne à la plus récente.
+ */
+interface Props {
+  steps: FormationStep[];
+}
+
+const { steps } = Astro.props;
+---
+
+<section
+  class="formation"
+  aria-label="Formation"
+  style={`--stations: ${steps.length}`}
+>
+  <div class="stage">
+    <div class="header container">
+      <SectionTitle outline="MA" main="FORMATION" />
+      <p class="hint" aria-hidden="true">Défilez <span class="hint-arrow">→</span></p>
+    </div>
+
+    <div class="rail" role="region" aria-label="Frise de formation" tabindex="0">
+      <ol class="track" role="list">
+        {
+          steps.map((step) => (
+            <li class="station">
+              <span class="annee">{step.annee}</span>
+              <ShapeSymbol shape={step.shape} class="station-node" />
+              <h3 class="diplome">{step.diplome}</h3>
+              <p class="ecole">{step.ecole}</p>
+              <p class="texte">{step.texte}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style lang="scss">
+  @use "@styles/config/variables" as *;
+  @use "@styles/config/mixin" as *;
+
+  .formation {
+    padding-block: var(--espace-section);
+  }
+
+  .header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--espace-m);
+    margin-bottom: var(--espace-xl);
+  }
+
+  .hint {
+    font-size: var(--little-text);
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+  }
+
+  .hint-arrow {
+    color: var(--color-accent);
+  }
+
+  // Aligne la première station sur le bord gauche du .container
+  .rail {
+    --rail-inset: max(var(--gouttiere), (100% - var(--largeur-max)) / 2);
+
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--rail-inset);
+    padding-bottom: var(--espace-m);
+    scrollbar-color: var(--color-accent-border) transparent;
+
+    &:focus-visible {
+      @include focus-visible;
+    }
+  }
+
+  .track {
+    --annee-size: clamp(3rem, 7vw, 5.5rem);
+    --node-size: 3rem;
+    --line-top: calc(var(--annee-size) + var(--espace-m) + var(--node-size) / 2);
+
+    position: relative;
+    display: flex;
+    gap: var(--espace-xl);
+    width: max-content;
+    padding-inline: var(--rail-inset);
+
+    // Ligne de fond + ligne néon tracée par-dessus
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: var(--line-top);
+    }
+
+    &::before {
+      height: 1px;
+      background: var(--color-border-emphasis);
+    }
+
+    &::after {
+      height: 2px;
+      margin-top: -0.5px;
+      background: var(--color-text);
+      box-shadow:
+        0 0 6px var(--color-halo),
+        0 0 16px var(--color-accent);
+      transform-origin: left;
+    }
+  }
+
+  .station {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--espace-m);
+    width: min(78vw, 22rem);
+    scroll-snap-align: start;
+
+    :global(.station-node) {
+      --symbol-size: 1.25rem;
+
+      width: var(--node-size);
+      height: var(--node-size);
+      border: 1px solid var(--color-accent-border);
+      border-radius: var(--rayon-rond);
+      background: var(--color-bg-primary);
+      color: var(--color-accent);
+      filter: drop-shadow(0 0 6px var(--color-accent));
+    }
+  }
+
+  .annee {
+    font-family: var(--font-title);
+    font-size: var(--annee-size);
+    font-style: italic;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    -webkit-text-stroke: 1.5px var(--color-accent);
+    color: transparent;
+  }
+
+  .diplome {
+    font-family: var(--font-title);
+    font-size: clamp(1.3rem, 2.5vw, 1.6rem);
+    font-style: italic;
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--color-text-strong);
+  }
+
+  .ecole {
+    font-size: var(--little-text);
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .texte {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--color-text);
+    opacity: 0.8;
+  }
+
+  // Ne translate que si la frise dépasse l'écran (min avec 0)
+  @keyframes frise-slide {
+    to {
+      transform: translateX(min(0px, -100% + 100cqw));
+    }
+  }
+
+  @keyframes frise-line {
+    from {
+      transform: scaleX(0);
+    }
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      // Hauteur = un écran collé + une course de scroll par station
+      .formation {
+        height: calc(100vh + var(--stations) * 50vh);
+        padding-block: 0;
+        view-timeline-name: --frise;
+      }
+
+      .stage {
+        position: sticky;
+        top: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100vh;
+        padding-top: var(--navbar-offset);
+        overflow: clip;
+        container-type: inline-size;
+      }
+
+      .rail {
+        overflow: visible;
+        scroll-snap-type: none;
+      }
+
+      .track,
+      .track::after {
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: --frise;
+        animation-range: contain 0% contain 100%;
+      }
+
+      .track {
+        animation-name: frise-slide;
+      }
+
+      .track::after {
+        animation-name: frise-line;
+      }
+    }
+  }
+</style>

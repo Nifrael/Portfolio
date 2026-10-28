@@ -1,0 +1,117 @@
+---
+import { Image } from "astro:assets";
+import Julien from "@assets/images/Julien.jpg";
+import ArrowLink from "@components/ui/ArrowLink.astro";
+import SectionTitle from "@components/ui/SectionTitle.astro";
+import AvailabilityBadge from "@components/ui/AvailabilityBadge.astro";
+
+/**
+ * AboutIntro — Ouverture de la page À propos : titre, disponibilité, texte de
+ * présentation et portrait découpé en cercle néon (même technique que les
+ * visuels de projets).
+ *
+ * @prop {string[]} paragraphs - Paragraphes de présentation (le premier en chapô).
+ */
+interface Props {
+  paragraphs: string[];
+}
+
+const { paragraphs } = Astro.props;
+---
+
+<section class="intro container" aria-label="Présentation">
+  <div class="text">
+    <ArrowLink href="/" direction="left" muted>Retour à l'accueil</ArrowLink>
+    <SectionTitle as="h1" outline="QUI" main="SUIS-JE ?" />
+    <AvailabilityBadge status="available" />
+    {paragraphs.map((paragraph) => <p class="paragraph">{paragraph}</p>)}
+  </div>
+
+  <div class="portrait">
+    <div class="frame">
+      <Image
+        src={Julien}
+        alt="Photo de Julien Marchand"
+        width={600}
+        height={600}
+        class="photo"
+        loading="eager"
+      />
+      <svg class="outline" viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="50" cy="50" r="49" vector-effect="non-scaling-stroke" />
+      </svg>
+    </div>
+  </div>
+</section>
+
+<style lang="scss">
+  @use "@styles/config/variables" as *;
+  @use "@styles/config/mixin" as *;
+
+  .intro {
+    --title-size: clamp(2.5rem, 8vw, 5rem);
+
+    display: grid;
+    gap: var(--espace-xl);
+    align-items: center;
+    padding-block: var(--espace-l-plus) var(--espace-section);
+
+    @include breakpoint-up($breakpoint-desktop) {
+      grid-template-columns: 3fr 2fr;
+      min-height: calc(100vh - var(--navbar-offset-desktop));
+    }
+  }
+
+  .text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--espace-m-plus);
+  }
+
+  .paragraph {
+    max-width: 38rem;
+    font-size: 1rem;
+    font-weight: 200;
+    line-height: 1.7;
+    color: var(--color-text);
+    opacity: 0.8;
+
+    &:first-of-type {
+      font-size: 1.2rem;
+      opacity: 1;
+    }
+  }
+
+  .portrait {
+    display: flex;
+    justify-content: center;
+  }
+
+  .frame {
+    position: relative;
+    width: min(100%, 22rem);
+    aspect-ratio: 1;
+  }
+
+  .photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    clip-path: circle(49%);
+  }
+
+  .outline {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    fill: none;
+    stroke: var(--color-text);
+    stroke-width: 6;
+    filter: drop-shadow(0 0 4px var(--color-halo))
+      drop-shadow(0 0 14px var(--color-accent))
+      drop-shadow(0 0 30px var(--color-accent));
+  }
+</style>
