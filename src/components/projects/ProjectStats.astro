@@ -1,0 +1,72 @@
+---
+import { getProjectStats, type Project } from "@utils/projects";
+
+/**
+ * ProjectStats — Chiffres clés de l'index des projets : leur nombre en grand
+ * (contour), puis le nombre de technos distinctes et la période couverte.
+ * Tout est calculé depuis la collection.
+ *
+ * @prop {Project[]} projects - Projets comptés.
+ */
+interface Props {
+  projects: Project[];
+}
+
+const { projects } = Astro.props;
+const { count, technologies, firstYear, lastYear } = getProjectStats(projects);
+const period =
+  firstYear === lastYear ? `${firstYear}` : `${firstYear} — ${lastYear}`;
+---
+
+<p class="project-stats">
+  <span class="number">{String(count).padStart(2, "0")}</span>
+  <span class="details">
+    <span>{count > 1 ? "projets" : "projet"}</span>
+    <span>{technologies} technologies</span>
+    <span>{period}</span>
+  </span>
+</p>
+
+<style lang="scss">
+  @use "@styles/config/variables" as *;
+  @use "@styles/config/mixin" as *;
+
+  .project-stats {
+    display: flex;
+    align-items: center;
+    gap: var(--espace-m-plus);
+    margin: 0;
+  }
+
+  .number {
+    font-family: var(--font-title);
+    font-size: clamp(4rem, 10vw, 8rem);
+    font-style: italic;
+    font-weight: 700;
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+    -webkit-text-stroke: 1.5px var(--color-accent);
+    color: transparent;
+    filter: var(--glow-accent);
+  }
+
+  .details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espace-s);
+    padding-left: var(--espace-m-plus);
+    border-left: 1px solid var(--color-accent-border);
+
+    span {
+      @include eyebrow;
+    }
+
+    span:first-child {
+      color: var(--color-text-strong);
+    }
+  }
+
+  .project-stats {
+    @include scroll-reveal(entry 10% cover 40%, $distance: 30px, $blur: 15px);
+  }
+</style>

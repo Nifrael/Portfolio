@@ -24,16 +24,18 @@ interface Props {
 }
 
 const { project, shape, reverse = false } = Astro.props;
-const { title, description, tags, cover, links } = project.data;
+const { title, description, tags, cover, featuredCover, links } = project.data;
+const visual = featuredCover ?? cover;
 ---
 
-<article class:list={["featured-project", `shape-${shape}`, { reverse }]}>
+<article class:list={["featured-project", { reverse }]}>
   <div class="visual">
     <NeonFrame
-      src={cover.src}
-      alt={cover.alt}
+      src={visual.src}
+      alt={visual.alt}
       shape={shape}
       size={800}
+      sizes="(min-width: 1024px) 24rem, 20rem"
       class="frame"
     />
   </div>
@@ -84,31 +86,16 @@ const { title, description, tags, cover, links } = project.data;
   }
 
   .visual :global(.frame) {
-    width: min(100%, 22rem * var(--frame-scale, 1));
+    width: min(100%, 18rem * var(--frame-scale, 1));
     transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 
     @include breakpoint-up($breakpoint-desktop) {
-      width: min(100%, 26rem * var(--frame-scale, 1));
+      width: min(100%, 21rem * var(--frame-scale, 1));
 
       &:hover {
         transform: scale(1.02);
       }
     }
-  }
-
-  // Compensation optique : à cadre égal, le triangle ne montre que ~50 % de
-  // l'image, la croix ~59 %, le cercle ~77 % et le carré 100 %.
-  // `--frame-scale` équilibre leur poids visuel (valeurs réglées à l'œil).
-  .shape-triangle {
-    --frame-scale: 1.12;
-  }
-
-  .shape-cross {
-    --frame-scale: 1.05;
-  }
-
-  .shape-square {
-    --frame-scale: 0.88;
   }
 
   .details {

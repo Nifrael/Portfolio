@@ -1,0 +1,320 @@
+---
+import { Image } from "astro:assets";
+import ShapeSymbol from "@components/ui/ShapeSymbol.astro";
+import { getProjectShape, type Project } from "@utils/projects";
+
+/**
+ * ProjectIndexList — Index éditorial des projets : une ligne par projet
+ * (numéro, symbole, titre, stack, année), entièrement cliquable.
+ *
+ * En desktop, au survol ou au focus, une bande cyan balaie la zone de la
+ * stack jusqu'au bout de la ligne, dévoilant derrière elle la photo du projet
+ * (dégradé, sombre à gauche, plus lumineuse à droite). En mobile, la photo
+ * est affichée en fond de ligne, en permanence et très atténuée.
+ *
+ * @prop {Project[]} projects - Projets à lister, dans l'ordre d'affichage.
+ * @prop {number} [start]      - Rang du premier projet dans l'index complet
+ *                               (défaut : 0), pour sa numérotation et son
+ *                               symbole par défaut.
+ * @prop {boolean} [priority]  - Charge la première photo sans attendre (liste
+ *                               en haut de page, où elle est l'élément LCP
+ *                               en mobile).
+ */
+interface Props {
+  projects: Project[];
+  start?: number;
+  priority?: boolean;
+}
+
+const { projects, start = 0, priority = false } = Astro.props;
+---
+
+<ol class="project-index" role="list">
+  {
+    projects.map((project, position) => {
+      const { title, tags, cover, publishDate } = project.data;
+      const index = start + position;
+
+      return (
+        <li class="row" style={`--i: ${position}`}>
+          <a href={`/projets/${project.id}`} class="row-link">
+            <span
+              class="index"
+              data-index={String(index + 1).padStart(2, "0")}
+              aria-hidden="true"
+            />
+            <ShapeSymbol
+              shape={getProjectShape(project, index)}
+              class="row-shape"
+            />
+            <h2 class="title">{title}</h2>
+            <span class="stack">{tags.slice(0, 3).join(" · ")}</span>
+            <span class="year">{publishDate.getFullYear()}</span>
+            <span class="arrow" aria-hidden="true">
+              →
+            </span>
+            <span class="reveal" aria-hidden="true">
+              <span class="reveal-media">
+                {/* Recadrée au format de la bande (≈ 3:1). Très atténuée en
+                    mobile : une demi-résolution suffit */}
+                <Image
+                  src={cover.src}
+                  alt=""
+                  width={960}
+                  height={320}
+                  widths={[480, 960]}
+                  sizes="(min-width: 1024px) 30rem, 50vw"
+                  loading={priority && position === 0 ? "eager" : "lazy"}
+                  class="reveal-image"
+                />
+              </span>
+              <span class="reveal-band" />
+            </span>
+          </a>
+        </li>
+      );
+    })
+  }
+</ol>
+
+<style lang="scss">
+  @use "@styles/config/variables" as *;
+  @use "@styles/config/mixin" as *;
+
+  $sweep: 0.7s cubic-bezier(0.65, 0, 0.35, 1);
+
+  .project-index {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .row {
+    border-bottom: 1px solid var(--color-border);
+    transition: border-color 0.3s ease;
+
+    &:has(.row-link:hover, .row-link:focus-visible) {
+      border-color: var(--color-accent-border);
+    }
+
+    @include scroll-reveal(entry 5% cover 25%);
+  }
+
+  // Mobile : numéro et symbole, puis titre, puis stack et année
+  .row-link {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      "index shape"
+      "title title"
+      "meta  meta";
+    column-gap: var(--espace-m);
+    row-gap: var(--espace-s);
+    align-items: center;
+    padding: var(--espace-l) var(--espace-m);
+    color: var(--color-text);
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+
+    &:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 4px;
+    }
+
+    @include breakpoint-up($breakpoint-desktop) {
+      grid-template-columns: 3rem 2.5rem 1fr 16rem 4rem 2rem;
+      grid-template-areas: "index shape title stack year arrow";
+      column-gap: var(--espace-l);
+      padding: var(--espace-l-plus) var(--espace-m);
+    }
+  }
+
+  // Numéro décoratif généré en CSS : redondant avec l'ordre de la liste
+  .index {
+    grid-area: index;
+    font-family: var(--font-title);
+    font-size: 1.1rem;
+    font-style: italic;
+    font-weight: 700;
+    -webkit-text-stroke: 1px var(--color-border-emphasis);
+    color: transparent;
+
+    &::before {
+      content: attr(data-index);
+    }
+  }
+
+  .row-link :global(.row-shape) {
+    --symbol-size: 1.5rem;
+
+    grid-area: shape;
+    justify-self: start;
+    transition:
+      color 0.4s ease,
+      filter 0.4s ease,
+      transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+
+    @include breakpoint-up($breakpoint-desktop) {
+      --symbol-size: 1.75rem;
+    }
+  }
+
+  .title {
+    grid-area: title;
+    justify-self: start;
+    margin: 0;
+    font-family: var(--font-title);
+    font-size: clamp(1.8rem, 5vw, 4rem);
+    font-style: italic;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+  }
+
+  .stack,
+  .year {
+    @include eyebrow;
+  }
+
+  .stack {
+    grid-area: meta;
+    justify-self: start;
+    padding-right: 4rem;
+  }
+
+  .year {
+    grid-area: meta;
+    justify-self: end;
+  }
+
+  .arrow {
+    display: none;
+  }
+
+  // Calque de fond : photo assombrie, sous le texte
+  .reveal {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .reveal-media {
+    position: absolute;
+    inset: 0;
+    opacity: 0.35;
+
+    // Dégradé : la photo sort du fond à gauche et s'éclaire vers la droite
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to right,
+        var(--color-bg-primary),
+        transparent
+      );
+    }
+  }
+
+  .reveal :global(.reveal-image) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.5) saturate(0.8);
+  }
+
+  .reveal-band {
+    display: none;
+  }
+
+  @include breakpoint-up($breakpoint-desktop) {
+    .stack {
+      grid-area: stack;
+      padding-right: 0;
+    }
+
+    .year {
+      grid-area: year;
+    }
+
+    .arrow {
+      grid-area: arrow;
+      display: block;
+      justify-self: end;
+      font-size: 1.5rem;
+      transition:
+        color 0.3s ease,
+        transform 0.3s ease;
+    }
+
+    // La photo couvre les colonnes stack, année et flèche (largeurs fixes de
+    // la grille), avec une marge avant la stack
+    .reveal {
+      left: auto;
+      width: calc(22rem + 3 * var(--espace-l) + var(--espace-m));
+    }
+
+    // 1px reste découvert (invisible : le dégradé y est à la couleur du
+    // fond) : une image entièrement rognée n'est jamais chargée en lazy
+    .reveal-media {
+      opacity: 1;
+      clip-path: inset(0 calc(100% - 1px) 0 0);
+      transition: clip-path $sweep;
+    }
+
+    // Bande cyan au front du balayage
+    .reveal-band {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      display: block;
+      width: 3px;
+      background: var(--color-accent);
+      box-shadow: 0 0 12px var(--color-accent-glow-xl);
+      opacity: 0;
+      transition:
+        left $sweep,
+        opacity 0.2s ease;
+    }
+
+    .row-link:hover,
+    .row-link:focus-visible {
+      .title {
+        @include text-gradient(0.1em);
+      }
+
+      :global(.row-shape) {
+        color: var(--color-accent);
+        filter: var(--glow-neon);
+        transform: rotate(-8deg) scale(1.1);
+      }
+
+      .arrow {
+        color: var(--color-accent);
+        transform: translateX(6px);
+      }
+
+      .reveal-media {
+        clip-path: inset(0);
+      }
+
+      .reveal-band {
+        left: calc(100% - 3px);
+        opacity: 1;
+      }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal-media,
+    .reveal-band {
+      transition: none;
+    }
+  }
+</style>

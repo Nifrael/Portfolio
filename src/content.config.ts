@@ -28,6 +28,14 @@ const projects = defineCollection({
         src: image(),
         alt: z.string(),
       }),
+      // Visuel dédié à la vitrine de l'accueil (découpé dans le symbole),
+      // `cover` sinon
+      featuredCover: z
+        .object({
+          src: image(),
+          alt: z.string(),
+        })
+        .optional(),
       links: z
         .object({
           live: z.url().optional(),

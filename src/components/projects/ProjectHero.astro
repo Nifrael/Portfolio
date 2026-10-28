@@ -1,0 +1,129 @@
+---
+import ArrowLink from "@components/ui/ArrowLink.astro";
+import ShapeSymbol from "@components/ui/ShapeSymbol.astro";
+import NeonFrame from "@components/ui/NeonFrame.astro";
+import AvailabilityBadge from "@components/ui/AvailabilityBadge.astro";
+import type { Project } from "@utils/projects";
+import type { ProjectShape } from "../../content.config";
+
+/**
+ * ProjectHero — En-tête de la page d'un projet : rang dans l'index et
+ * symbole, titre (h1), badge « Site en ligne » (si le projet a un lien live)
+ * et description en chapô à gauche ; visuel découpé dans le symbole à droite
+ * (sous le texte en mobile).
+ *
+ * @prop {Project} project     - Projet affiché.
+ * @prop {ProjectShape} shape  - Symbole du projet.
+ * @prop {number} index        - Rang du projet dans l'index (à partir de 0).
+ * @prop {number} total        - Nombre total de projets.
+ */
+interface Props {
+  project: Project;
+  shape: ProjectShape;
+  index: number;
+  total: number;
+}
+
+const { project, shape, index, total } = Astro.props;
+const { title, description, cover, featuredCover, links } = project.data;
+const visual = featuredCover ?? cover;
+const pad = (n: number) => String(n).padStart(2, "0");
+---
+
+<header class="project-hero">
+  <div class="hero-text">
+    <nav aria-label="Fil d'Ariane">
+      <ArrowLink href="/projets" direction="left" muted
+        >Tous les projets</ArrowLink
+      >
+    </nav>
+    <div class="hero-rank">
+      <ShapeSymbol shape={shape} class="hero-shape" />
+      <span>Projet {pad(index + 1)} / {pad(total)}</span>
+    </div>
+    <h1 class="hero-title">{title}</h1>
+    {links?.live && <AvailabilityBadge label="Site en ligne" />}
+    <p class="hero-lead">{description}</p>
+  </div>
+
+  <NeonFrame
+    src={visual.src}
+    alt={visual.alt}
+    shape={shape}
+    size={800}
+    sizes="(min-width: 1024px) 24rem, 18rem"
+    priority
+    class="hero-frame"
+  />
+</header>
+
+<style lang="scss">
+  @use "@styles/config/variables" as *;
+  @use "@styles/config/mixin" as *;
+
+  .project-hero {
+    display: grid;
+    gap: var(--espace-xl);
+    align-items: center;
+    margin-bottom: var(--espace-xl);
+
+    @include breakpoint-up($breakpoint-desktop) {
+      grid-template-columns: 1fr auto;
+      gap: var(--espace-xl-plus);
+    }
+  }
+
+  .hero-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--espace-m-plus);
+  }
+
+  .hero-rank {
+    @include eyebrow(var(--color-accent));
+
+    display: flex;
+    align-items: center;
+    gap: var(--espace-s-plus);
+    margin: var(--espace-m) 0 0;
+
+    :global(.hero-shape) {
+      --symbol-size: 1.25rem;
+
+      color: var(--color-accent);
+      filter: var(--glow-accent);
+    }
+  }
+
+  .hero-title {
+    margin: 0;
+    font-family: var(--font-title);
+    font-size: clamp(2.8rem, 8vw, 5.5rem);
+    font-style: italic;
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    color: var(--color-text-strong);
+  }
+
+  .hero-lead {
+    max-width: 36rem;
+    margin: 0;
+    font-family: var(--font-text);
+    font-size: 1.15rem;
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--color-text);
+    opacity: 0.85;
+  }
+
+  .project-hero :global(.hero-frame) {
+    justify-self: center;
+    width: min(100%, 16rem * var(--frame-scale, 1));
+
+    @include breakpoint-up($breakpoint-desktop) {
+      width: calc(21rem * var(--frame-scale, 1));
+    }
+  }
+</style>

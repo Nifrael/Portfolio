@@ -1,0 +1,124 @@
+---
+import TagList from "@components/ui/TagList.astro";
+import type { Project } from "@utils/projects";
+import { formatMonthYear } from "@utils/date";
+
+/**
+ * ProjectFacts — Fiche technique d'un projet, en bande horizontale entre deux
+ * filets : date de réalisation, stack et liens externes (site, code source).
+ * Empilée en mobile.
+ *
+ * @prop {Project} project - Projet décrit.
+ */
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const { tags, links, publishDate } = project.data;
+---
+
+<dl class="project-facts">
+  <div class="fact">
+    <dt>Réalisé en</dt>
+    <dd class="fact-value">{formatMonthYear(publishDate)}</dd>
+  </div>
+
+  <div class="fact">
+    <dt>Stack</dt>
+    <dd><TagList tags={tags} /></dd>
+  </div>
+
+  {
+    (links?.live || links?.repository) && (
+      <div class="fact">
+        <dt>Liens</dt>
+        <dd class="fact-links">
+          {links.live && (
+            <a href={links.live} target="_blank" rel="noopener noreferrer">
+              Voir le site <span aria-hidden="true">↗</span>
+              <span class="visually-hidden">(nouvel onglet)</span>
+            </a>
+          )}
+          {links.repository && (
+            <a
+              href={links.repository}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Code source <span aria-hidden="true">↗</span>
+              <span class="visually-hidden">(nouvel onglet)</span>
+            </a>
+          )}
+        </dd>
+      </div>
+    )
+  }
+</dl>
+
+<style lang="scss">
+  @use "@styles/config/variables" as *;
+  @use "@styles/config/mixin" as *;
+
+  .project-facts {
+    display: grid;
+    gap: var(--espace-l);
+    margin: 0 0 var(--espace-xl);
+    padding-block: var(--espace-l);
+    border-block: 1px solid var(--color-border);
+
+    @include breakpoint-up($breakpoint-tablet) {
+      grid-template-columns: auto 1fr auto;
+      gap: var(--espace-xl);
+    }
+  }
+
+  .fact {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espace-s-plus);
+  }
+
+  dt {
+    @include eyebrow;
+  }
+
+  dd {
+    margin: 0;
+  }
+
+  .fact-value {
+    font-family: var(--font-title);
+    font-size: 1.1rem;
+    font-style: italic;
+    font-weight: 700;
+    color: var(--color-text-strong);
+    text-transform: capitalize;
+  }
+
+  .fact-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espace-s) var(--espace-l);
+
+    a {
+      font-family: var(--font-text);
+      font-size: var(--little-text);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-text);
+      text-decoration: none;
+      transition: color 0.3s ease;
+
+      &:hover,
+      &:focus-visible {
+        color: var(--color-accent);
+      }
+
+      &:focus-visible {
+        @include focus-visible;
+      }
+    }
+  }
+</style>

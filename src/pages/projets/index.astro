@@ -1,7 +1,8 @@
 ---
 import Layout from "@layouts/Layout.astro";
-import ProjectCard from "@components/ui/ProjectCard.astro";
 import PageHeader from "@components/ui/PageHeader.astro";
+import ProjectIndexList from "@components/projects/ProjectIndexList.astro";
+import ProjectStats from "@components/projects/ProjectStats.astro";
 import { getSortedProjects } from "@utils/projects";
 
 const sortedProjects = await getSortedProjects();
@@ -11,39 +12,21 @@ const sortedProjects = await getSortedProjects();
   title="Mes projets — NifraDev"
   description="L'ensemble des travaux de Julien Marchand en architecture web et développement full-stack."
 >
-  <div class="projects-page">
-    <div class="container">
-      <PageHeader outline="MES" main="PROJETS">
-        Découvrez l'ensemble de mes travaux en architecture web et développement
-        full-stack.
-      </PageHeader>
+  <div class="projects-page container">
+    <PageHeader outline="MES" main="PROJETS">
+      Découvrez l'ensemble de mes travaux en architecture web et développement
+      full-stack.
+      <ProjectStats projects={sortedProjects} slot="aside" />
+    </PageHeader>
 
-      <div class="projects-grid">
-        {sortedProjects.map((project) => <ProjectCard project={project} />)}
-      </div>
-    </div>
+    <ProjectIndexList projects={sortedProjects} priority />
   </div>
 </Layout>
 
 <style lang="scss">
-  @use "@styles/config/variables" as *;
-  @use "@styles/config/mixin" as *;
-
   .projects-page {
-    position: relative;
-    padding-block: var(--espace-l-plus);
+    padding-block: var(--espace-l-plus) var(--espace-section);
     min-height: 100vh;
     min-height: 100svh;
-  }
-
-  .projects-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--espace-l-plus);
-
-    @include breakpoint-up($breakpoint-tablet) {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 2.5rem;
-    }
   }
 </style>

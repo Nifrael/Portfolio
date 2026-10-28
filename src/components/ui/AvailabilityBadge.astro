@@ -1,16 +1,19 @@
 ---
 /**
- * AvailabilityBadge — Badge animé indiquant la disponibilité.
+ * AvailabilityBadge — Badge animé indiquant un statut (disponibilité, site
+ * en ligne…) : point vert pulsant si actif, rouge sinon.
  *
  * @prop {"available" | "unavailable"} [status="available"] - Statut affiché.
+ * @prop {string} [label] - Libellé (défaut : « Disponible » / « Indisponible »).
  * @prop {string} [class] - Classes CSS additionnelles.
  */
 interface Props {
   status?: "available" | "unavailable";
+  label?: string;
   class?: string;
 }
 
-const { status = "available", class: className } = Astro.props;
+const { status = "available", label, class: className } = Astro.props;
 
 const labelMap: Record<NonNullable<Props["status"]>, string> = {
   available: "Disponible",
@@ -23,7 +26,7 @@ const labelMap: Record<NonNullable<Props["status"]>, string> = {
     {status === "available" && <span class="badge-ping" />}
     <span class="badge-core"></span>
   </span>
-  <span class="badge-text">{labelMap[status]}</span>
+  <span class="badge-text">{label ?? labelMap[status]}</span>
 </div>
 
 <style lang="scss">

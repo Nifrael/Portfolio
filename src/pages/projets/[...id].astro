@@ -1,95 +1,74 @@
 ---
 import Layout from "@layouts/Layout.astro";
-import { getCollection, render } from "astro:content";
+import { render } from "astro:content";
 import { Image } from "astro:assets";
-import Github from "@assets/icons/Github.svg";
-import ExternalLink from "@assets/icons/ExternalLink.svg";
-import TagList from "@components/ui/TagList.astro";
-import ArrowLink from "@components/ui/ArrowLink.astro";
-import CtaButton from "@components/ui/CtaButton.astro";
-import { formatMonthYear } from "@utils/date";
+import ProjectHero from "@components/projects/ProjectHero.astro";
+import ProjectFacts from "@components/projects/ProjectFacts.astro";
+import ProjectIndexList from "@components/projects/ProjectIndexList.astro";
+import { getProjectShape, getSortedProjects } from "@utils/projects";
 
 export async function getStaticPaths() {
-  const projects = await getCollection("projects");
-  return projects.map((project) => ({
-    params: { id: project.id },
-    props: { project },
-  }));
+  const projects = await getSortedProjects();
+  return projects.map((project, index) => {
+    const nextIndex = (index + 1) % projects.length;
+    return {
+      params: { id: project.id },
+      props: {
+        project,
+        index,
+        total: projects.length,
+        next: nextIndex === index ? undefined : projects[nextIndex],
+        nextIndex,
+      },
+    };
+  });
 }
 
-const { project } = Astro.props;
-const { title, description, tags, cover, links, publishDate } = project.data;
+const { project, index, total, next, nextIndex } = Astro.props;
+const { title, description, cover, links } = project.data;
+const domain =
+  links?.live && new URL(links.live).hostname.replace(/^www\./, "");
+const shape = getProjectShape(project, index);
 const { Content } = await render(project);
-
-const formattedDate = formatMonthYear(publishDate);
 ---
 
 <Layout title={`${title} — NifraDev`} description={description}>
-  <article class="project-detail-page">
-    <div class="container">
-      <header class="project-header">
-        <nav class="breadcrumb" aria-label="Fil d'ariane">
-          <ArrowLink href="/projets" direction="left" muted
-            >Tous les projets</ArrowLink
-          >
-        </nav>
+  <article class:list={["project-page", "container", `marker-${shape}`]}>
+    <ProjectHero project={project} shape={shape} index={index} total={total} />
 
-        <div class="title-section">
-          <TagList tags={tags} />
-          <h1 class="project-title">{title}</h1>
-          <p class="project-meta">Réalisé en {formattedDate}</p>
+    <ProjectFacts project={project} />
+
+    <div class="project-body">
+      <figure class="capture">
+        <div class="capture-frame">
+          <Image
+            src={cover.src}
+            alt={cover.alt}
+            width={1000}
+            height={625}
+            widths={[480, 640, 1000]}
+            sizes="(min-width: 1024px) 28rem, calc(100vw - 3rem)"
+            class="capture-image"
+          />
         </div>
-      </header>
+        <figcaption class="capture-caption">
+          Aperçu{domain && <span> · {domain}</span>}
+        </figcaption>
+      </figure>
 
-      <div class="project-layout">
-        <div class="project-main-content">
-          <div class="hero-image-wrapper">
-            <Image
-              src={cover.src}
-              alt={cover.alt}
-              width={1200}
-              height={675}
-              class="hero-image"
-              loading="eager"
-              fetchpriority="high"
-            />
-          </div>
-
-          <div class="markdown-content">
-            <Content />
-          </div>
-        </div>
-
-        <aside class="project-sidebar">
-          <div class="sidebar-widget">
-            <h2 class="widget-title">En résumé</h2>
-            <p class="project-excerpt">{description}</p>
-
-            {
-              links && (
-                <div class="project-actions">
-                  {links.live && (
-                    <CtaButton href={links.live} label="Démonstration" external>
-                      <ExternalLink slot="icon" width={16} height={16} />
-                    </CtaButton>
-                  )}
-                  {links.repository && (
-                    <CtaButton
-                      href={links.repository}
-                      label="Code source"
-                      variant="outline"
-                      external
-                    >
-                      <Github slot="icon" width={16} height={16} />
-                    </CtaButton>
-                  )}
-                </div>
-              )
-            }
-          </div>
-        </aside>
+      <div class="markdown-content">
+        <Content />
       </div>
     </div>
+
+    {
+      next && (
+        <nav class="next-project" aria-label="Projet suivant">
+          <p class="next-label">Projet suivant</p>
+          <ProjectIndexList projects={[next]} start={nextIndex} />
+        </nav>
+      )
+    }
   </article>
 </Layout>
 
@@ -97,151 +76,188 @@ const formattedDate = formatMonthYear(publishDate);
   @use "@styles/config/variables" as *;
   @use "@styles/config/mixin" as *;
 
-  .project-detail-page {
-    position: relative;
-    padding-block: var(--espace-l-plus);
+  .project-page {
+    padding-block: var(--espace-l-plus) var(--espace-section);
     min-height: 100vh;
     min-height: 100svh;
   }
 
-  .project-header {
-    margin-bottom: var(--espace-xl);
-  }
-
-  .breadcrumb {
-    margin-bottom: var(--espace-l);
-  }
-
-  .title-section {
-    display: flex;
-    flex-direction: column;
-    gap: var(--espace-m);
-  }
-
-  .project-title {
-    font-family: var(--font-title);
-    font-size: clamp(2.5rem, 8vw, 4.5rem);
-    font-weight: 700;
-    line-height: 0.95;
-    font-style: italic;
-    color: var(--color-text);
-    margin: 0;
-    letter-spacing: -0.02em;
-  }
-
-  .project-meta {
-    font-family: var(--font-text);
-    font-size: 0.9rem;
-    color: var(--color-text);
-    opacity: 0.6;
-    margin: 0;
-  }
-
-  .project-layout {
+  // Texte à gauche, aperçu à droite (et collant) dès le desktop ; en mobile,
+  // l'aperçu précède le texte
+  .project-body {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--espace-l-plus);
+    gap: var(--espace-xl);
 
     @include breakpoint-up($breakpoint-desktop) {
-      grid-template-columns: 8fr 4fr;
-      gap: var(--espace-xl);
+      grid-template-columns: minmax(0, 46rem) minmax(0, 28rem);
+      justify-content: space-between;
     }
   }
 
-  .hero-image-wrapper {
-    position: relative;
-    aspect-ratio: 16 / 9;
-    overflow: hidden;
-    border: 1px solid var(--color-border-subtle);
-    background: var(--color-bg-cards);
-    margin-bottom: var(--espace-l-plus);
+  .capture {
+    margin: 0;
+
+    @include breakpoint-up($breakpoint-desktop) {
+      position: sticky;
+      top: var(--navbar-offset-desktop);
+      grid-column: 2;
+      grid-row: 1;
+      align-self: start;
+    }
   }
 
-  .hero-image {
+  // Coins de visée cyan, dessinés par huit dégradés (deux traits par coin)
+  .capture-frame {
+    $corner: 1.25rem;
+    $line: linear-gradient(var(--color-accent), var(--color-accent));
+
+    padding: var(--espace-s-plus);
+    background:
+      $line top left / $corner 1px,
+      $line top left / 1px $corner,
+      $line top right / $corner 1px,
+      $line top right / 1px $corner,
+      $line bottom left / $corner 1px,
+      $line bottom left / 1px $corner,
+      $line bottom right / $corner 1px,
+      $line bottom right / 1px $corner;
+    background-repeat: no-repeat;
+    filter: drop-shadow(0 0 6px var(--color-accent-glow-s));
+  }
+
+  .capture :global(.capture-image) {
+    display: block;
     width: 100%;
-    height: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
     object-fit: cover;
+    border: 1px solid var(--color-border);
+  }
+
+  .capture-caption {
+    @include eyebrow;
+
+    margin-top: var(--espace-s-plus);
+    text-align: right;
+
+    span {
+      color: var(--color-accent);
+    }
+  }
+
+  // Symbole du projet en masque (seule l'opacité compte) : il sert de puce
+  // aux listes et de repère aux titres du contenu
+  $shape-masks: (
+    triangle: "<polygon points='4,8 96,8 50,92'/>",
+    circle: "<circle cx='50' cy='50' r='44'/>",
+    cross: "<path d='M12 12 L88 88 M88 12 L12 88'/>",
+    square: "<rect x='8' y='8' width='84' height='84'/>",
+  );
+
+  @each $shape, $svg in $shape-masks {
+    .marker-#{$shape} {
+      --marker: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none' stroke='%23000' stroke-width='12'%3E#{$svg}%3C/svg%3E");
+    }
+  }
+
+  @mixin marker {
+    content: "";
+    display: inline-block;
+    flex-shrink: 0;
+    width: 0.6em;
+    height: 0.6em;
+    background: var(--color-accent);
+    mask: var(--marker) center / contain no-repeat;
   }
 
   // :global() est requis : le HTML rendu par <Content /> ne porte pas
   // l'attribut de scope Astro, les sélecteurs scopés ne le matchent jamais.
   .markdown-content {
-    color: var(--color-text);
+    max-width: 46rem;
     font-family: var(--font-text);
-    font-size: var(--base-size);
+    font-size: 1.05rem;
     line-height: 1.8;
-    opacity: 0.85;
+    color: var(--color-text);
+
+    > :global(:first-child) {
+      margin-top: 0;
+    }
 
     :global(h2) {
+      display: flex;
+      align-items: center;
+      gap: var(--espace-s-plus);
+      margin: var(--espace-xl) 0 var(--espace-m-plus);
       font-family: var(--font-title);
-      font-size: 1.8rem;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
       font-style: italic;
-      color: var(--color-text);
-      margin: var(--espace-l-plus) 0 var(--espace-m-plus);
-      border-bottom: 1px solid var(--color-border-subtle);
-      padding-bottom: var(--espace-s);
+      line-height: 1.1;
+      color: var(--color-text-strong);
+
+      &::before {
+        @include marker;
+
+        filter: var(--glow-accent);
+      }
     }
 
     :global(h3) {
-      font-family: var(--font-title);
-      font-size: 1.3rem;
-      font-style: italic;
-      color: var(--color-accent);
+      @include eyebrow(var(--color-accent));
+
       margin: var(--espace-l) 0 var(--espace-m);
     }
 
     :global(p) {
-      margin-bottom: var(--espace-m-plus);
+      margin: 0 0 var(--espace-m-plus);
+      opacity: 0.85;
     }
 
-    :global(ul),
+    :global(ul) {
+      display: grid;
+      gap: var(--espace-m);
+      margin: 0 0 var(--espace-l);
+      padding: 0;
+      list-style: none;
+    }
+
+    :global(ul > li) {
+      position: relative;
+      padding-left: 1.6em;
+
+      &::before {
+        @include marker;
+
+        position: absolute;
+        top: 0.6em;
+        left: 0;
+      }
+    }
+
     :global(ol) {
-      margin-bottom: var(--espace-l);
+      margin: 0 0 var(--espace-l);
       padding-left: var(--espace-m-plus);
     }
 
-    :global(li) {
-      margin-bottom: var(--espace-s);
+    :global(strong) {
+      color: var(--color-text-strong);
     }
 
     :global(code) {
-      background: var(--color-bg-code);
-      border: 1px solid var(--color-border);
       padding: 0.2rem 0.4rem;
+      border: 1px solid var(--color-border);
       border-radius: var(--rayon-s);
+      background: var(--color-bg-code);
       font-size: 0.9em;
     }
   }
 
-  .project-sidebar {
-    position: relative;
-    align-self: start;
-    background: var(--color-bg-cards);
-    border: 1px solid var(--color-border-subtle);
-    backdrop-filter: blur(10px);
-    padding: 2.5rem;
+  .next-project {
+    margin-top: var(--espace-xxl);
   }
 
-  .widget-title {
-    font-family: var(--font-title);
-    font-size: 1.5rem;
-    font-style: italic;
-    color: var(--color-text);
-    margin: 0 0 var(--espace-m-plus) 0;
-  }
+  .next-label {
+    @include eyebrow;
 
-  .project-excerpt {
-    font-family: var(--font-text);
-    font-size: 0.95rem;
-    line-height: 1.6;
-    color: var(--color-text);
-    opacity: 0.7;
-    margin: 0 0 2.5rem 0;
-  }
-
-  .project-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
+    margin: 0 0 var(--espace-m-plus);
   }
 </style>
