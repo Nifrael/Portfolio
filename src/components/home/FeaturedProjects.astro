@@ -2,8 +2,7 @@
 import FeaturedProject from "@components/home/FeaturedProject.astro";
 import SectionHeader from "@components/ui/SectionHeader.astro";
 import CtaButton from "@components/ui/CtaButton.astro";
-import type { Project } from "@utils/projects";
-import { PROJECT_SHAPES } from "../../content.config";
+import { getProjectShape, type Project } from "@utils/projects";
 
 /**
  * FeaturedProjects — Section des projets mis en avant sur la page d'accueil.
@@ -34,9 +33,7 @@ const { projects } = Astro.props;
       projects.map((project, index) => (
         <FeaturedProject
           project={project}
-          shape={
-            project.data.shape ?? PROJECT_SHAPES[index % PROJECT_SHAPES.length]
-          }
+          shape={getProjectShape(project, index)}
           reverse={index % 2 === 1}
         />
       ))

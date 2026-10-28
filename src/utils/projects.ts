@@ -1,4 +1,5 @@
 import { getCollection, type CollectionEntry } from "astro:content";
+import { PROJECT_SHAPES, type ProjectShape } from "../content.config";
 
 export type Project = CollectionEntry<"projects">;
 
@@ -23,4 +24,12 @@ export async function getFeaturedProjects(): Promise<Project[]> {
   return projects
     .filter((project) => project.data.featured)
     .slice(0, MAX_FEATURED_PROJECTS);
+}
+
+/**
+ * Symbole d'un projet : celui du frontmatter `shape`, sinon le cycle
+ * △ ○ × □ selon sa position dans la liste.
+ */
+export function getProjectShape(project: Project, index: number): ProjectShape {
+  return project.data.shape ?? PROJECT_SHAPES[index % PROJECT_SHAPES.length];
 }
