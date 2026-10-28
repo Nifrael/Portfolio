@@ -86,22 +86,11 @@ const { stats, source } = Astro.props;
     color: var(--color-text-secondary);
   }
 
-  @keyframes stat-reveal {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-  }
-
-  @supports (animation-timeline: view()) {
-    @media (prefers-reduced-motion: no-preference) {
-      // Apparition décalée d'un chiffre à l'autre
-      .stat {
-        animation: stat-reveal ease-out both;
-        animation-timeline: view();
-        animation-range: entry calc(5% + var(--i) * 8%) cover
-          calc(20% + var(--i) * 5%);
-      }
-    }
+  // Apparition décalée d'un chiffre à l'autre
+  .stat {
+    @include scroll-reveal(
+      entry calc(5% + var(--i) * 8%) cover calc(20% + var(--i) * 5%),
+      $distance: 30px
+    );
   }
 </style>

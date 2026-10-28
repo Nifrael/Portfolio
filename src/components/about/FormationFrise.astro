@@ -77,11 +77,7 @@ const { steps } = Astro.props;
   }
 
   .hint {
-    font-size: var(--little-text);
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--color-text-secondary);
+    @include eyebrow;
   }
 
   .hint-arrow {
@@ -174,18 +170,11 @@ const { steps } = Astro.props;
   }
 
   .ecole {
-    font-size: var(--little-text);
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--color-accent);
+    @include eyebrow(var(--color-accent));
   }
 
   .texte {
-    font-size: 0.95rem;
-    line-height: 1.7;
-    color: var(--color-text);
-    opacity: 0.8;
+    @include body-muted;
   }
 
   // Ne translate que si la frise dépasse l'écran (min avec 0)

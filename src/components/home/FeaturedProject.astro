@@ -131,11 +131,9 @@ const { title, description, tags, cover, links } = project.data;
   }
 
   .description {
+    @include body-muted(0.7);
+
     font-family: var(--font-text);
-    font-size: 0.95rem;
-    line-height: 1.7;
-    color: var(--color-text);
-    opacity: 0.7;
     max-width: 34rem;
     margin: 0;
   }
@@ -149,29 +147,7 @@ const { title, description, tags, cover, links } = project.data;
     margin-top: var(--espace-s-plus);
   }
 
-  // Révélation au scroll, en CSS pur (même pattern que le titre de section)
-  @keyframes project-reveal {
-    from {
-      opacity: 0;
-      transform: translateY(40px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @supports (animation-timeline: view()) {
-    .featured-project {
-      animation: project-reveal both;
-      animation-timeline: view();
-      animation-range: entry 10% cover 35%;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .featured-project {
-        animation: none;
-      }
-    }
+  .featured-project {
+    @include scroll-reveal(entry 10% cover 35%);
   }
 </style>

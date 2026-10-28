@@ -36,3 +36,64 @@
   padding: $bleed;
   margin: calc($bleed * -1);
 }
+
+// Apparition au scroll, en CSS pur : l'élément monte de `$distance` en
+// apparaissant (depuis un flou si `$blur` > 0), sur la plage `$range` de sa
+// propre view-timeline. Sans support des scroll-driven animations, ou en
+// mouvement réduit, il est simplement affiché.
+@mixin scroll-reveal(
+  $range: entry 10% cover 30%,
+  $distance: 40px,
+  $blur: 0px
+) {
+  // Deux keyframes : le flou n'est animé que lorsqu'il est demandé
+  $name: scroll-reveal;
+  @if $blur != 0px {
+    $name: scroll-reveal-blur;
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      --reveal-distance: #{$distance};
+      --reveal-blur: #{$blur};
+
+      animation: $name ease-out both;
+      animation-timeline: view();
+      animation-range: $range;
+    }
+  }
+
+  @at-root {
+    @keyframes scroll-reveal {
+      from {
+        opacity: 0;
+        transform: translateY(var(--reveal-distance));
+      }
+    }
+
+    @keyframes scroll-reveal-blur {
+      from {
+        opacity: 0;
+        filter: blur(var(--reveal-blur));
+        transform: translateY(var(--reveal-distance));
+      }
+    }
+  }
+}
+
+// Sur-titre : petit texte gras, espacé, en capitales (périodes, libellés…)
+@mixin eyebrow($color: var(--color-text-secondary)) {
+  font-size: var(--little-text);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: $color;
+}
+
+// Texte courant atténué des cartes et étapes
+@mixin body-muted($opacity: 0.8) {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--color-text);
+  opacity: $opacity;
+}

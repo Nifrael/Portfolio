@@ -93,8 +93,7 @@ const { items, class: className } = Astro.props;
 
     .card:hover & :global(.card-shape) {
       color: var(--color-accent);
-      filter: drop-shadow(0 0 4px var(--color-halo))
-        drop-shadow(0 0 14px var(--color-accent));
+      filter: var(--glow-neon);
       transform: scale(1.08);
 
       // Légère rotation, réservée au survol à la souris
@@ -124,28 +123,13 @@ const { items, class: className } = Astro.props;
   }
 
   .texte {
-    font-size: 0.95rem;
-    line-height: 1.7;
-    color: var(--color-text);
-    opacity: 0.8;
+    @include body-muted;
   }
 
-  @keyframes card-reveal {
-    from {
-      opacity: 0;
-      transform: translateY(40px);
-    }
-  }
-
-  @supports (animation-timeline: view()) {
-    @media (prefers-reduced-motion: no-preference) {
-      // Apparition décalée d'une carte à l'autre
-      .card {
-        animation: card-reveal ease-out both;
-        animation-timeline: view();
-        animation-range: entry calc(5% + var(--i) * 10%) cover
-          calc(25% + var(--i) * 5%);
-      }
-    }
+  // Apparition décalée d'une carte à l'autre
+  .card {
+    @include scroll-reveal(
+      entry calc(5% + var(--i) * 10%) cover calc(25% + var(--i) * 5%)
+    );
   }
 </style>

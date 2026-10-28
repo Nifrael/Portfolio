@@ -63,29 +63,13 @@ const { outline, main, class: className } = Astro.props;
     opacity: 0.8;
   }
 
-  @keyframes reveal-blur {
-    from {
-      opacity: 0;
-      filter: blur(15px);
-      transform: translateY(30px);
-    }
+  // :global() requis : la classe est portée par le composant enfant
+  // SectionTitle, qui ne reçoit pas l'attribut de scope de ce composant.
+  .section-header :global(.section-header-title) {
+    @include scroll-reveal(entry 10% cover 40%, $distance: 30px, $blur: 15px);
   }
 
-  @supports (animation-timeline: view()) {
-    @media (prefers-reduced-motion: no-preference) {
-      // :global() requis : la classe est portée par le composant enfant
-      // SectionTitle, qui ne reçoit pas l'attribut de scope de ce composant.
-      .section-header :global(.section-header-title) {
-        animation: reveal-blur both;
-        animation-timeline: view();
-        animation-range: entry 10% cover 40%;
-      }
-
-      .section-subtitle {
-        animation: reveal-blur both;
-        animation-timeline: view();
-        animation-range: entry 15% cover 45%;
-      }
-    }
+  .section-subtitle {
+    @include scroll-reveal(entry 15% cover 45%, $distance: 30px, $blur: 15px);
   }
 </style>

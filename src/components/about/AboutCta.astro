@@ -65,7 +65,7 @@ const { text, contactHref, cvHref } = Astro.props;
     display: flex;
     gap: var(--espace-m-plus);
     color: var(--color-accent);
-    filter: drop-shadow(0 0 6px var(--color-accent));
+    filter: var(--glow-accent);
 
     // ShapeSymbol impose sa couleur : on lui fait suivre celle du conteneur
     :global(.shape-symbol) {

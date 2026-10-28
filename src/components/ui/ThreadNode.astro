@@ -49,7 +49,7 @@ const { shape, lit = "scroll", class: className } = Astro.props;
     font-style: italic;
     font-weight: 700;
     color: var(--color-accent);
-    filter: drop-shadow(0 0 6px var(--color-accent));
+    filter: var(--glow-accent);
 
     // Le symbole suit la couleur du nœud (éteint / allumé)
     :global(.thread-node-shape) {

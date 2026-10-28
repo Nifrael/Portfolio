@@ -58,6 +58,12 @@ $jaune: #facc15;
   --color-accent-glow-l: #{rgba($cyan, 0.4)};
   --color-accent-glow-xl: #{rgba($cyan, 0.6)};
 
+  // Halos néon (valeurs de `filter`)
+  --glow-accent: drop-shadow(0 0 6px var(--color-accent));
+  --glow-neon: drop-shadow(0 0 4px var(--color-halo))
+    drop-shadow(0 0 14px var(--color-accent));
+  --glow-neon-strong: var(--glow-neon) drop-shadow(0 0 30px var(--color-accent));
+
   // Décor (fond global, symboles)
   --color-decor-grid: #{rgba($blanc, 0.02)};
   --color-decor-glow: #{rgba($blanc, 0.04)};
@@ -69,6 +75,7 @@ $jaune: #facc15;
   // États
   --color-success: #{rgba($vert, 0.3)};
   --color-error: #{rgba($rouge, 0.4)};
+  --color-error-text: #{$rouge}; // texte d'erreur lisible (contraste ≈ 6,6:1 sur le fond)
 
   // Tags
   --color-tag-astro: #{$violet};
