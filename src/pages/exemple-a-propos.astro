@@ -1,0 +1,57 @@
+---
+import Layout from "@layouts/Layout.astro";
+import AboutIntro from "@components/about/AboutIntro.astro";
+import ParcoursThread from "@components/about/ParcoursThread.astro";
+import FormationFrise from "@components/about/FormationFrise.astro";
+import ShapeCards from "@components/about/ShapeCards.astro";
+import AboutCta from "@components/about/AboutCta.astro";
+import type {
+  ParcoursStep,
+  FormationStep,
+  ShapeCard,
+} from "@components/about/types";
+
+// Page d'exemple : contenus en lorem ipsum, à remplacer par les vrais textes.
+const lorem =
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+const loremLong = `${lorem} Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.`;
+
+const intro = [
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio, praesent libero sed cursus ante dapibus diam.",
+  loremLong,
+  "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+];
+
+const parcours: ParcoursStep[] = [
+  { periode: "Lorem — Ipsum", titre: "Lorem ipsum dolor", lieu: "Consectetur, Adipiscing", texte: loremLong, shape: "triangle" },
+  { periode: "Lorem — Ipsum", titre: "Sit amet consectetur", lieu: "Eiusmod, Tempor", texte: lorem, shape: "circle" },
+  { periode: "Lorem — Ipsum", titre: "Adipiscing elit sed", lieu: "Incididunt, Labore", texte: loremLong, shape: "cross" },
+  { periode: "Lorem — Aujourd'hui", titre: "Do eiusmod tempor", lieu: "Magna, Aliqua", texte: lorem, shape: "square" },
+];
+
+const formation: FormationStep[] = [
+  { annee: "2012", diplome: "Lorem ipsum dolor", ecole: "Lycée Consectetur", texte: lorem, shape: "triangle" },
+  { annee: "2015", diplome: "Sit amet adipiscing", ecole: "Université Eiusmod", texte: lorem, shape: "circle" },
+  { annee: "2018", diplome: "Sed do eiusmod tempor", ecole: "École Incididunt", texte: lorem, shape: "cross" },
+  { annee: "2022", diplome: "Ut labore et dolore", ecole: "Formation Magna", texte: lorem, shape: "square" },
+  { annee: "2024", diplome: "Magna aliqua enim", ecole: "Certification Veniam", texte: lorem, shape: "triangle" },
+];
+
+const competences: ShapeCard[] = [
+  { shape: "triangle", titre: "Front-end", texte: lorem, tags: ["Astro", "TypeScript", "SCSS", "React"] },
+  { shape: "circle", titre: "Back-end", texte: lorem, tags: ["Python", "FastAPI", "Node.js"] },
+  { shape: "cross", titre: "Qualité", texte: lorem, tags: ["Accessibilité", "Performance", "SEO"] },
+  { shape: "square", titre: "Outils", texte: lorem, tags: ["Git", "Figma", "Cloudflare"] },
+];
+---
+
+<Layout
+  title="À propos — NifraDev"
+  description="Exemple de page À propos : parcours, formation et compétences de Julien Marchand."
+>
+  <AboutIntro paragraphs={intro} />
+  <ParcoursThread steps={parcours} />
+  <FormationFrise steps={formation} />
+  <ShapeCards outline="MES" main="COMPÉTENCES" items={competences} />
+  <AboutCta text={loremLong} contactHref="/#contact" cvHref="#" />
+</Layout>
