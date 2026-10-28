@@ -109,7 +109,6 @@ const { title, description, tags, cover, links } = project.data;
 </article>
 
 <style lang="scss">
-  @use "sass:math";
   @use "@styles/config/variables" as *;
   @use "@styles/config/mixin" as *;
 
@@ -145,18 +144,15 @@ const { title, description, tags, cover, links } = project.data;
 
   .frame {
     position: relative;
-    width: min(100% * var(--frame-fit, 1), 22rem);
+    width: min(100%, 22rem * var(--frame-scale, 1));
     aspect-ratio: 1;
-    transform: translateX(var(--frame-shift, 0%))
-      rotate(var(--frame-tilt, 0deg));
     transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 
     @include breakpoint-up($breakpoint-desktop) {
-      width: min(100%, 26rem);
+      width: min(100%, 26rem * var(--frame-scale, 1));
 
       &:hover {
-        transform: translateX(var(--frame-shift, 0%))
-          rotate(var(--frame-tilt, 0deg)) scale(1.02);
+        transform: scale(1.02);
       }
     }
   }
@@ -185,33 +181,25 @@ const { title, description, tags, cover, links } = project.data;
     height: 100%;
   }
 
-  // Formes qui découpent le screenshot
-  // Triangle inversé (pointe en bas), légèrement incliné comme la maquette
-  // Un carré incliné de θ occupe (cos θ + sin θ) fois sa largeur : en mobile,
-  // les coins du triangle sortaient de l'écran. `--frame-fit` réduit le cadre
-  // pour que son emprise inclinée tienne dans la colonne. Comme la rotation
-  // pivote autour du centre du cadre, un coin haut part plus loin que l'autre
-  // de (côté × sin θ / 2) : `--frame-shift` recentre le triangle visible, sans
-  // dépasser la gouttière pour ne jamais créer de défilement horizontal.
-  $triangle-tilt: -8deg;
-  $tilt-sin: math.abs(math.sin($triangle-tilt));
-  $tilt-cos: math.cos($triangle-tilt);
-
+  // Compensation optique : à cadre égal, le triangle ne montre que ~50 % de
+  // l'image, la croix ~59 %, le cercle ~77 % et le carré 100 %.
+  // `--frame-scale` équilibre leur poids visuel (valeurs réglées à l'œil).
   .shape-triangle {
-    --frame-tilt: #{$triangle-tilt};
-    --frame-fit: #{math.div(1, $tilt-cos + $tilt-sin)};
-    --frame-shift: min(
-      #{math.percentage(math.div($tilt-sin, 2))},
-      var(--gouttiere)
-    );
+    --frame-scale: 1.12;
+  }
 
-    @include breakpoint-up($breakpoint-desktop) {
-      --frame-shift: 0%;
-    }
+  .shape-cross {
+    --frame-scale: 1.05;
+  }
 
-    .cover {
-      clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
-    }
+  .shape-square {
+    --frame-scale: 0.88;
+  }
+
+  // Formes qui découpent le screenshot
+  // Triangle inversé (pointe en bas)
+  .shape-triangle .cover {
+    clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
   }
 
   .shape-circle .cover {

@@ -1,0 +1,73 @@
+---
+import Layout from "@layouts/Layout.astro";
+import SectionTitle from "@components/ui/SectionTitle.astro";
+import ArrowLink from "@components/ui/ArrowLink.astro";
+import TerminalForm from "@components/contact/TerminalForm.astro";
+import ContactInfo from "@components/contact/ContactInfo.astro";
+---
+
+<Layout
+  title="Contact — NifraDev"
+  description="Contactez Julien Marchand, développeur web, pour la création, la refonte ou la maintenance de votre site."
+>
+  <div class="contact-page">
+    <div class="container">
+      <header class="page-header">
+        <ArrowLink href="/" direction="left" muted>Retour à l'accueil</ArrowLink>
+        <SectionTitle as="h1" outline="PARLONS DE" main="VOTRE PROJET" />
+        <p class="page-subtitle">
+          Un site à créer, à refaire ou à faire évoluer ? Décrivez-moi votre
+          besoin en quelques lignes.
+        </p>
+      </header>
+
+      <div class="contact-content">
+        <ContactInfo />
+        <TerminalForm />
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style lang="scss">
+  @use "@styles/config/variables" as *;
+  @use "@styles/config/mixin" as *;
+
+  .contact-page {
+    padding-block: var(--espace-l-plus) var(--espace-section);
+    min-height: 100vh;
+  }
+
+  .page-header {
+    --title-size: clamp(2.5rem, 8vw, 5rem);
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--espace-m-plus);
+    margin-bottom: var(--espace-xl-plus);
+  }
+
+  .page-subtitle {
+    max-width: 35rem;
+    margin: 0;
+    font-family: var(--font-text);
+    font-size: 1.1rem;
+    font-weight: 200;
+    line-height: 1.6;
+    color: var(--color-text);
+    opacity: 0.8;
+  }
+
+  // Coordonnées à gauche, terminal à droite en desktop ; empilés en mobile
+  .contact-content {
+    display: grid;
+    gap: var(--espace-xl);
+
+    @include breakpoint-up($breakpoint-desktop) {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+      gap: var(--espace-xl-plus);
+      align-items: start;
+    }
+  }
+</style>

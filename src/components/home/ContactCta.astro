@@ -1,0 +1,44 @@
+---
+import SectionTitle from "@components/ui/SectionTitle.astro";
+import CtaButton from "@components/ui/CtaButton.astro";
+
+/**
+ * ContactCta — Dernière section de l'accueil : invitation à prendre contact,
+ * qui renvoie vers la page /contact.
+ */
+---
+
+<section class="contact-cta container" id="contact" aria-label="Contact">
+  <SectionTitle outline="PARLONS DE" main="VOTRE PROJET" />
+  <p class="texte">
+    Un site à créer, à refaire ou à faire évoluer ? Écrivez-moi, on en
+    discute.
+  </p>
+  <CtaButton href="/contact" label="Me contacter" arrow />
+</section>
+
+<style lang="scss">
+  @use "@styles/config/variables" as *;
+  @use "@styles/config/mixin" as *;
+
+  .contact-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--espace-l);
+    padding-block: var(--espace-section);
+    text-align: center;
+    scroll-margin-top: var(--navbar-offset);
+  }
+
+  .texte {
+    max-width: 32rem;
+    margin: 0;
+    font-family: var(--font-text);
+    font-size: 1.1rem;
+    font-weight: 200;
+    line-height: 1.6;
+    color: var(--color-text);
+    opacity: 0.8;
+  }
+</style>

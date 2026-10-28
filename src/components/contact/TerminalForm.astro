@@ -1,0 +1,263 @@
+---
+import ShapeSymbol from "@components/ui/ShapeSymbol.astro";
+import { CONTACT_EMAIL, CONTACT_ENDPOINT } from "@utils/contact";
+
+/**
+ * TerminalForm — Formulaire de contact présenté comme une fenêtre de
+ * terminal : chaque champ est une invite de commande.
+ *
+ * Amélioration progressive : sans JS, le formulaire s'envoie via `action`
+ * (service configuré, sinon messagerie du visiteur). Avec JS
+ * (`@scripts/contact-form`), l'envoi se fait sans rechargement et le retour
+ * s'affiche comme une sortie de commande.
+ */
+const action = CONTACT_ENDPOINT ?? `mailto:${CONTACT_EMAIL}`;
+const enctype = CONTACT_ENDPOINT ? undefined : "text/plain";
+---
+
+<div class="terminal">
+  <div class="terminal-bar" aria-hidden="true">
+    <span class="window-buttons">
+      <ShapeSymbol shape="circle" class="window-button" />
+      <ShapeSymbol shape="triangle" class="window-button" />
+      <ShapeSymbol shape="cross" class="window-button" />
+    </span>
+    <span class="terminal-title">contact@nifradev: ~/nouveau-projet</span>
+  </div>
+
+  <form
+    id="contact-form"
+    class="terminal-body"
+    action={action}
+    method="post"
+    enctype={enctype}
+    data-endpoint={CONTACT_ENDPOINT}
+    data-email={CONTACT_EMAIL}
+  >
+    <p class="line" aria-hidden="true">
+      <span class="prompt">$</span> ./contact --nouveau-projet
+    </p>
+    <p class="line comment">
+      # Parlez-moi de votre projet, je vous réponds dès que possible.
+    </p>
+
+    <div class="field">
+      <label for="contact-nom"><span class="prompt" aria-hidden="true">?</span> nom</label>
+      <span class="chevron" aria-hidden="true">›</span>
+      <input id="contact-nom" name="nom" type="text" autocomplete="name" required />
+    </div>
+
+    <div class="field">
+      <label for="contact-email"><span class="prompt" aria-hidden="true">?</span> email</label>
+      <span class="chevron" aria-hidden="true">›</span>
+      <input id="contact-email" name="email" type="email" autocomplete="email" required />
+    </div>
+
+    <div class="field field-message">
+      <label for="contact-message"><span class="prompt" aria-hidden="true">?</span> message</label>
+      <span class="chevron" aria-hidden="true">›</span>
+      <textarea id="contact-message" name="message" rows="5" required></textarea>
+    </div>
+
+    <!-- Champ piège anti-spam : invisible pour les humains -->
+    <div class="trap" aria-hidden="true">
+      <label>Ne pas remplir <input name="_gotcha" type="text" tabindex="-1" autocomplete="off" /></label>
+    </div>
+
+    <button type="submit" class="submit">
+      <span class="prompt" aria-hidden="true">$</span> envoyer
+      <kbd aria-hidden="true">⏎</kbd>
+    </button>
+
+    <p id="contact-output" class="output" role="status" aria-live="polite"></p>
+  </form>
+</div>
+
+<script>
+  import { initContactForm } from "@scripts/contact-form";
+  initContactForm();
+</script>
+
+<style lang="scss">
+  @use "@styles/config/variables" as *;
+  @use "@styles/config/mixin" as *;
+
+  // Pas de police mono dans les tokens : pile système locale au terminal
+  $font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono",
+    monospace;
+
+  .terminal {
+    overflow: hidden;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--rayon-m);
+    background: var(--color-bg-primary);
+    box-shadow: 0 0 40px -12px var(--color-accent);
+    font-family: $font-mono;
+    font-size: 0.95rem;
+
+    // Les styles typographiques globaux (p, label…) imposent police et taille
+    // du texte courant : on rétablit celles du terminal partout
+    p,
+    label {
+      font: inherit;
+      letter-spacing: normal;
+    }
+  }
+
+  .terminal-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--espace-m);
+    padding: var(--espace-s) var(--espace-m);
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-bg-code);
+  }
+
+  // Boutons de fenêtre : les symboles de la charte à la place des pastilles
+  .window-buttons {
+    display: flex;
+    gap: var(--espace-s);
+
+    :global(.window-button) {
+      --symbol-size: 0.75rem;
+    }
+  }
+
+  .terminal-title {
+    overflow: hidden;
+    font-size: var(--little-text);
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .terminal-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espace-m);
+    padding: var(--espace-l) var(--espace-m);
+
+    @include breakpoint-up($breakpoint-tablet) {
+      padding: var(--espace-l);
+    }
+  }
+
+  .line {
+    margin: 0;
+    color: var(--color-text);
+  }
+
+  .comment {
+    color: var(--color-text-secondary);
+  }
+
+  .prompt {
+    color: var(--color-accent);
+  }
+
+  .field {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    gap: var(--espace-s);
+    align-items: baseline;
+
+    label {
+      color: var(--color-text);
+    }
+  }
+
+  .chevron {
+    color: var(--color-accent);
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    padding: var(--espace-xs) 0;
+    border: none;
+    border-bottom: 1px dashed var(--color-border-emphasis);
+    background: transparent;
+    font: inherit;
+    color: var(--color-text-strong);
+    caret-color: var(--color-accent);
+    caret-shape: block;
+
+    &:focus {
+      outline: none;
+      border-bottom-style: solid;
+      border-bottom-color: var(--color-accent);
+    }
+
+    &:focus-visible {
+      @include focus-visible;
+    }
+  }
+
+  // Message : la zone de saisie passe sous l'invite, sur toute la largeur
+  .field-message textarea {
+    grid-column: 1 / -1;
+    padding: var(--espace-s);
+    border: 1px dashed var(--color-border-emphasis);
+    resize: vertical;
+
+    &:focus {
+      border-style: solid;
+      border-color: var(--color-accent);
+    }
+  }
+
+  .trap {
+    position: absolute;
+    left: -9999px;
+  }
+
+  .submit {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--espace-s);
+    align-self: flex-start;
+    margin-top: var(--espace-s);
+    padding: var(--espace-s) var(--espace-m);
+    border: 1px solid var(--color-accent-border);
+    background: transparent;
+    font: inherit;
+    color: var(--color-text-strong);
+    cursor: pointer;
+    transition:
+      border-color 0.3s ease,
+      box-shadow 0.3s ease;
+
+    &:hover {
+      border-color: var(--color-accent);
+      box-shadow: 0 0 14px -4px var(--color-accent);
+    }
+
+    &:focus-visible {
+      @include focus-visible;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: wait;
+    }
+
+    kbd {
+      font: inherit;
+      color: var(--color-text-secondary);
+    }
+  }
+
+  .output {
+    min-height: 1.5em;
+    margin: 0;
+    color: var(--color-text-secondary);
+
+    &[data-state="success"] {
+      color: var(--color-accent);
+    }
+
+    &[data-state="error"] {
+      color: var(--color-text-strong);
+    }
+  }
+</style>

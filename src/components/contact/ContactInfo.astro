@@ -1,0 +1,186 @@
+---
+import Github from "@assets/icons/Github.svg";
+import Linkedin from "@assets/icons/Linkedin.svg";
+import {
+  CONTACT_EMAIL,
+  CONTACT_PHONE,
+  CV_URL,
+  GITHUB_URL,
+  LINKEDIN_URL,
+} from "@utils/contact";
+
+/**
+ * ContactInfo — Coordonnées directes, en alternative au formulaire :
+ * email, téléphone et CV en ligne, puis réseaux en icônes.
+ */
+const items = [
+  { label: "Email", value: CONTACT_EMAIL, href: `mailto:${CONTACT_EMAIL}` },
+  {
+    label: "Téléphone",
+    value: CONTACT_PHONE.display,
+    href: `tel:${CONTACT_PHONE.international}`,
+  },
+  { label: "CV", value: "Consulter mon CV en ligne", href: CV_URL, external: true },
+];
+---
+
+<section class="contact-info" aria-labelledby="contact-info-title">
+  <h2 id="contact-info-title" class="info-title">Me joindre directement</h2>
+
+  <ul class="items" role="list">
+    {
+      items.map((item) => (
+        <li class="item">
+          <span class="label">{item.label}</span>
+          <a
+            href={item.href}
+            class="value"
+            {...(item.external && { target: "_blank", rel: "noopener noreferrer" })}
+          >
+            {item.value}
+            {item.external && (
+              <>
+                <span class="external" aria-hidden="true">↗</span>
+                <span class="visually-hidden">(nouvel onglet)</span>
+              </>
+            )}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+
+  <ul class="socials" role="list">
+    <li>
+      <a
+        href={LINKEDIN_URL}
+        class="social"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Mon profil LinkedIn (nouvel onglet)"
+      >
+        <Linkedin />
+      </a>
+    </li>
+    <li>
+      <a
+        href={GITHUB_URL}
+        class="social"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Mon GitHub (nouvel onglet)"
+      >
+        <Github />
+      </a>
+    </li>
+  </ul>
+</section>
+
+<style lang="scss">
+  @use "@styles/config/variables" as *;
+  @use "@styles/config/mixin" as *;
+
+  .contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espace-l);
+  }
+
+  .info-title {
+    margin: 0;
+    font-family: var(--font-title);
+    font-size: 1.5rem;
+    font-style: italic;
+    font-weight: 700;
+    color: var(--color-text-strong);
+  }
+
+  .items {
+    display: flex;
+    flex-direction: column;
+  }
+
+  // Liste à filets fins : une coordonnée par ligne
+  .item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espace-xs);
+    padding-block: var(--espace-m);
+    border-top: 1px solid var(--color-border);
+
+    &:last-child {
+      border-bottom: 1px solid var(--color-border);
+    }
+  }
+
+  .label {
+    font-size: var(--little-text);
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+  }
+
+  .value {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--espace-s);
+    width: fit-content;
+    font-family: var(--font-text);
+    font-size: 1.05rem;
+    color: var(--color-text-strong);
+    text-decoration: none;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: var(--color-accent);
+    }
+
+    &:focus-visible {
+      @include focus-visible;
+    }
+  }
+
+  .socials {
+    display: flex;
+    gap: var(--espace-m);
+  }
+
+  .social {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--rayon-rond);
+    color: var(--color-text);
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      color 0.3s ease,
+      border-color 0.3s ease,
+      transform 0.2s ease;
+
+    &:hover {
+      color: var(--color-accent);
+      border-color: var(--color-accent-border);
+      transform: translateY(-2px);
+    }
+
+    &:active {
+      color: var(--color-accent);
+    }
+
+    &:focus-visible {
+      @include focus-visible;
+    }
+  }
+
+  .external {
+    color: var(--color-accent);
+    transition: transform 0.3s ease;
+
+    .value:hover & {
+      transform: translate(2px, -2px);
+    }
+  }
+</style>
