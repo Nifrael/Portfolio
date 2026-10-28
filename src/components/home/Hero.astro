@@ -35,7 +35,10 @@ import CtaButton from "@components/ui/CtaButton.astro";
     position: relative;
     display: flex;
     align-items: center;
+    // svh : hauteur de l'écran barre d'adresse mobile affichée (pas de saut
+    // au scroll) ; la ligne en vh sert de repli aux navigateurs plus anciens
     min-height: 100vh;
+    min-height: 100svh;
     overflow: hidden;
     padding-block: var(--espace-xxl) var(--espace-l);
 
@@ -54,6 +57,7 @@ import CtaButton from "@components/ui/CtaButton.astro";
     align-items: center;
     position: relative;
     min-height: 70vh;
+    min-height: 70svh;
     z-index: 10;
 
     @include breakpoint-up($breakpoint-desktop) {

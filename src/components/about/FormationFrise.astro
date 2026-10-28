@@ -195,6 +195,7 @@ const { steps } = Astro.props;
       // Hauteur = un écran collé + une course de scroll par station
       .formation {
         height: calc(100vh + var(--stations) * 50vh);
+        height: calc(100svh + var(--stations) * 50svh);
         padding-block: 0;
         view-timeline-name: --frise;
       }
@@ -206,6 +207,7 @@ const { steps } = Astro.props;
         flex-direction: column;
         justify-content: center;
         height: 100vh;
+        height: 100svh;
         padding-top: var(--navbar-offset);
         overflow: clip;
         container-type: inline-size;

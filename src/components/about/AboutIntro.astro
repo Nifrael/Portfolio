@@ -54,6 +54,7 @@ const { paragraphs } = Astro.props;
     @include breakpoint-up($breakpoint-desktop) {
       grid-template-columns: 3fr 2fr;
       min-height: calc(100vh - var(--navbar-offset-desktop));
+      min-height: calc(100svh - var(--navbar-offset-desktop));
     }
   }
 
