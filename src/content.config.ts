@@ -2,7 +2,7 @@ import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 
-/** Symboles géométriques associés aux projets featured (écho aux GlassSymbols). */
+/** Symboles géométriques associés aux projets featured (cf. ShapeSymbol). */
 export const PROJECT_SHAPES = ['triangle', 'circle', 'cross', 'square'] as const;
 export type ProjectShape = (typeof PROJECT_SHAPES)[number];
 

@@ -5,6 +5,7 @@ import ParcoursThread from "@components/about/ParcoursThread.astro";
 import FormationFrise from "@components/about/FormationFrise.astro";
 import ShapeCards from "@components/about/ShapeCards.astro";
 import AboutCta from "@components/about/AboutCta.astro";
+import { CV_URL } from "@utils/contact";
 import type {
   ParcoursStep,
   FormationStep,
@@ -53,5 +54,5 @@ const competences: ShapeCard[] = [
   <ParcoursThread steps={parcours} />
   <FormationFrise steps={formation} />
   <ShapeCards outline="MES" main="COMPÉTENCES" items={competences} />
-  <AboutCta text={loremLong} contactHref="/#contact" cvHref="#" />
+  <AboutCta text={loremLong} contactHref="/#contact" cvHref={CV_URL} />
 </Layout>

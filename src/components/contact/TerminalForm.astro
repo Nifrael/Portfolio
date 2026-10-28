@@ -188,6 +188,7 @@ const enctype = CONTACT_ENDPOINT ? undefined : "text/plain";
       border-bottom-color: var(--color-accent);
     }
 
+    // Rétablit le contour global, annulé par le :focus ci-dessus
     &:focus-visible {
       @include focus-visible;
     }
@@ -230,10 +231,6 @@ const enctype = CONTACT_ENDPOINT ? undefined : "text/plain";
     &:hover {
       border-color: var(--color-accent);
       box-shadow: 0 0 14px -4px var(--color-accent);
-    }
-
-    &:focus-visible {
-      @include focus-visible;
     }
 
     &:disabled {

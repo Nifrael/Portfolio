@@ -9,7 +9,7 @@ import { PROJECT_SHAPES } from "../../content.config";
  *
  * @prop {string} text          - Texte d'invitation.
  * @prop {string} contactHref   - Lien du bouton principal.
- * @prop {string} [cvHref]      - Lien du CV (bouton secondaire, masqué si absent).
+ * @prop {string} [cvHref]      - Lien du CV en ligne (bouton secondaire, masqué si absent).
  */
 interface Props {
   text: string;
@@ -28,7 +28,7 @@ const { text, contactHref, cvHref } = Astro.props;
   <p class="text">{text}</p>
   <div class="actions">
     <CtaButton href={contactHref} label="Me contacter" arrow />
-    {cvHref && <CtaButton href={cvHref} label="Télécharger mon CV" variant="outline" />}
+    {cvHref && <CtaButton href={cvHref} label="Consulter mon CV" variant="outline" external />}
   </div>
 </section>
 
@@ -57,6 +57,11 @@ const { text, contactHref, cvHref } = Astro.props;
     gap: var(--espace-m-plus);
     color: var(--color-accent);
     filter: drop-shadow(0 0 6px var(--color-accent));
+
+    // ShapeSymbol impose sa couleur : on lui fait suivre celle du conteneur
+    :global(.shape-symbol) {
+      color: inherit;
+    }
   }
 
   .text {

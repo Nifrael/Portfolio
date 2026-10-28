@@ -1,14 +1,12 @@
 ---
-import CornerAccents from "@components/ui/CornerAccents.astro";
-
 /**
  * CtaButton — Bouton d'appel à l'action unifié.
  *
  * @prop {string} href                        - URL de destination du lien.
  * @prop {string} label                       - Texte affiché dans le bouton.
  * @prop {"solid" | "outline"} [variant]      - Style du bouton (défaut : "solid").
- * @prop {boolean} [external]                 - Ouvre dans un nouvel onglet (target/rel).
- * @prop {boolean} [corners]                  - Affiche les coins décoratifs.
+ * @prop {boolean} [external]                 - Ouvre dans un nouvel onglet (target/rel),
+ *                                              annoncé aux lecteurs d'écran.
  * @prop {boolean} [arrow]                    - Affiche une flèche animée au survol.
  * @prop {string} [class]                     - Classes CSS additionnelles.
  * @slot icon                                 - Icône affichée après le libellé.
@@ -18,7 +16,6 @@ interface Props {
   label: string;
   variant?: "solid" | "outline";
   external?: boolean;
-  corners?: boolean;
   arrow?: boolean;
   class?: string;
 }
@@ -28,7 +25,6 @@ const {
   label,
   variant = "solid",
   external = false,
-  corners = false,
   arrow = false,
   class: className,
 } = Astro.props;
@@ -52,7 +48,7 @@ const externalAttrs = external
       </span>
     )
   }
-  {corners && <CornerAccents />}
+  {external && <span class="visually-hidden">(nouvel onglet)</span>}
 </a>
 
 <style lang="scss">
@@ -60,8 +56,6 @@ const externalAttrs = external
   @use "@styles/config/mixin" as *;
 
   .cta {
-    --corner-offset: -0.25rem;
-
     position: relative;
     display: inline-flex;
     align-items: center;
