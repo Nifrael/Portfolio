@@ -1,0 +1,73 @@
+---
+import type { ProjectShape } from "../../content.config";
+import ShapeSymbol from "./ShapeSymbol.astro";
+
+/**
+ * ThreadNode — Nœud rond posé sur un ScrollThread, qui s'allume quand la
+ * pointe du fil (milieu de l'écran) l'atteint.
+ *
+ * Contient soit l'un des quatre symboles (`shape`), soit un court texte
+ * (slot, ex. un numéro d'étape). Décoratif : masqué aux lecteurs d'écran.
+ * La taille se règle via `--node-size` (défaut : 2.75rem), celle du symbole
+ * via `--symbol-size` ; le placement est laissé au parent.
+ *
+ * @prop {ProjectShape} [shape] - Symbole à afficher à la place du slot.
+ * @prop {string} [class]       - Classes CSS additionnelles.
+ */
+interface Props {
+  shape?: ProjectShape;
+  class?: string;
+}
+
+const { shape, class: className } = Astro.props;
+---
+
+<span class:list={["thread-node", className]} aria-hidden="true">
+  {shape ? <ShapeSymbol shape={shape} class="thread-node-shape" /> : <slot />}
+</span>
+
+<style lang="scss">
+  // Son fond masque le rail : le fil semble passer derrière le nœud
+  .thread-node {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: var(--node-size, 2.75rem);
+    height: var(--node-size, 2.75rem);
+    border: 1px solid var(--color-accent-border);
+    border-radius: var(--rayon-rond);
+    background: var(--color-bg-primary);
+    font-family: var(--font-title);
+    font-size: var(--little-text);
+    font-style: italic;
+    font-weight: 700;
+    color: var(--color-accent);
+    filter: drop-shadow(0 0 6px var(--color-accent));
+
+    // Le symbole suit la couleur du nœud (éteint / allumé)
+    :global(.thread-node-shape) {
+      color: inherit;
+    }
+  }
+
+  @keyframes node-on {
+    from {
+      color: var(--color-decor-symbol);
+      border-color: var(--color-border);
+      filter: none;
+    }
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      // Allumé quand son centre atteint le milieu de l'écran
+      .thread-node {
+        animation: node-on linear both;
+        animation-timeline: view();
+        animation-range: cover calc(50vh - var(--node-size, 2.75rem) / 2)
+          cover 50vh;
+      }
+    }
+  }
+</style>

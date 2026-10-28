@@ -1,14 +1,14 @@
 ---
+import ScrollThread from "@components/ui/ScrollThread.astro";
 import SectionTitle from "@components/ui/SectionTitle.astro";
+import ThreadNode from "@components/ui/ThreadNode.astro";
 import type { MethodStep } from "./types";
 
 /**
  * Method — Étapes de travail avec le client, le long d'un fil lumineux.
  *
- * CSS pur, même mécanique que ParcoursThread : le fil est révélé par un
- * clip-path piloté par une view-timeline (`--method`), sa pointe suit le
- * milieu de l'écran et chaque nœud s'allume à son passage. Sans support des
- * scroll-driven animations (ou en mouvement réduit), tout est affiché allumé.
+ * Fil droit (ScrollThread) passant par le centre des nœuds numérotés
+ * (ThreadNode), à gauche des étapes.
  *
  * @prop {MethodStep[]} steps - Étapes, dans l'ordre (fournies par la page).
  */
@@ -22,21 +22,21 @@ const { steps } = Astro.props;
 <section class="method container" id="methode" aria-label="Méthode de travail">
   <SectionTitle outline="COMMENT ON" main="TRAVAILLE" class="method-title" />
 
-  <ol class="steps" role="list">
-    {
-      steps.map((step, index) => (
-        <li class="step">
-          <span class="node" aria-hidden="true">
-            {String(index + 1).padStart(2, "0")}
-          </span>
-          <div class="content">
-            <h3 class="titre">{step.titre}</h3>
-            <p class="texte">{step.texte}</p>
-          </div>
-        </li>
-      ))
-    }
-  </ol>
+  <ScrollThread class="method-thread">
+    <ol class="steps" role="list">
+      {
+        steps.map((step, index) => (
+          <li class="step">
+            <ThreadNode>{String(index + 1).padStart(2, "0")}</ThreadNode>
+            <div class="content">
+              <h3 class="titre">{step.titre}</h3>
+              <p class="texte">{step.texte}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </ScrollThread>
 </section>
 
 <style lang="scss">
@@ -54,39 +54,18 @@ const { steps } = Astro.props;
     }
   }
 
-  .steps {
-    position: relative;
-    display: grid;
-    gap: var(--espace-xl);
+  // Le fil part du centre du premier nœud
+  .method :global(.method-thread) {
+    --thread-width: var(--node-size);
+    --thread-start: calc(var(--node-size) / 2);
+
     max-width: 48rem;
     margin-inline: auto;
-    view-timeline-name: --method;
+  }
 
-    // Fil vertical passant par le centre des nœuds :
-    // ::before = rail éteint, ::after = fil lumineux révélé au scroll
-    &::before,
-    &::after {
-      content: "";
-      position: absolute;
-      top: calc(var(--node-size) / 2);
-      bottom: 0;
-      left: calc(var(--node-size) / 2);
-      pointer-events: none;
-      transform: translateX(-50%);
-    }
-
-    &::before {
-      width: 1px;
-      background: var(--color-border-emphasis);
-    }
-
-    &::after {
-      width: 2px;
-      background: var(--color-text);
-      box-shadow:
-        0 0 4px var(--color-halo),
-        0 0 14px var(--color-accent);
-    }
+  .steps {
+    display: grid;
+    gap: var(--espace-xl);
   }
 
   .step {
@@ -98,25 +77,6 @@ const { steps } = Astro.props;
     @include breakpoint-up($breakpoint-tablet) {
       gap: var(--espace-l);
     }
-  }
-
-  // Nœud posé sur le fil : son fond masque le rail
-  .node {
-    position: relative;
-    z-index: 1;
-    display: grid;
-    place-items: center;
-    width: var(--node-size);
-    height: var(--node-size);
-    border: 1px solid var(--color-accent-border);
-    border-radius: var(--rayon-rond);
-    background: var(--color-bg-primary);
-    font-family: var(--font-title);
-    font-size: var(--little-text);
-    font-style: italic;
-    font-weight: 700;
-    color: var(--color-accent);
-    filter: drop-shadow(0 0 6px var(--color-accent));
   }
 
   .content {
@@ -144,24 +104,6 @@ const { steps } = Astro.props;
     opacity: 0.8;
   }
 
-  // Insets horizontaux négatifs : le halo ne doit pas être rogné
-  @keyframes wire-unroll {
-    from {
-      clip-path: inset(0 -20px 100% -20px);
-    }
-    to {
-      clip-path: inset(0 -20px 0 -20px);
-    }
-  }
-
-  @keyframes node-on {
-    from {
-      color: var(--color-decor-symbol);
-      border-color: var(--color-border);
-      filter: none;
-    }
-  }
-
   @keyframes step-reveal {
     from {
       opacity: 0;
@@ -171,20 +113,6 @@ const { steps } = Astro.props;
 
   @supports (animation-timeline: view()) {
     @media (prefers-reduced-motion: no-preference) {
-      // Pointe du fil au milieu de l'écran : la révélation commence quand le
-      // haut de la liste atteint le milieu, et finit quand le bas l'atteint.
-      .steps::after {
-        animation: wire-unroll linear both;
-        animation-timeline: --method;
-        animation-range: cover 50vh cover calc(100% - 50vh);
-      }
-
-      .node {
-        animation: node-on linear both;
-        animation-timeline: view();
-        animation-range: cover calc(50vh - var(--node-size) / 2) cover 50vh;
-      }
-
       .content {
         animation: step-reveal ease-out both;
         animation-timeline: view();

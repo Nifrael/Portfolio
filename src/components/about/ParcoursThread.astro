@@ -1,15 +1,15 @@
 ---
+import ScrollThread from "@components/ui/ScrollThread.astro";
 import SectionTitle from "@components/ui/SectionTitle.astro";
-import ShapeSymbol from "@components/ui/ShapeSymbol.astro";
+import ThreadNode from "@components/ui/ThreadNode.astro";
 import type { ParcoursStep } from "./types";
 
 /**
  * ParcoursThread — Parcours le long d'un fil néon qui se déroule au scroll.
  *
- * CSS pur : le fil lumineux est révélé par un clip-path piloté par une
- * view-timeline (`--parcours`), calée pour que sa pointe suive le milieu de
- * l'écran ; chaque nœud s'allume quand la pointe l'atteint. Sans support des
- * scroll-driven animations (ou en mouvement réduit), tout est affiché allumé.
+ * Fil ondulant (ScrollThread) qui recroise l'axe sur chaque nœud-symbole
+ * (ThreadNode) : à gauche en mobile, au centre en desktop avec des cartes
+ * alternées de part et d'autre.
  *
  * @prop {ParcoursStep[]} steps - Étapes, de la plus ancienne à la plus récente.
  */
@@ -18,47 +18,17 @@ interface Props {
 }
 
 const { steps } = Astro.props;
-
-// Fil ondulant autour de l'axe : deux demi-ondes par étape, il recroise
-// l'axe (x = 50) au milieu de chaque étape, là où est posé le nœud.
-const halfWaves = steps.length * 2;
-const waveHeight = 1000 / halfWaves;
-const wirePath = [
-  "M 50 0",
-  ...Array.from({ length: halfWaves }, (_, i) => {
-    const y = i * waveHeight;
-    const x = i % 2 === 0 ? 85 : 15;
-    return `C ${x} ${y + waveHeight * 0.35}, ${x} ${y + waveHeight * 0.65}, 50 ${y + waveHeight}`;
-  }),
-].join(" ");
 ---
 
 <section class="parcours container" aria-label="Parcours">
   <SectionTitle outline="MON" main="PARCOURS" class="parcours-title" />
 
-  <div class="thread">
-    <svg
-      class="wire wire-track"
-      viewBox="0 0 100 1000"
-      preserveAspectRatio="none"
-      aria-hidden="true"
-    >
-      <path d={wirePath} vector-effect="non-scaling-stroke" />
-    </svg>
-    <svg
-      class="wire wire-light"
-      viewBox="0 0 100 1000"
-      preserveAspectRatio="none"
-      aria-hidden="true"
-    >
-      <path d={wirePath} vector-effect="non-scaling-stroke" />
-    </svg>
-
+  <ScrollThread waves={steps.length} class="parcours-thread">
     <ol class="steps" role="list">
       {
         steps.map((step) => (
           <li class="step">
-            <ShapeSymbol shape={step.shape} class="node" />
+            <ThreadNode shape={step.shape} class="node" />
             <article class="card">
               <p class="periode">{step.periode}</p>
               <h3 class="titre">{step.titre}</h3>
@@ -69,7 +39,7 @@ const wirePath = [
         ))
       }
     </ol>
-  </div>
+  </ScrollThread>
 </section>
 
 <style lang="scss">
@@ -90,36 +60,15 @@ const wirePath = [
     }
   }
 
-  .thread {
-    position: relative;
-    view-timeline-name: --parcours;
-  }
-
-  // Le fil occupe la colonne des nœuds : à gauche en mobile, au centre en desktop
-  .wire {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: var(--wire-width);
-    height: 100%;
-    overflow: visible;
-    fill: none;
-    pointer-events: none;
+  // Fil plus épais et sans halo : il ondule déjà beaucoup
+  .parcours :global(.parcours-thread) {
+    --thread-width: var(--wire-width);
+    --thread-stroke: 3;
+    --thread-glow: none;
 
     @include breakpoint-up($breakpoint-desktop) {
-      left: 50%;
-      transform: translateX(-50%);
+      --thread-center: 50%;
     }
-  }
-
-  .wire-track {
-    stroke: var(--color-border-emphasis);
-    stroke-width: 1;
-  }
-
-  .wire-light {
-    stroke: var(--color-text);
-    stroke-width: 3;
   }
 
   .steps {
@@ -139,21 +88,12 @@ const wirePath = [
       gap: var(--espace-l-plus);
     }
 
-    // Nœud posé sur le fil : son fond masque le croisement
     :global(.node) {
       --symbol-size: 1.25rem;
 
-      position: relative;
       grid-row: 1;
       grid-column: 1;
       justify-self: center;
-      width: 2.75rem;
-      height: 2.75rem;
-      border: 1px solid var(--color-accent-border);
-      border-radius: var(--rayon-rond);
-      background: var(--color-bg-primary);
-      color: var(--color-accent);
-      filter: drop-shadow(0 0 6px var(--color-accent));
 
       @include breakpoint-up($breakpoint-desktop) {
         grid-column: 2;
@@ -216,23 +156,6 @@ const wirePath = [
     opacity: 0.8;
   }
 
-  @keyframes wire-unroll {
-    from {
-      clip-path: inset(0 -50% 100% -50%);
-    }
-    to {
-      clip-path: inset(0 -50% 0 -50%);
-    }
-  }
-
-  @keyframes node-on {
-    from {
-      color: var(--color-decor-symbol);
-      border-color: var(--color-border);
-      filter: none;
-    }
-  }
-
   @keyframes card-reveal {
     from {
       opacity: 0;
@@ -242,20 +165,6 @@ const wirePath = [
 
   @supports (animation-timeline: view()) {
     @media (prefers-reduced-motion: no-preference) {
-      // Pointe du fil au milieu de l'écran : la révélation commence quand le
-      // haut du fil atteint le milieu, et finit quand le bas l'atteint.
-      .wire-light {
-        animation: wire-unroll linear both;
-        animation-timeline: --parcours;
-        animation-range: cover 50vh cover calc(100% - 50vh);
-      }
-
-      .step :global(.node) {
-        animation: node-on linear both;
-        animation-timeline: view();
-        animation-range: cover calc(50vh - 1.375rem) cover 50vh;
-      }
-
       .card {
         animation: card-reveal ease-out both;
         animation-timeline: view();

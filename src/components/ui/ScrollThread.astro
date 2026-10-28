@@ -1,0 +1,122 @@
+---
+/**
+ * ScrollThread — Fil lumineux vertical qui se déroule au scroll, derrière
+ * son contenu (slot).
+ *
+ * CSS pur : un rail éteint (`.wire-track`) et, par-dessus, le même tracé
+ * allumé (`.wire-light`), révélé de haut en bas par un clip-path piloté par
+ * la view-timeline du fil. La plage `cover 50vh → cover 100% - 50vh` cale la
+ * pointe sur le milieu de l'écran. Les nœuds posés sur le fil (ThreadNode)
+ * s'allument au même moment. Sans support des scroll-driven animations (ou en
+ * mouvement réduit), le fil est affiché allumé.
+ *
+ * Géométrie réglable par custom properties, posées par le parent :
+ * - `--thread-width`  largeur de la colonne du fil (défaut : 2.75rem)
+ * - `--thread-center` position horizontale de l'axe (défaut : moitié de la colonne)
+ * - `--thread-start` / `--thread-end` retrait du fil en haut / en bas (défaut : 0)
+ * - `--thread-stroke` épaisseur du fil allumé, en px (défaut : 2)
+ * - `--thread-glow`   halo du fil allumé (défaut : halo néon ; `none` pour l'ôter)
+ *
+ * @prop {number} [waves] - Nombre d'étapes : le fil ondule et recroise l'axe
+ *                          au milieu de chacune. Absent : fil droit.
+ * @prop {string} [class] - Classes CSS additionnelles.
+ */
+interface Props {
+  waves?: number;
+  class?: string;
+}
+
+const { waves, class: className } = Astro.props;
+
+// Tracé dans un repère 100 × 1000 étiré sur la colonne (preserveAspectRatio="none").
+// Ondulé : deux demi-ondes par étape, l'axe (x = 50) est recroisé au milieu
+// de chaque étape, là où est posé le nœud.
+function buildWirePath(steps?: number): string {
+  if (!steps) return "M 50 0 L 50 1000";
+
+  const halfWaves = steps * 2;
+  const waveHeight = 1000 / halfWaves;
+  return [
+    "M 50 0",
+    ...Array.from({ length: halfWaves }, (_, i) => {
+      const y = i * waveHeight;
+      const x = i % 2 === 0 ? 85 : 15;
+      return `C ${x} ${y + waveHeight * 0.35}, ${x} ${y + waveHeight * 0.65}, 50 ${y + waveHeight}`;
+    }),
+  ].join(" ");
+}
+
+const wirePath = buildWirePath(waves);
+---
+
+<div class:list={["scroll-thread", className]}>
+  <div class="wire" aria-hidden="true">
+    {
+      ["wire-track", "wire-light"].map((layer) => (
+        <svg class={layer} viewBox="0 0 100 1000" preserveAspectRatio="none">
+          <path d={wirePath} vector-effect="non-scaling-stroke" />
+        </svg>
+      ))
+    }
+  </div>
+  <slot />
+</div>
+
+<style lang="scss">
+  .scroll-thread {
+    position: relative;
+  }
+
+  // Boîte du fil : porte la view-timeline, pour que la révélation suive
+  // exactement la longueur du tracé
+  .wire {
+    position: absolute;
+    top: var(--thread-start, 0);
+    bottom: var(--thread-end, 0);
+    left: var(--thread-center, calc(var(--thread-width, 2.75rem) / 2));
+    width: var(--thread-width, 2.75rem);
+    pointer-events: none;
+    transform: translateX(-50%);
+    view-timeline-name: --scroll-thread;
+
+    svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      fill: none;
+    }
+  }
+
+  .wire-track {
+    stroke: var(--color-border-emphasis);
+    stroke-width: 1;
+  }
+
+  .wire-light {
+    stroke: var(--color-text);
+    stroke-width: var(--thread-stroke, 2);
+  }
+
+  // Insets horizontaux très négatifs : l'ondulation et le halo ne doivent
+  // pas être rognés, seul le bas est découpé
+  @keyframes wire-unroll {
+    from {
+      clip-path: inset(0 -100% 100% -100%);
+    }
+    to {
+      clip-path: inset(0 -100% 0 -100%);
+    }
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .wire-light {
+        animation: wire-unroll linear both;
+        animation-timeline: --scroll-thread;
+        animation-range: cover 50vh cover calc(100% - 50vh);
+      }
+    }
+  }
+</style>
