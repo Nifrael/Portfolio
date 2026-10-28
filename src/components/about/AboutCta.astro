@@ -1,0 +1,77 @@
+---
+import SectionTitle from "@components/ui/SectionTitle.astro";
+import ShapeSymbol from "@components/ui/ShapeSymbol.astro";
+import CtaButton from "@components/ui/CtaButton.astro";
+import { PROJECT_SHAPES } from "../../content.config";
+
+/**
+ * AboutCta — Appel à l'action de fin de page, signé par les quatre symboles.
+ *
+ * @prop {string} text          - Texte d'invitation.
+ * @prop {string} contactHref   - Lien du bouton principal.
+ * @prop {string} [cvHref]      - Lien du CV (bouton secondaire, masqué si absent).
+ */
+interface Props {
+  text: string;
+  contactHref: string;
+  cvHref?: string;
+}
+
+const { text, contactHref, cvHref } = Astro.props;
+---
+
+<section class="about-cta container" aria-label="Contact">
+  <div class="symbols" aria-hidden="true">
+    {PROJECT_SHAPES.map((shape) => <ShapeSymbol shape={shape} />)}
+  </div>
+  <SectionTitle outline="TRAVAILLONS" main="ENSEMBLE" class="about-cta-title" />
+  <p class="text">{text}</p>
+  <div class="actions">
+    <CtaButton href={contactHref} label="Me contacter" arrow />
+    {cvHref && <CtaButton href={cvHref} label="Télécharger mon CV" variant="outline" />}
+  </div>
+</section>
+
+<style lang="scss">
+  @use "@styles/config/variables" as *;
+  @use "@styles/config/mixin" as *;
+
+  .about-cta {
+    --title-size: clamp(2.5rem, 9vw, 6rem);
+    --symbol-size: 1.5rem;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--espace-l);
+    padding-block: var(--espace-section) var(--espace-xxl);
+    text-align: center;
+
+    :global(.about-cta-title) {
+      align-items: center;
+    }
+  }
+
+  .symbols {
+    display: flex;
+    gap: var(--espace-m-plus);
+    color: var(--color-accent);
+    filter: drop-shadow(0 0 6px var(--color-accent));
+  }
+
+  .text {
+    max-width: 36rem;
+    font-size: 1.1rem;
+    font-weight: 200;
+    line-height: 1.7;
+    color: var(--color-text);
+    opacity: 0.8;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--espace-m-plus);
+  }
+</style>
