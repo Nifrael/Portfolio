@@ -11,6 +11,8 @@ import SectionTitle from "./SectionTitle.astro";
  * @prop {string} [backHref]    - Cible du lien de retour (défaut : "/").
  * @prop {string} [backLabel]   - Libellé du lien de retour (défaut : « Retour à l'accueil »).
  * @slot                        - Sous-titre (texte), masqué si absent.
+ * @slot aside                  - Contenu affiché à droite dès le desktop
+ *                                (sous le sous-titre en mobile), aligné en bas.
  */
 interface Props {
   outline: string;
@@ -28,26 +30,50 @@ const {
 ---
 
 <header class="page-header">
-  <ArrowLink href={backHref} direction="left" muted>{backLabel}</ArrowLink>
-  <SectionTitle as="h1" outline={outline} main={main} />
+  <div class="page-header-main">
+    <ArrowLink href={backHref} direction="left" muted>{backLabel}</ArrowLink>
+    <SectionTitle as="h1" outline={outline} main={main} />
+    {
+      Astro.slots.has("default") && (
+        <p class="page-subtitle">
+          <slot />
+        </p>
+      )
+    }
+  </div>
   {
-    Astro.slots.has("default") && (
-      <p class="page-subtitle">
-        <slot />
-      </p>
+    Astro.slots.has("aside") && (
+      <div class="page-header-aside">
+        <slot name="aside" />
+      </div>
     )
   }
 </header>
 
 <style lang="scss">
+  @use "@styles/config/variables" as *;
+  @use "@styles/config/mixin" as *;
+
   .page-header {
     --title-size: clamp(2.5rem, 8vw, 5rem);
 
     display: flex;
     flex-direction: column;
+    gap: var(--espace-l);
+    margin-bottom: var(--espace-xl-plus);
+
+    @include breakpoint-up($breakpoint-desktop) {
+      flex-direction: row;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+  }
+
+  .page-header-main {
+    display: flex;
+    flex-direction: column;
     align-items: flex-start;
     gap: var(--espace-m-plus);
-    margin-bottom: var(--espace-xl-plus);
   }
 
   .page-subtitle {

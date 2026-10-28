@@ -27,7 +27,7 @@ const { steps } = Astro.props;
       {
         steps.map((step, index) => (
           <li class="step">
-            <ThreadNode>{String(index + 1).padStart(2, "0")}</ThreadNode>
+            <ThreadNode label={String(index + 1).padStart(2, "0")} />
             <div class="content">
               <h3 class="titre">{step.titre}</h3>
               <p class="texte">{step.texte}</p>

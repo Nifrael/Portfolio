@@ -7,29 +7,33 @@ import ShapeSymbol from "./ShapeSymbol.astro";
  * il s'allume quand la pointe du fil (milieu de l'écran) l'atteint.
  *
  * Contient soit l'un des quatre symboles (`shape`), soit un court texte
- * (slot, ex. un numéro d'étape). Décoratif : masqué aux lecteurs d'écran.
+ * (`label`, ex. un numéro d'étape). Décoratif : masqué aux lecteurs d'écran,
+ * et le texte est généré en CSS pour ne pas compter comme du contenu.
  * La taille se règle via `--node-size` (défaut : 2.75rem), celle du symbole
  * via `--symbol-size` ; le placement est laissé au parent.
  *
- * @prop {ProjectShape} [shape]         - Symbole à afficher à la place du slot.
+ * @prop {ProjectShape} [shape]         - Symbole à afficher.
+ * @prop {string} [label]               - Court texte, si pas de symbole.
  * @prop {"scroll" | "always"} [lit]    - Allumé au passage du fil (défaut)
  *                                        ou en permanence (fil non vertical).
  * @prop {string} [class]               - Classes CSS additionnelles.
  */
 interface Props {
   shape?: ProjectShape;
+  label?: string;
   lit?: "scroll" | "always";
   class?: string;
 }
 
-const { shape, lit = "scroll", class: className } = Astro.props;
+const { shape, label, lit = "scroll", class: className } = Astro.props;
 ---
 
 <span
   class:list={["thread-node", { "lit-always": lit === "always" }, className]}
+  data-label={label}
   aria-hidden="true"
 >
-  {shape ? <ShapeSymbol shape={shape} class="thread-node-shape" /> : <slot />}
+  {shape && <ShapeSymbol shape={shape} class="thread-node-shape" />}
 </span>
 
 <style lang="scss">
@@ -54,6 +58,10 @@ const { shape, lit = "scroll", class: className } = Astro.props;
     // Le symbole suit la couleur du nœud (éteint / allumé)
     :global(.thread-node-shape) {
       color: inherit;
+    }
+
+    &[data-label]::before {
+      content: attr(data-label);
     }
   }
 

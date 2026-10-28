@@ -33,3 +33,33 @@ export async function getFeaturedProjects(): Promise<Project[]> {
 export function getProjectShape(project: Project, index: number): ProjectShape {
   return project.data.shape ?? PROJECT_SHAPES[index % PROJECT_SHAPES.length];
 }
+
+/** Alias de technos comptés comme une seule (cf. TagList). */
+const TECH_ALIASES: Record<string, string> = { sass: "scss" };
+
+export interface ProjectStats {
+  count: number;
+  technologies: number;
+  firstYear: number;
+  lastYear: number;
+}
+
+/** Chiffres clés d'une liste de projets (nombre, technos distinctes, période). */
+export function getProjectStats(projects: Project[]): ProjectStats {
+  const technologies = new Set(
+    projects.flatMap(({ data }) =>
+      data.tags.map((tag) => {
+        const key = tag.toLowerCase();
+        return TECH_ALIASES[key] ?? key;
+      }),
+    ),
+  );
+  const years = projects.map(({ data }) => data.publishDate.getFullYear());
+
+  return {
+    count: projects.length,
+    technologies: technologies.size,
+    firstYear: Math.min(...years),
+    lastYear: Math.max(...years),
+  };
+}

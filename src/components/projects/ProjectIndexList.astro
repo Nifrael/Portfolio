@@ -29,9 +29,11 @@ const { projects } = Astro.props;
       return (
         <li class="row" style={`--i: ${index}`}>
           <a href={`/projets/${project.id}`} class="row-link">
-            <span class="index" aria-hidden="true">
-              {String(index + 1).padStart(2, "0")}
-            </span>
+            <span
+              class="index"
+              data-index={String(index + 1).padStart(2, "0")}
+              aria-hidden="true"
+            />
             <ShapeSymbol
               shape={getProjectShape(project, index)}
               class="row-shape"
@@ -44,11 +46,16 @@ const { projects } = Astro.props;
             </span>
             <span class="reveal" aria-hidden="true">
               <span class="reveal-media">
+                {/* Recadrée au format de la bande (≈ 3:1). Très atténuée en
+                    mobile : une demi-résolution suffit */}
                 <Image
                   src={cover.src}
                   alt=""
+                  width={960}
+                  height={320}
                   widths={[480, 960]}
-                  sizes="(min-width: 1024px) 30rem, 100vw"
+                  sizes="(min-width: 1024px) 30rem, 50vw"
+                  loading={index === 0 ? "eager" : "lazy"}
                   class="reveal-image"
                 />
               </span>
@@ -116,6 +123,7 @@ const { projects } = Astro.props;
     }
   }
 
+  // Numéro décoratif généré en CSS : redondant avec l'ordre de la liste
   .index {
     grid-area: index;
     font-family: var(--font-title);
@@ -124,6 +132,10 @@ const { projects } = Astro.props;
     font-weight: 700;
     -webkit-text-stroke: 1px var(--color-border-emphasis);
     color: transparent;
+
+    &::before {
+      content: attr(data-index);
+    }
   }
 
   .row-link :global(.row-shape) {
@@ -238,9 +250,11 @@ const { projects } = Astro.props;
       width: calc(22rem + 3 * var(--espace-l) + var(--espace-m));
     }
 
+    // 1px reste découvert (invisible : le dégradé y est à la couleur du
+    // fond) : une image entièrement rognée n'est jamais chargée en lazy
     .reveal-media {
       opacity: 1;
-      clip-path: inset(0 100% 0 0);
+      clip-path: inset(0 calc(100% - 1px) 0 0);
       transition: clip-path $sweep;
     }
 

@@ -2,6 +2,7 @@
 import Layout from "@layouts/Layout.astro";
 import PageHeader from "@components/ui/PageHeader.astro";
 import ProjectIndexList from "@components/projects/ProjectIndexList.astro";
+import ProjectStats from "@components/projects/ProjectStats.astro";
 import { getSortedProjects } from "@utils/projects";
 
 const sortedProjects = await getSortedProjects();
@@ -15,28 +16,17 @@ const sortedProjects = await getSortedProjects();
     <PageHeader outline="MES" main="PROJETS">
       Découvrez l'ensemble de mes travaux en architecture web et développement
       full-stack.
+      <ProjectStats projects={sortedProjects} slot="aside" />
     </PageHeader>
-
-    <p class="count">
-      {String(sortedProjects.length).padStart(2, "0")} projets
-    </p>
 
     <ProjectIndexList projects={sortedProjects} />
   </div>
 </Layout>
 
 <style lang="scss">
-  @use "@styles/config/mixin" as *;
-
   .projects-page {
     padding-block: var(--espace-l-plus) var(--espace-section);
     min-height: 100vh;
     min-height: 100svh;
-  }
-
-  .count {
-    @include eyebrow;
-
-    margin: 0 0 var(--espace-m-plus);
   }
 </style>
