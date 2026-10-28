@@ -1,4 +1,4 @@
-import type { ProjectShape } from '../../content.config';
+import type { ProjectShape } from "../../content.config";
 
 /** Étape du parcours professionnel (fil néon). */
 export interface ParcoursStep {

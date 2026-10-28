@@ -28,10 +28,17 @@ const { steps } = Astro.props;
   <div class="stage">
     <div class="header container">
       <SectionTitle outline="MA" main="FORMATION" />
-      <p class="hint" aria-hidden="true">Défilez <span class="hint-arrow">→</span></p>
+      <p class="hint" aria-hidden="true">
+        Défilez <span class="hint-arrow">→</span>
+      </p>
     </div>
 
-    <div class="rail" role="region" aria-label="Frise de formation" tabindex="0">
+    <div
+      class="rail"
+      role="region"
+      aria-label="Frise de formation"
+      tabindex="0"
+    >
       <ol class="track" role="list">
         {
           steps.map((step) => (
@@ -91,7 +98,9 @@ const { steps } = Astro.props;
   .track {
     --annee-size: clamp(3rem, 7vw, 5.5rem);
     --node-size: 3rem;
-    --line-top: calc(var(--annee-size) + var(--espace-m) + var(--node-size) / 2);
+    --line-top: calc(
+      var(--annee-size) + var(--espace-m) + var(--node-size) / 2
+    );
 
     position: relative;
     display: flex;

@@ -20,7 +20,12 @@ const items = [
     value: CONTACT_PHONE.display,
     href: `tel:${CONTACT_PHONE.international}`,
   },
-  { label: "CV", value: "Consulter mon CV en ligne", href: CV_URL, external: true },
+  {
+    label: "CV",
+    value: "Consulter mon CV en ligne",
+    href: CV_URL,
+    external: true,
+  },
 ];
 ---
 
@@ -35,12 +40,17 @@ const items = [
           <a
             href={item.href}
             class="value"
-            {...(item.external && { target: "_blank", rel: "noopener noreferrer" })}
+            {...(item.external && {
+              target: "_blank",
+              rel: "noopener noreferrer",
+            })}
           >
             {item.value}
             {item.external && (
               <>
-                <span class="external" aria-hidden="true">↗</span>
+                <span class="external" aria-hidden="true">
+                  ↗
+                </span>
                 <span class="visually-hidden">(nouvel onglet)</span>
               </>
             )}

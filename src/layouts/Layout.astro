@@ -1,10 +1,10 @@
 ---
-import { Font } from 'astro:assets';
+import { Font } from "astro:assets";
 import "@styles/main.scss";
-import Navbar from '@components/global/Navbar.astro';
-import Footer from '@components/global/Footer.astro';
-import GlobalBackdrop from '@components/global/GlobalBackdrop.astro';
-import GlobalSymbols from '@components/global/GlobalSymbols.astro';
+import Navbar from "@components/global/Navbar.astro";
+import Footer from "@components/global/Footer.astro";
+import GlobalBackdrop from "@components/global/GlobalBackdrop.astro";
+import GlobalSymbols from "@components/global/GlobalSymbols.astro";
 
 /**
  * Layout — Structure globale du site (head SEO, navbar, footer, décor).
@@ -14,9 +14,9 @@ import GlobalSymbols from '@components/global/GlobalSymbols.astro';
  * @prop {boolean} [fullBleed] - Supprime le padding-top du <main> (sections plein écran).
  */
 interface Props {
-	title: string;
-	description: string;
-	fullBleed?: boolean;
+  title: string;
+  description: string;
+  fullBleed?: boolean;
 }
 
 const { title, description, fullBleed = false } = Astro.props;
@@ -25,36 +25,36 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
 <!doctype html>
 <html lang="fr">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<link rel="sitemap" href="/sitemap-index.xml" />
-		<meta name="generator" content={Astro.generator} />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="generator" content={Astro.generator} />
 
-		<title>{title}</title>
-		<meta name="description" content={description} />
-		<link rel="canonical" href={canonicalURL} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
 
-		<meta property="og:type" content="website" />
-		<meta property="og:site_name" content="NifraDev" />
-		<meta property="og:title" content={title} />
-		<meta property="og:description" content={description} />
-		<meta property="og:url" content={canonicalURL} />
-		<meta property="og:locale" content="fr_FR" />
-		<meta name="twitter:card" content="summary" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="NifraDev" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:locale" content="fr_FR" />
+    <meta name="twitter:card" content="summary" />
 
-		<Font cssVariable="--font-title" preload />
-		<Font cssVariable="--font-text" preload />
-	</head>
-	<body>
-		<GlobalBackdrop />
-		<GlobalSymbols />
-		<Navbar />
-		<main class:list={[{ 'main-full-bleed': fullBleed }]}>
-			<slot />
-		</main>
-		<Footer />
-	</body>
+    <Font cssVariable="--font-title" preload />
+    <Font cssVariable="--font-text" preload />
+  </head>
+  <body>
+    <GlobalBackdrop />
+    <GlobalSymbols />
+    <Navbar />
+    <main class:list={[{ "main-full-bleed": fullBleed }]}>
+      <slot />
+    </main>
+    <Footer />
+  </body>
 </html>

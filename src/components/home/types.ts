@@ -1,4 +1,4 @@
-import type { ProjectShape } from '../../content.config';
+import type { ProjectShape } from "../../content.config";
 
 /** Chiffre vérifiable affiché dans la bande de preuves. */
 export interface ProofStat {

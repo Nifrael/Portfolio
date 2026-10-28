@@ -14,13 +14,30 @@ interface Props {
   class?: string;
 }
 
-const { href, direction = "right", muted = false, class: className } = Astro.props;
+const {
+  href,
+  direction = "right",
+  muted = false,
+  class: className,
+} = Astro.props;
 ---
 
 <a href={href} class:list={["arrow-link", { muted }, className]}>
-  {direction === "left" && <span class="arrow arrow-left" aria-hidden="true">←</span>}
+  {
+    direction === "left" && (
+      <span class="arrow arrow-left" aria-hidden="true">
+        ←
+      </span>
+    )
+  }
   <slot />
-  {direction === "right" && <span class="arrow arrow-right" aria-hidden="true">→</span>}
+  {
+    direction === "right" && (
+      <span class="arrow arrow-right" aria-hidden="true">
+        →
+      </span>
+    )
+  }
 </a>
 
 <style lang="scss">

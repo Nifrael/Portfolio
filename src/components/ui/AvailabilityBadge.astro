@@ -20,7 +20,7 @@ const labelMap: Record<NonNullable<Props["status"]>, string> = {
 
 <div class:list={["badge", `badge--${status}`, className]}>
   <span class="badge-dot">
-    {status === "available" && <span class="badge-ping"></span>}
+    {status === "available" && <span class="badge-ping" />}
     <span class="badge-core"></span>
   </span>
   <span class="badge-text">{labelMap[status]}</span>

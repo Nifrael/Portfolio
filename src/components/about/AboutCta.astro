@@ -28,7 +28,16 @@ const { text, contactHref, cvHref } = Astro.props;
   <p class="text">{text}</p>
   <div class="actions">
     <CtaButton href={contactHref} label="Me contacter" arrow />
-    {cvHref && <CtaButton href={cvHref} label="Consulter mon CV" variant="outline" external />}
+    {
+      cvHref && (
+        <CtaButton
+          href={cvHref}
+          label="Consulter mon CV"
+          variant="outline"
+          external
+        />
+      )
+    }
   </div>
 </section>
 

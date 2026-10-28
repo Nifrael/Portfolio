@@ -1,6 +1,6 @@
-const monthYearFormatter = new Intl.DateTimeFormat('fr-FR', {
-  year: 'numeric',
-  month: 'long',
+const monthYearFormatter = new Intl.DateTimeFormat("fr-FR", {
+  year: "numeric",
+  month: "long",
 });
 
 /** Formate une date en « mois année » (ex. « janvier 2026 »). */

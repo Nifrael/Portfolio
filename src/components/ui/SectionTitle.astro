@@ -17,7 +17,12 @@ interface Props {
   class?: string;
 }
 
-const { outline, main, as: Heading = "h2", class: className }: Props = Astro.props;
+const {
+  outline,
+  main,
+  as: Heading = "h2",
+  class: className,
+}: Props = Astro.props;
 ---
 
 <Heading class:list={["section-title", className]}>
