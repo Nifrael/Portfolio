@@ -83,7 +83,6 @@ const { title, description, tags, cover, links } = project.data;
     justify-content: center;
   }
 
-  // :global() requis : la classe est portée par le composant enfant NeonFrame
   .visual :global(.frame) {
     width: min(100%, 22rem * var(--frame-scale, 1));
     transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);

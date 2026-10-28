@@ -78,7 +78,7 @@ const enctype = CONTACT_ENDPOINT ? undefined : "text/plain";
       ></textarea>
     </div>
 
-    <!-- Champ piège anti-spam : invisible pour les humains -->
+    {/* Champ piège anti-spam : invisible pour les humains */}
     <div class="trap" aria-hidden="true">
       <label
         >Ne pas remplir <input
@@ -139,7 +139,6 @@ const enctype = CONTACT_ENDPOINT ? undefined : "text/plain";
     background: var(--color-bg-code);
   }
 
-  // Boutons de fenêtre : les symboles de la charte à la place des pastilles
   .window-buttons {
     display: flex;
     gap: var(--espace-s);
@@ -220,7 +219,6 @@ const enctype = CONTACT_ENDPOINT ? undefined : "text/plain";
     }
   }
 
-  // Message : la zone de saisie passe sous l'invite, sur toute la largeur
   .field-message textarea {
     grid-column: 1 / -1;
     padding: var(--espace-s);

@@ -126,7 +126,6 @@ const { items, class: className } = Astro.props;
     @include body-muted;
   }
 
-  // Apparition décalée d'une carte à l'autre
   .card {
     @include scroll-reveal(
       entry calc(5% + var(--i) * 10%) cover calc(25% + var(--i) * 5%)

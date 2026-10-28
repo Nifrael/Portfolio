@@ -86,7 +86,6 @@ const { stats, source } = Astro.props;
     color: var(--color-text-secondary);
   }
 
-  // Apparition décalée d'un chiffre à l'autre
   .stat {
     @include scroll-reveal(
       entry calc(5% + var(--i) * 8%) cover calc(20% + var(--i) * 5%),
