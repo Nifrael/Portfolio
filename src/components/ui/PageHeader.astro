@@ -1,0 +1,63 @@
+---
+import ArrowLink from "./ArrowLink.astro";
+import SectionTitle from "./SectionTitle.astro";
+
+/**
+ * PageHeader — En-tête des pages secondaires : lien de retour, titre de page
+ * (h1) en deux lignes et sous-titre.
+ *
+ * @prop {string} outline       - Ligne du titre affichée en contour.
+ * @prop {string} main          - Ligne du titre affichée en dégradé.
+ * @prop {string} [backHref]    - Cible du lien de retour (défaut : "/").
+ * @prop {string} [backLabel]   - Libellé du lien de retour (défaut : « Retour à l'accueil »).
+ * @slot                        - Sous-titre (texte), masqué si absent.
+ */
+interface Props {
+  outline: string;
+  main: string;
+  backHref?: string;
+  backLabel?: string;
+}
+
+const {
+  outline,
+  main,
+  backHref = "/",
+  backLabel = "Retour à l'accueil",
+} = Astro.props;
+---
+
+<header class="page-header">
+  <ArrowLink href={backHref} direction="left" muted>{backLabel}</ArrowLink>
+  <SectionTitle as="h1" outline={outline} main={main} />
+  {
+    Astro.slots.has("default") && (
+      <p class="page-subtitle">
+        <slot />
+      </p>
+    )
+  }
+</header>
+
+<style lang="scss">
+  .page-header {
+    --title-size: clamp(2.5rem, 8vw, 5rem);
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--espace-m-plus);
+    margin-bottom: var(--espace-xl-plus);
+  }
+
+  .page-subtitle {
+    max-width: 35rem;
+    margin: 0;
+    font-family: var(--font-text);
+    font-size: 1.1rem;
+    font-weight: 200;
+    line-height: 1.6;
+    color: var(--color-text);
+    opacity: 0.8;
+  }
+</style>

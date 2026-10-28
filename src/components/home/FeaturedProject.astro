@@ -1,8 +1,8 @@
 ---
-import { Image } from "astro:assets";
 import TagList from "@components/ui/TagList.astro";
 import ArrowLink from "@components/ui/ArrowLink.astro";
 import ProjectLinks from "@components/ui/ProjectLinks.astro";
+import NeonFrame from "@components/ui/NeonFrame.astro";
 import type { Project } from "@utils/projects";
 import type { ProjectShape } from "../../content.config";
 
@@ -10,9 +10,8 @@ import type { ProjectShape } from "../../content.config";
  * FeaturedProject — Vitrine éditoriale d'un projet featured, dont le visuel
  * est associé à l'un des quatre symboles du site (△ ○ × □).
  *
- * Le triangle, le cercle et la croix découpent le screenshot (clip-path +
- * contour SVG lumineux, même technique que HeroPortrait). Le carré l'encadre
- * en entier.
+ * Le visuel (NeonFrame) découpe le screenshot selon le symbole ; ce
+ * composant gère sa taille, compensée selon la forme, et la mise en page.
  *
  * @prop {Project} project        - Projet à afficher.
  * @prop {ProjectShape} shape     - Symbole associé.
@@ -30,71 +29,13 @@ const { title, description, tags, cover, links } = project.data;
 
 <article class:list={["featured-project", `shape-${shape}`, { reverse }]}>
   <div class="visual">
-    <div class="frame">
-      <Image
-        src={cover.src}
-        alt={cover.alt}
-        width={800}
-        height={800}
-        class="cover"
-      />
-
-      {
-        shape === "triangle" && (
-          <svg
-            class="outline"
-            viewBox="0 0 100 100"
-            preserveAspectRatio="none"
-            aria-hidden="true"
-          >
-            <polygon
-              points="0,0 100,0 50,100"
-              vector-effect="non-scaling-stroke"
-            />
-          </svg>
-        )
-      }
-      {
-        shape === "circle" && (
-          <svg class="outline" viewBox="0 0 100 100" aria-hidden="true">
-            <circle cx="50" cy="50" r="49" vector-effect="non-scaling-stroke" />
-          </svg>
-        )
-      }
-      {
-        shape === "square" && (
-          <svg
-            class="outline"
-            viewBox="0 0 100 100"
-            preserveAspectRatio="none"
-            aria-hidden="true"
-          >
-            <rect
-              x="1"
-              y="1"
-              width="98"
-              height="98"
-              vector-effect="non-scaling-stroke"
-            />
-          </svg>
-        )
-      }
-      {
-        shape === "cross" && (
-          <svg
-            class="outline"
-            viewBox="0 0 100 100"
-            preserveAspectRatio="none"
-            aria-hidden="true"
-          >
-            <polygon
-              points="0,22 22,0 50,28 78,0 100,22 72,50 100,78 78,100 50,72 22,100 0,78 28,50"
-              vector-effect="non-scaling-stroke"
-            />
-          </svg>
-        )
-      }
-    </div>
+    <NeonFrame
+      src={cover.src}
+      alt={cover.alt}
+      shape={shape}
+      size={800}
+      class="frame"
+    />
   </div>
 
   <div class="details">
@@ -142,10 +83,9 @@ const { title, description, tags, cover, links } = project.data;
     justify-content: center;
   }
 
-  .frame {
-    position: relative;
+  // :global() requis : la classe est portée par le composant enfant NeonFrame
+  .visual :global(.frame) {
     width: min(100%, 22rem * var(--frame-scale, 1));
-    aspect-ratio: 1;
     transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 
     @include breakpoint-up($breakpoint-desktop) {
@@ -155,30 +95,6 @@ const { title, description, tags, cover, links } = project.data;
         transform: scale(1.02);
       }
     }
-  }
-
-  .cover {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-  }
-
-  // Bordure "néon chaud" : trait épais presque blanc, halo serré blanc
-  // puis halo large cyan (même esprit que la maquette).
-  .outline {
-    position: absolute;
-    pointer-events: none;
-    overflow: visible;
-    fill: none;
-    stroke: var(--color-text);
-    stroke-width: 6;
-    filter: drop-shadow(0 0 4px var(--color-halo))
-      drop-shadow(0 0 14px var(--color-accent))
-      drop-shadow(0 0 30px var(--color-accent));
-    inset: 0;
-    width: 100%;
-    height: 100%;
   }
 
   // Compensation optique : à cadre égal, le triangle ne montre que ~50 % de
@@ -194,40 +110,6 @@ const { title, description, tags, cover, links } = project.data;
 
   .shape-square {
     --frame-scale: 0.88;
-  }
-
-  // Formes qui découpent le screenshot
-  // Triangle inversé (pointe en bas)
-  .shape-triangle .cover {
-    clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
-  }
-
-  .shape-circle .cover {
-    clip-path: circle(49%);
-  }
-
-  // Croix en ×, branches épaisses pour laisser lire le screenshot
-  // (mêmes points que le polygone SVG du contour)
-  .shape-cross .cover {
-    clip-path: polygon(
-      0% 22%,
-      22% 0%,
-      50% 28%,
-      78% 0%,
-      100% 22%,
-      72% 50%,
-      100% 78%,
-      78% 100%,
-      50% 72%,
-      22% 100%,
-      0% 78%,
-      28% 50%
-    );
-  }
-
-  // Forme qui garde le screenshot entier
-  .shape-square .cover {
-    border: 1px solid var(--color-border);
   }
 
   .details {

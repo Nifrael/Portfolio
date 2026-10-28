@@ -1,8 +1,7 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import ProjectCard from "@components/ui/ProjectCard.astro";
-import SectionTitle from "@components/ui/SectionTitle.astro";
-import ArrowLink from "@components/ui/ArrowLink.astro";
+import PageHeader from "@components/ui/PageHeader.astro";
 import { getSortedProjects } from "@utils/projects";
 
 const sortedProjects = await getSortedProjects();
@@ -14,15 +13,10 @@ const sortedProjects = await getSortedProjects();
 >
   <div class="projects-page">
     <div class="container">
-      <header class="page-header">
-        <ArrowLink href="/" direction="left" muted>Retour à l'accueil</ArrowLink
-        >
-        <SectionTitle as="h1" outline="MES" main="PROJETS" />
-        <p class="page-subtitle">
-          Découvrez l'ensemble de mes travaux en architecture web et
-          développement full-stack.
-        </p>
-      </header>
+      <PageHeader outline="MES" main="PROJETS">
+        Découvrez l'ensemble de mes travaux en architecture web et développement
+        full-stack.
+      </PageHeader>
 
       <div class="projects-grid">
         {sortedProjects.map((project) => <ProjectCard project={project} />)}
@@ -39,27 +33,6 @@ const sortedProjects = await getSortedProjects();
     position: relative;
     padding-block: var(--espace-l-plus);
     min-height: 100vh;
-  }
-
-  .page-header {
-    --title-size: clamp(2.5rem, 8vw, 5rem);
-
-    margin-bottom: var(--espace-xl-plus);
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--espace-m-plus);
-  }
-
-  .page-subtitle {
-    color: var(--color-text);
-    font-size: 1.1rem;
-    font-family: var(--font-text);
-    font-weight: 200;
-    max-width: 35rem;
-    line-height: 1.6;
-    margin: 0;
-    opacity: 0.8;
   }
 
   .projects-grid {

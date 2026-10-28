@@ -1,4 +1,4 @@
-import type { ProjectShape } from "../../content.config";
+import type { ShapeCardItem } from "../ui/types";
 
 /** Chiffre vérifiable affiché dans la bande de preuves. */
 export interface ProofStat {
@@ -12,9 +12,5 @@ export interface MethodStep {
   texte: string;
 }
 
-/** Service proposé, associé à l'un des quatre symboles. */
-export interface Service {
-  shape: ProjectShape;
-  titre: string;
-  texte: string;
-}
+/** Service proposé, associé à l'un des quatre symboles (sans tags). */
+export type Service = Omit<ShapeCardItem, "tags">;

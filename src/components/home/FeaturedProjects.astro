@@ -1,6 +1,6 @@
 ---
 import FeaturedProject from "@components/home/FeaturedProject.astro";
-import SectionTitle from "@components/ui/SectionTitle.astro";
+import SectionHeader from "@components/ui/SectionHeader.astro";
 import CtaButton from "@components/ui/CtaButton.astro";
 import type { Project } from "@utils/projects";
 import { PROJECT_SHAPES } from "../../content.config";
@@ -24,13 +24,10 @@ const { projects } = Astro.props;
   id="projets"
   aria-label="Projets phares"
 >
-  <div class="section-header">
-    <SectionTitle outline="QUELQUES" main="PROJETS" class="reveal-title" />
-    <p class="section-subtitle">
-      Sélection de réalisations techniques axées sur la performance et
-      l'architecture logicielle.
-    </p>
-  </div>
+  <SectionHeader outline="QUELQUES" main="PROJETS">
+    Sélection de réalisations techniques axées sur la performance et
+    l'architecture logicielle.
+  </SectionHeader>
 
   <div class="projects-showcase">
     {
@@ -65,31 +62,11 @@ const { projects } = Astro.props;
     padding-block: var(--espace-section);
     background: transparent;
     scroll-margin-top: var(--navbar-offset);
-  }
 
-  .section-header {
-    margin-bottom: var(--espace-xl-plus);
-    display: flex;
-    flex-direction: column;
-    gap: var(--espace-m);
-
+    // Plus d'air sous l'en-tête, avant le premier projet
     @include breakpoint-up($breakpoint-tablet) {
-      flex-direction: row;
-      margin-bottom: 8rem;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: var(--espace-l-plus);
+      --header-gap: 8rem;
     }
-  }
-
-  .section-subtitle {
-    color: var(--color-text);
-    font-size: var(--base-size);
-    font-family: var(--font-text);
-    font-weight: 200;
-    line-height: 1.5;
-    margin: 0;
-    opacity: 0.8;
   }
 
   .projects-showcase {
@@ -106,41 +83,5 @@ const { projects } = Astro.props;
     display: flex;
     justify-content: center;
     margin-top: var(--espace-xl-plus);
-  }
-
-  @keyframes reveal-blur {
-    from {
-      opacity: 0;
-      filter: blur(15px);
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      filter: blur(0);
-      transform: translateY(0);
-    }
-  }
-
-  @supports (animation-timeline: view()) {
-    // :global() requis : la classe est portée par le composant enfant
-    // SectionTitle, qui ne reçoit pas l'attribut de scope de ce composant.
-    .section-header :global(.reveal-title) {
-      animation: reveal-blur both;
-      animation-timeline: view();
-      animation-range: entry 10% cover 40%;
-    }
-
-    .section-subtitle {
-      animation: reveal-blur both;
-      animation-timeline: view();
-      animation-range: entry 15% cover 45%;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .section-header :global(.reveal-title),
-      .section-subtitle {
-        animation: none;
-      }
-    }
   }
 </style>

@@ -1,6 +1,6 @@
 ---
-import SectionTitle from "@components/ui/SectionTitle.astro";
-import ShapeSymbol from "@components/ui/ShapeSymbol.astro";
+import SectionHeader from "@components/ui/SectionHeader.astro";
+import ShapeCardGrid from "@components/ui/ShapeCardGrid.astro";
 import type { Service } from "./types";
 
 /**
@@ -16,159 +16,16 @@ const { services } = Astro.props;
 ---
 
 <section class="services container" id="services" aria-label="Services">
-  <div class="section-header">
-    <SectionTitle outline="CE QUE JE" main="PROPOSE" />
-    <p class="section-subtitle">
-      Des sites à taille humaine pour les indépendants et les petites structures
-      : rapides, accessibles, et pensés pour durer.
-    </p>
-  </div>
-
-  <ul class="grid" role="list">
-    {
-      services.map((service, index) => (
-        <li class="card" style={`--i: ${index}`}>
-          <div class="card-head">
-            <ShapeSymbol shape={service.shape} class="card-shape" />
-            <span class="index" aria-hidden="true">
-              {String(index + 1).padStart(2, "0")}
-            </span>
-          </div>
-          <h3 class="titre">{service.titre}</h3>
-          <p class="texte">{service.texte}</p>
-        </li>
-      ))
-    }
-  </ul>
+  <SectionHeader outline="CE QUE JE" main="PROPOSE">
+    Des sites à taille humaine pour les indépendants et les petites structures :
+    rapides, accessibles, et pensés pour durer.
+  </SectionHeader>
+  <ShapeCardGrid items={services} />
 </section>
 
 <style lang="scss">
-  @use "@styles/config/variables" as *;
-  @use "@styles/config/mixin" as *;
-
   .services {
     padding-block: var(--espace-section);
     scroll-margin-top: var(--navbar-offset);
-  }
-
-  .section-header {
-    display: flex;
-    flex-direction: column;
-    gap: var(--espace-m);
-    margin-bottom: var(--espace-xl-plus);
-
-    @include breakpoint-up($breakpoint-tablet) {
-      flex-direction: row;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: var(--espace-l-plus);
-    }
-  }
-
-  .section-subtitle {
-    max-width: 30rem;
-    margin: 0;
-    font-family: var(--font-text);
-    font-size: var(--base-size);
-    font-weight: 200;
-    line-height: 1.5;
-    color: var(--color-text);
-    opacity: 0.8;
-  }
-
-  .grid {
-    display: grid;
-    gap: var(--espace-m-plus);
-
-    @include breakpoint-up($breakpoint-tablet) {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    @include breakpoint-up($breakpoint-desktop-xl) {
-      grid-template-columns: repeat(4, 1fr);
-    }
-  }
-
-  .card {
-    display: flex;
-    flex-direction: column;
-    gap: var(--espace-m);
-    padding: var(--espace-l);
-    border: 1px solid var(--color-border);
-    background: var(--color-bg-cards);
-    transition: border-color 0.3s ease;
-
-    &:hover {
-      border-color: var(--color-accent-border);
-    }
-  }
-
-  .card-head {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    margin-bottom: var(--espace-m);
-
-    :global(.card-shape) {
-      --symbol-size: 3.5rem;
-
-      color: var(--color-decor-symbol);
-      transition:
-        color 0.4s ease,
-        filter 0.4s ease,
-        transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-    }
-
-    .card:hover & :global(.card-shape) {
-      color: var(--color-accent);
-      filter: drop-shadow(0 0 4px var(--color-halo))
-        drop-shadow(0 0 14px var(--color-accent));
-      transform: scale(1.08);
-    }
-  }
-
-  .index {
-    font-family: var(--font-title);
-    font-size: 2.5rem;
-    font-style: italic;
-    font-weight: 700;
-    line-height: 1;
-    -webkit-text-stroke: 1px var(--color-border-emphasis);
-    color: transparent;
-  }
-
-  .titre {
-    font-family: var(--font-title);
-    font-size: 1.5rem;
-    font-style: italic;
-    font-weight: 700;
-    line-height: 1.1;
-    color: var(--color-text-strong);
-  }
-
-  .texte {
-    font-size: 0.95rem;
-    line-height: 1.7;
-    color: var(--color-text);
-    opacity: 0.8;
-  }
-
-  @keyframes card-reveal {
-    from {
-      opacity: 0;
-      transform: translateY(40px);
-    }
-  }
-
-  @supports (animation-timeline: view()) {
-    @media (prefers-reduced-motion: no-preference) {
-      // Apparition décalée d'une carte à l'autre
-      .card {
-        animation: card-reveal ease-out both;
-        animation-timeline: view();
-        animation-range: entry calc(5% + var(--i) * 10%) cover
-          calc(25% + var(--i) * 5%);
-      }
-    }
   }
 </style>

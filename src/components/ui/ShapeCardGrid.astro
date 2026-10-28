@@ -1,0 +1,151 @@
+---
+import ShapeSymbol from "./ShapeSymbol.astro";
+import TagList from "./TagList.astro";
+import type { ShapeCardItem } from "./types";
+
+/**
+ * ShapeCardGrid — Grille de cartes numérotées, chacune portant l'un des
+ * quatre symboles de la charte (△ ○ × □), qui s'allume au survol.
+ *
+ * 1 colonne en mobile, 2 en tablette, 4 en grand écran. Les cartes
+ * apparaissent en décalé au scroll ; les tags sont optionnels.
+ *
+ * @prop {ShapeCardItem[]} items - Cartes à afficher.
+ * @prop {string} [class]        - Classes CSS additionnelles.
+ */
+interface Props {
+  items: ShapeCardItem[];
+  class?: string;
+}
+
+const { items, class: className } = Astro.props;
+---
+
+<ul class:list={["shape-card-grid", className]} role="list">
+  {
+    items.map((item, index) => (
+      <li class="card" style={`--i: ${index}`}>
+        <div class="card-head">
+          <ShapeSymbol shape={item.shape} class="card-shape" />
+          <span class="index" aria-hidden="true">
+            {String(index + 1).padStart(2, "0")}
+          </span>
+        </div>
+        <h3 class="titre">{item.titre}</h3>
+        <p class="texte">{item.texte}</p>
+        {item.tags && <TagList tags={item.tags} class="card-tags" />}
+      </li>
+    ))
+  }
+</ul>
+
+<style lang="scss">
+  @use "@styles/config/variables" as *;
+  @use "@styles/config/mixin" as *;
+
+  .shape-card-grid {
+    display: grid;
+    gap: var(--espace-m-plus);
+
+    @include breakpoint-up($breakpoint-tablet) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include breakpoint-up($breakpoint-desktop-xl) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espace-m);
+    padding: var(--espace-l);
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-cards);
+    transition: border-color 0.3s ease;
+
+    &:hover {
+      border-color: var(--color-accent-border);
+    }
+
+    // Tags calés en bas de carte, quelle que soit la longueur du texte
+    :global(.card-tags) {
+      margin-top: auto;
+    }
+  }
+
+  .card-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: var(--espace-m);
+
+    :global(.card-shape) {
+      --symbol-size: 3.5rem;
+
+      color: var(--color-decor-symbol);
+      transition:
+        color 0.4s ease,
+        filter 0.4s ease,
+        transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .card:hover & :global(.card-shape) {
+      color: var(--color-accent);
+      filter: drop-shadow(0 0 4px var(--color-halo))
+        drop-shadow(0 0 14px var(--color-accent));
+      transform: scale(1.08);
+
+      // Légère rotation, réservée au survol à la souris
+      @include breakpoint-up($breakpoint-desktop) {
+        transform: rotate(-8deg) scale(1.08);
+      }
+    }
+  }
+
+  .index {
+    font-family: var(--font-title);
+    font-size: 2.5rem;
+    font-style: italic;
+    font-weight: 700;
+    line-height: 1;
+    -webkit-text-stroke: 1px var(--color-border-emphasis);
+    color: transparent;
+  }
+
+  .titre {
+    font-family: var(--font-title);
+    font-size: 1.5rem;
+    font-style: italic;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--color-text-strong);
+  }
+
+  .texte {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--color-text);
+    opacity: 0.8;
+  }
+
+  @keyframes card-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      // Apparition décalée d'une carte à l'autre
+      .card {
+        animation: card-reveal ease-out both;
+        animation-timeline: view();
+        animation-range: entry calc(5% + var(--i) * 10%) cover
+          calc(25% + var(--i) * 5%);
+      }
+    }
+  }
+</style>

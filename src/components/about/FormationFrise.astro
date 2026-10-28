@@ -1,6 +1,6 @@
 ---
 import SectionTitle from "@components/ui/SectionTitle.astro";
-import ShapeSymbol from "@components/ui/ShapeSymbol.astro";
+import ThreadNode from "@components/ui/ThreadNode.astro";
 import type { FormationStep } from "./types";
 
 /**
@@ -44,7 +44,11 @@ const { steps } = Astro.props;
           steps.map((step) => (
             <li class="station">
               <span class="annee">{step.annee}</span>
-              <ShapeSymbol shape={step.shape} class="station-node" />
+              <ThreadNode
+                shape={step.shape}
+                lit="always"
+                class="station-node"
+              />
               <h3 class="diplome">{step.diplome}</h3>
               <p class="ecole">{step.ecole}</p>
               <p class="texte">{step.texte}</p>
@@ -146,14 +150,6 @@ const { steps } = Astro.props;
 
     :global(.station-node) {
       --symbol-size: 1.25rem;
-
-      width: var(--node-size);
-      height: var(--node-size);
-      border: 1px solid var(--color-accent-border);
-      border-radius: var(--rayon-rond);
-      background: var(--color-bg-primary);
-      color: var(--color-accent);
-      filter: drop-shadow(0 0 6px var(--color-accent));
     }
   }
 

@@ -1,0 +1,91 @@
+---
+import SectionTitle from "./SectionTitle.astro";
+
+/**
+ * SectionHeader — En-tête de section : titre à gauche, sous-titre aligné en
+ * bas à droite dès la tablette (empilés en mobile). Titre et sous-titre se
+ * révèlent au scroll, avec un léger flou.
+ *
+ * L'espace sous l'en-tête se règle via `--header-gap`
+ * (défaut : var(--espace-xl-plus)).
+ *
+ * @prop {string} outline  - Ligne du titre affichée en contour.
+ * @prop {string} main     - Ligne du titre affichée en dégradé.
+ * @prop {string} [class]  - Classes CSS additionnelles.
+ * @slot                   - Sous-titre (texte), masqué si absent.
+ */
+interface Props {
+  outline: string;
+  main: string;
+  class?: string;
+}
+
+const { outline, main, class: className } = Astro.props;
+---
+
+<div class:list={["section-header", className]}>
+  <SectionTitle outline={outline} main={main} class="section-header-title" />
+  {
+    Astro.slots.has("default") && (
+      <p class="section-subtitle">
+        <slot />
+      </p>
+    )
+  }
+</div>
+
+<style lang="scss">
+  @use "@styles/config/variables" as *;
+  @use "@styles/config/mixin" as *;
+
+  .section-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espace-m);
+    margin-bottom: var(--header-gap, var(--espace-xl-plus));
+
+    @include breakpoint-up($breakpoint-tablet) {
+      flex-direction: row;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: var(--espace-l-plus);
+    }
+  }
+
+  .section-subtitle {
+    max-width: 30rem;
+    margin: 0;
+    font-family: var(--font-text);
+    font-size: var(--base-size);
+    font-weight: 200;
+    line-height: 1.5;
+    color: var(--color-text);
+    opacity: 0.8;
+  }
+
+  @keyframes reveal-blur {
+    from {
+      opacity: 0;
+      filter: blur(15px);
+      transform: translateY(30px);
+    }
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      // :global() requis : la classe est portée par le composant enfant
+      // SectionTitle, qui ne reçoit pas l'attribut de scope de ce composant.
+      .section-header :global(.section-header-title) {
+        animation: reveal-blur both;
+        animation-timeline: view();
+        animation-range: entry 10% cover 40%;
+      }
+
+      .section-subtitle {
+        animation: reveal-blur both;
+        animation-timeline: view();
+        animation-range: entry 15% cover 45%;
+      }
+    }
+  }
+</style>

@@ -1,4 +1,5 @@
 import type { ProjectShape } from "../../content.config";
+import type { ShapeCardItem } from "../ui/types";
 
 /** Étape du parcours professionnel (fil néon). */
 export interface ParcoursStep {
@@ -18,10 +19,5 @@ export interface FormationStep {
   shape: ProjectShape;
 }
 
-/** Carte de compétence associée à l'un des quatre symboles. */
-export interface ShapeCard {
-  shape: ProjectShape;
-  titre: string;
-  texte: string;
-  tags: string[];
-}
+/** Carte de compétence associée à l'un des quatre symboles, avec ses technos. */
+export type ShapeCard = ShapeCardItem & { tags: string[] };
