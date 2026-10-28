@@ -63,8 +63,6 @@ const { outline, main, class: className } = Astro.props;
     opacity: 0.8;
   }
 
-  // :global() requis : la classe est portée par le composant enfant
-  // SectionTitle, qui ne reçoit pas l'attribut de scope de ce composant.
   .section-header :global(.section-header-title) {
     @include scroll-reveal(entry 10% cover 40%, $distance: 30px, $blur: 15px);
   }
