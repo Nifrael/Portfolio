@@ -9,8 +9,7 @@ const stylesPath = path.resolve(__dirname, "src/styles");
 
 // https://astro.build/config
 export default defineConfig({
-  // TODO: remplacer par l'URL de production réelle avant le déploiement
-  site: "https://www.nifradev.fr",
+  site: "https://nifradev.fr",
   integrations: [sitemap()],
   vite: {
     build: {

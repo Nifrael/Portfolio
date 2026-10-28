@@ -2,4 +2,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.nifradev.fr/sitemap-index.xml
+Sitemap: https://nifradev.fr/sitemap-index.xml
