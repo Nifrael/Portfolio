@@ -1,6 +1,6 @@
 ---
 import type { ImageMetadata } from "astro";
-import { Image } from "astro:assets";
+import { Picture } from "astro:assets";
 import type { ProjectShape } from "../../content.config";
 
 /**
@@ -9,7 +9,8 @@ import type { ProjectShape } from "../../content.config";
  *
  * Le triangle, le cercle et la croix découpent l'image (clip-path + contour
  * SVG aux mêmes points). Le carré la garde entière. La largeur est laissée au
- * parent (via `class`), la hauteur suit (carré).
+ * parent (via `class`), la hauteur suit (carré) ; le parent la multiplie par
+ * `--frame-scale`, défini ici par forme, pour équilibrer leur poids visuel.
  *
  * @prop {ImageMetadata} src       - Image importée.
  * @prop {string} alt              - Texte alternatif.
@@ -18,7 +19,9 @@ import type { ProjectShape } from "../../content.config";
  *                                  (déclinée aussi en 50 % et 70 %).
  * @prop {string} sizes            - Largeur affichée (attribut `sizes`), pour
  *                                  que le navigateur choisisse la déclinaison.
- * @prop {"lazy" | "eager"} [loading] - Chargement de l'image (défaut : "lazy").
+ * @prop {boolean} [priority]     - Image principale de la page (LCP) : chargée
+ *                                  tout de suite, en priorité réseau haute.
+ *                                  Sinon, chargement différé.
  * @prop {string} [class]          - Classes CSS additionnelles.
  */
 interface Props {
@@ -27,7 +30,7 @@ interface Props {
   shape: ProjectShape;
   size: number;
   sizes: string;
-  loading?: "lazy" | "eager";
+  priority?: boolean;
   class?: string;
 }
 
@@ -37,21 +40,24 @@ const {
   shape,
   size,
   sizes,
-  loading = "lazy",
+  priority = false,
   class: className,
 } = Astro.props;
 ---
 
 <div class:list={["neon-frame", `neon-frame--${shape}`, className]}>
   <div class="neon-clip">
-    <Image
+    <Picture
       src={src}
       alt={alt}
       width={size}
       height={size}
       widths={[size * 0.5, size * 0.7, size]}
       sizes={sizes}
-      loading={loading}
+      formats={["avif", "webp"]}
+      loading={priority ? "eager" : "lazy"}
+      fetchpriority={priority ? "high" : undefined}
+      pictureAttributes={{ class: "neon-picture" }}
       class="neon-image"
     />
   </div>
@@ -116,9 +122,29 @@ const {
     aspect-ratio: 1;
   }
 
+  // Compensation optique : à cadre égal, le triangle ne montre que ~50 % de
+  // l'image, la croix ~59 %, le cercle ~77 % et le carré 100 % (valeurs
+  // réglées à l'œil)
+  .neon-frame--triangle {
+    --frame-scale: 1.12;
+  }
+
+  .neon-frame--cross {
+    --frame-scale: 1.05;
+  }
+
+  .neon-frame--square {
+    --frame-scale: 0.88;
+  }
+
   .neon-clip {
     width: 100%;
     height: 100%;
+  }
+
+  // <picture> n'a pas de rendu propre : l'image suit directement le cadre
+  .neon-picture {
+    display: contents;
   }
 
   .neon-image {

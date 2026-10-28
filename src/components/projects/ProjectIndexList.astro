@@ -13,21 +13,30 @@ import { getProjectShape, type Project } from "@utils/projects";
  * est affichée en fond de ligne, en permanence et très atténuée.
  *
  * @prop {Project[]} projects - Projets à lister, dans l'ordre d'affichage.
+ * @prop {number} [start]      - Rang du premier projet dans l'index complet
+ *                               (défaut : 0), pour sa numérotation et son
+ *                               symbole par défaut.
+ * @prop {boolean} [priority]  - Charge la première photo sans attendre (liste
+ *                               en haut de page, où elle est l'élément LCP
+ *                               en mobile).
  */
 interface Props {
   projects: Project[];
+  start?: number;
+  priority?: boolean;
 }
 
-const { projects } = Astro.props;
+const { projects, start = 0, priority = false } = Astro.props;
 ---
 
 <ol class="project-index" role="list">
   {
-    projects.map((project, index) => {
+    projects.map((project, position) => {
       const { title, tags, cover, publishDate } = project.data;
+      const index = start + position;
 
       return (
-        <li class="row" style={`--i: ${index}`}>
+        <li class="row" style={`--i: ${position}`}>
           <a href={`/projets/${project.id}`} class="row-link">
             <span
               class="index"
@@ -55,7 +64,7 @@ const { projects } = Astro.props;
                   height={320}
                   widths={[480, 960]}
                   sizes="(min-width: 1024px) 30rem, 50vw"
-                  loading={index === 0 ? "eager" : "lazy"}
+                  loading={priority && position === 0 ? "eager" : "lazy"}
                   class="reveal-image"
                 />
               </span>

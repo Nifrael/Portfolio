@@ -19,7 +19,7 @@ const sortedProjects = await getSortedProjects();
       <ProjectStats projects={sortedProjects} slot="aside" />
     </PageHeader>
 
-    <ProjectIndexList projects={sortedProjects} />
+    <ProjectIndexList projects={sortedProjects} priority />
   </div>
 </Layout>
 

@@ -28,7 +28,7 @@ const { title, description, tags, cover, featuredCover, links } = project.data;
 const visual = featuredCover ?? cover;
 ---
 
-<article class:list={["featured-project", `shape-${shape}`, { reverse }]}>
+<article class:list={["featured-project", { reverse }]}>
   <div class="visual">
     <NeonFrame
       src={visual.src}
@@ -96,21 +96,6 @@ const visual = featuredCover ?? cover;
         transform: scale(1.02);
       }
     }
-  }
-
-  // Compensation optique : à cadre égal, le triangle ne montre que ~50 % de
-  // l'image, la croix ~59 %, le cercle ~77 % et le carré 100 %.
-  // `--frame-scale` équilibre leur poids visuel (valeurs réglées à l'œil).
-  .shape-triangle {
-    --frame-scale: 1.12;
-  }
-
-  .shape-cross {
-    --frame-scale: 1.05;
-  }
-
-  .shape-square {
-    --frame-scale: 0.88;
   }
 
   .details {
